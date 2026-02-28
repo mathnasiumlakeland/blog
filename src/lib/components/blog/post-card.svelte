@@ -17,7 +17,7 @@
 </script>
 
 <Card class="h-full border-border/70 bg-card/85 backdrop-blur-sm transition hover:-translate-y-0.5 hover:shadow-lg">
-	<CardHeader class="gap-3">
+	<CardHeader class="gap-2.5 sm:gap-3">
 		<div class="flex flex-wrap items-center gap-2">
 			{#each post.tags as tag (tag)}
 				<Badge variant="secondary" class="border border-border/80 bg-background/70 text-[11px]">
@@ -25,7 +25,7 @@
 				</Badge>
 			{/each}
 		</div>
-		<CardTitle class="text-xl leading-tight">{post.title}</CardTitle>
+		<CardTitle class="text-lg leading-tight sm:text-xl">{post.title}</CardTitle>
 		<CardDescription class="text-sm">
 			{post.subtitle}
 		</CardDescription>
@@ -38,8 +38,10 @@
 		</p>
 	</CardContent>
 
-	<CardFooter class="mt-auto flex items-center justify-between text-xs text-muted-foreground">
-		<div class="space-x-3">
+	<CardFooter
+		class="mt-auto flex flex-col items-start gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between"
+	>
+		<div class="flex flex-wrap items-center gap-x-3 gap-y-1">
 			<span>{post.publishedOn}</span>
 			<span>{post.readTime}</span>
 		</div>

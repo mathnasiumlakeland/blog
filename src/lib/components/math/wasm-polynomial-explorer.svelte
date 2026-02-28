@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
 	import { Badge } from '$lib/components/ui/badge';
 
 	type WasmExports = {
@@ -173,7 +174,7 @@
 
 		const boot = async () => {
 			try {
-				const response = await fetch('/wasm/polynomial.wasm');
+				const response = await fetch(`${base}/wasm/polynomial.wasm`);
 				const bytes = await response.arrayBuffer();
 				const result = await WebAssembly.instantiate(bytes, {});
 				wasm = result.instance.exports as unknown as WasmExports;

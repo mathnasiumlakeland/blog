@@ -15,33 +15,37 @@
 	const feed = posts.filter((post) => post.slug !== featuredPost.slug);
 </script>
 
-<div class="space-y-12">
+<div class="space-y-10 sm:space-y-12">
 	<section class="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
 		<div
-			class="soft-grid relative overflow-hidden rounded-3xl border border-border/70 bg-card/78 p-7 shadow-sm backdrop-blur-sm sm:p-10"
+			class="soft-grid relative overflow-hidden rounded-3xl border border-border/70 bg-card/78 p-5 shadow-sm backdrop-blur-sm sm:p-10"
 		>
 			<div class="space-y-5">
-				<Badge class="border border-primary/20 bg-primary/12 px-3 py-1 text-primary">
+				<Badge class="border border-primary/20 bg-primary/12 px-3 py-1 text-xs text-primary sm:text-sm">
 					<Sparkles class="mr-1.5 size-3.5" />
 					Math + Design + Computation
 				</Badge>
 
 				<div class="space-y-4">
-					<h1 class="max-w-xl text-4xl leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+					<h1 class="max-w-xl text-3xl leading-tight tracking-tight sm:text-5xl lg:text-6xl">
 						A clean, visual home for modern math stories.
 					</h1>
-					<p class="max-w-2xl text-base text-muted-foreground sm:text-lg">
+					<p class="max-w-2xl text-sm text-muted-foreground sm:text-lg">
 						Mathnasium Journal is a static Svelte 5 blog focused on elegant explanations, interactive
 						visuals, and fast browser-native experiments.
 					</p>
 				</div>
 
-				<div class="flex flex-wrap items-center gap-3">
-					<Button href={resolve('/posts')} class="gap-1.5">
+				<div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+					<Button href={resolve('/posts')} class="w-full justify-center gap-1.5 sm:w-auto">
 						Read articles
 						<ArrowRight class="size-4" />
 					</Button>
-					<Button href={resolve('/posts/wasm-newton-lab')} variant="secondary" class="gap-1.5">
+					<Button
+						href={resolve('/posts/wasm-newton-lab')}
+						variant="secondary"
+						class="w-full justify-center gap-1.5 sm:w-auto"
+					>
 						<Cpu class="size-4" />
 						Open WASM Lab
 					</Button>
@@ -54,7 +58,7 @@
 				<Badge variant="secondary" class="w-fit border border-border/80 bg-background/70">
 					Featured Post
 				</Badge>
-				<CardTitle class="text-2xl">{featuredPost.title}</CardTitle>
+				<CardTitle class="text-xl sm:text-2xl">{featuredPost.title}</CardTitle>
 				<p class="text-sm text-muted-foreground">{featuredPost.subtitle}</p>
 			</CardHeader>
 			<CardContent class="space-y-4 text-sm">
@@ -85,7 +89,7 @@
 					<Atom class="size-5" />
 				</div>
 				<div>
-					<p class="text-lg font-semibold">Interactive first</p>
+					<p class="text-base font-semibold sm:text-lg">Interactive first</p>
 					<p class="text-xs text-muted-foreground">Every post includes a visual model.</p>
 				</div>
 			</CardContent>
@@ -96,7 +100,7 @@
 					<Cpu class="size-5" />
 				</div>
 				<div>
-					<p class="text-lg font-semibold">WASM experiments</p>
+					<p class="text-base font-semibold sm:text-lg">WASM experiments</p>
 					<p class="text-xs text-muted-foreground">Numerical kernels run directly in browser.</p>
 				</div>
 			</CardContent>
@@ -107,23 +111,23 @@
 					<BookOpenText class="size-5" />
 				</div>
 				<div>
-					<p class="text-lg font-semibold">Static + fast</p>
+					<p class="text-base font-semibold sm:text-lg">Static + fast</p>
 					<p class="text-xs text-muted-foreground">Optimized for static hosting and low friction.</p>
 				</div>
 			</CardContent>
 		</Card>
 	</section>
 
-	<section class="space-y-4 rounded-3xl border border-border/70 bg-card/78 p-6 shadow-sm backdrop-blur-sm sm:p-8">
+	<section class="space-y-4 rounded-3xl border border-border/70 bg-card/78 p-5 shadow-sm backdrop-blur-sm sm:p-8">
 		<div class="space-y-1">
-			<h2 class="text-3xl leading-tight">Live Math Studio</h2>
+			<h2 class="text-2xl leading-tight sm:text-3xl">Live Math Studio</h2>
 			<p class="text-sm text-muted-foreground">
 				Switch between animated curves and a WebAssembly-backed Newton solver.
 			</p>
 		</div>
 
 		<Tabs value="curves" class="gap-4">
-			<TabsList class="grid w-full max-w-xs grid-cols-2">
+			<TabsList class="grid w-full grid-cols-2 sm:max-w-xs">
 				<TabsTrigger value="curves">Curves</TabsTrigger>
 				<TabsTrigger value="wasm">WASM Solver</TabsTrigger>
 			</TabsList>
@@ -139,7 +143,7 @@
 	<section class="space-y-5">
 		<div class="flex items-end justify-between gap-3">
 			<div>
-				<h2 class="text-3xl leading-tight">Latest Posts</h2>
+				<h2 class="text-2xl leading-tight sm:text-3xl">Latest Posts</h2>
 				<p class="text-sm text-muted-foreground">Three polished entries to launch the math blog.</p>
 			</div>
 			<Button href={resolve('/posts')} variant="ghost" class="hidden gap-1.5 sm:inline-flex">
@@ -153,5 +157,10 @@
 				<PostCard {post} />
 			{/each}
 		</div>
+
+		<Button href={resolve('/posts')} variant="outline" class="w-full gap-1.5 sm:hidden">
+			View all posts
+			<ArrowRight class="size-4" />
+		</Button>
 	</section>
 </div>

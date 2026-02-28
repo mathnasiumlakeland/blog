@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ArrowRight, Atom, BookOpenText, Cpu, Sparkles } from '@lucide/svelte';
+	import { ArrowRight, Atom, BookOpenText, Cpu, ExternalLink, Sparkles } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
 	import PostCard from '$lib/components/blog/post-card.svelte';
 	import { Badge } from '$lib/components/ui/badge';
@@ -23,31 +23,33 @@
 			<div class="space-y-5">
 				<Badge class="border border-primary/20 bg-primary/12 px-3 py-1 text-xs text-primary sm:text-sm">
 					<Sparkles class="mr-1.5 size-3.5" />
-					Math + Design + Computation
+					Mathnasium Lakeland Highlands
 				</Badge>
 
 				<div class="space-y-4">
 					<h1 class="max-w-xl text-3xl leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-						A clean, visual home for modern math stories.
+						Math stories from our center, built for students and families.
 					</h1>
 					<p class="max-w-2xl text-sm text-muted-foreground sm:text-lg">
-						Mathnasium Journal is a static Svelte 5 blog focused on elegant explanations, interactive
-						visuals, and fast browser-native experiments.
+						Mathnasium Journal shares clear explanations, interactive visuals, and take-home ideas from
+						Mathnasium Lakeland Highlands.
 					</p>
 				</div>
 
 				<div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
 					<Button href={resolve('/posts')} class="w-full justify-center gap-1.5 sm:w-auto">
-						Read articles
+						Read latest posts
 						<ArrowRight class="size-4" />
 					</Button>
 					<Button
-						href={resolve('/posts/wasm-newton-lab')}
+						href="https://www.mathnasium.com/math-centers/lakelandhighlands"
 						variant="secondary"
 						class="w-full justify-center gap-1.5 sm:w-auto"
+						target="_blank"
+						rel="noopener noreferrer"
 					>
-						<Cpu class="size-4" />
-						Open WASM Lab
+						<ExternalLink class="size-4" />
+						Visit center page
 					</Button>
 				</div>
 			</div>
@@ -89,8 +91,8 @@
 					<Atom class="size-5" />
 				</div>
 				<div class="min-w-0">
-					<p class="text-base font-semibold sm:text-lg">Interactive first</p>
-					<p class="text-xs text-muted-foreground">Every post includes a visual model.</p>
+					<p class="text-base font-semibold sm:text-lg">Student-first explanations</p>
+					<p class="text-xs text-muted-foreground">Short posts focused on clarity and confidence.</p>
 				</div>
 			</CardContent>
 		</Card>
@@ -100,8 +102,8 @@
 					<Cpu class="size-5" />
 				</div>
 				<div class="min-w-0">
-					<p class="text-base font-semibold sm:text-lg">WASM experiments</p>
-					<p class="text-xs text-muted-foreground">Numerical kernels run directly in browser.</p>
+					<p class="text-base font-semibold sm:text-lg">Center-inspired visuals</p>
+					<p class="text-xs text-muted-foreground">Interactive models connected to what we teach.</p>
 				</div>
 			</CardContent>
 		</Card>
@@ -111,8 +113,8 @@
 					<BookOpenText class="size-5" />
 				</div>
 				<div class="min-w-0">
-					<p class="text-base font-semibold sm:text-lg">Static + fast</p>
-					<p class="text-xs text-muted-foreground">Optimized for static hosting and low friction.</p>
+					<p class="text-base font-semibold sm:text-lg">Family-friendly resources</p>
+					<p class="text-xs text-muted-foreground">Ideas parents and students can revisit anytime.</p>
 				</div>
 			</CardContent>
 		</Card>
@@ -120,16 +122,16 @@
 
 	<section class="space-y-4 rounded-3xl border border-border/70 bg-card/78 p-5 shadow-sm backdrop-blur-sm sm:p-8">
 		<div class="space-y-1">
-			<h2 class="text-2xl leading-tight sm:text-3xl">Live Math Studio</h2>
+			<h2 class="text-2xl leading-tight sm:text-3xl">Interactive Spotlight</h2>
 			<p class="text-sm text-muted-foreground">
-				Switch between animated curves and a WebAssembly-backed Newton solver.
+				Two visuals from our journal that make abstract ideas easier to see.
 			</p>
 		</div>
 
 		<Tabs value="curves" class="gap-4">
 			<TabsList class="grid w-full grid-cols-2 sm:max-w-xs">
-				<TabsTrigger value="curves">Curves</TabsTrigger>
-				<TabsTrigger value="wasm">WASM Solver</TabsTrigger>
+				<TabsTrigger value="curves">Patterns</TabsTrigger>
+				<TabsTrigger value="wasm">Root Finding</TabsTrigger>
 			</TabsList>
 			<TabsContent value="curves" class="mt-0">
 				<LissajousCanvas />
@@ -144,7 +146,7 @@
 		<div class="flex items-end justify-between gap-3">
 			<div>
 				<h2 class="text-2xl leading-tight sm:text-3xl">Latest Posts</h2>
-				<p class="text-sm text-muted-foreground">Three polished entries to launch the math blog.</p>
+				<p class="text-sm text-muted-foreground">Recent notes and visuals from Mathnasium Journal.</p>
 			</div>
 			<Button href={resolve('/posts')} variant="ghost" class="hidden gap-1.5 sm:inline-flex">
 				View all

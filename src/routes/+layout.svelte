@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { resolve } from '$app/paths';
-	import { Calculator, Sigma } from '@lucide/svelte';
+	import { Calculator, ExternalLink, Sigma } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import favicon from '$lib/assets/favicon.svg';
 
@@ -43,18 +43,23 @@
 				<span class="hidden sm:inline">Mathnasium Journal</span>
 			</a>
 
-			<nav class="hidden items-center gap-5 text-sm font-medium text-muted-foreground md:flex">
-				<a class="transition hover:text-foreground" href={resolve('/')}>Home</a>
-				<a class="transition hover:text-foreground" href={resolve('/posts')}>Posts</a>
-				<a class="transition hover:text-foreground" href={resolve('/posts/wasm-newton-lab')}
-					>WASM Lab</a
+			<div class="flex items-center gap-2">
+				<Button href={resolve('/posts')} size="sm" class="gap-1.5 px-2.5 sm:px-3">
+					<Calculator class="size-4" />
+					<span class="hidden sm:inline">Explore</span>
+				</Button>
+				<Button
+					href="https://www.mathnasium.com/math-centers/lakelandhighlands"
+					size="sm"
+					variant="outline"
+					class="gap-1.5 px-2.5 sm:px-3"
+					target="_blank"
+					rel="noopener noreferrer"
 				>
-			</nav>
-
-			<Button href={resolve('/posts')} size="sm" class="gap-1.5 px-2.5 sm:px-3">
-				<Calculator class="size-4" />
-				<span class="hidden sm:inline">Explore</span>
-			</Button>
+					<ExternalLink class="size-4" />
+					<span class="hidden sm:inline">Center</span>
+				</Button>
+			</div>
 		</div>
 	</header>
 
@@ -66,8 +71,18 @@
 		<div
 			class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 text-center text-sm text-muted-foreground sm:flex-row sm:items-center sm:px-6 sm:text-left lg:px-8"
 		>
-			<p>Mathnasium Journal - Visual notes on patterns, proofs, and playful computation.</p>
-			<p class="font-mono text-xs text-foreground/70">Built with Svelte 5 + Tailwind + shadcn-svelte</p>
+			<p>
+				Schedule a free assessment for your child today.
+				<a
+					href="https://www.mathnasium.com/math-centers/lakelandhighlands"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="ml-1 font-medium text-primary underline-offset-4 hover:underline"
+				>
+					Schedule now
+				</a>
+			</p>
+			<p class="text-xs text-foreground/70">Mathnasium Lakeland Highlands</p>
 		</div>
 	</footer>
 </div>

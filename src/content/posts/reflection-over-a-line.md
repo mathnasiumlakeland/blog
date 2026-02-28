@@ -18,6 +18,7 @@ In this post, we visualize how a point reflects across a line.
 <div style="width:min(100%, 820px); margin:0 auto;">
 	<iframe
 		src="https://www.desmos.com/calculator/ajdr4a4hck?embed"
+		title="Desmos interactive graph for reflection over a line"
 		style="display:block; width:100%; aspect-ratio:1 / 1; height:auto; border:1px solid #ccc;"
 		frameborder="0"
 	></iframe>

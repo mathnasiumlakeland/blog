@@ -18,7 +18,7 @@
 <div class="space-y-10 sm:space-y-12">
 	<section class="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
 		<div
-			class="soft-grid relative overflow-hidden rounded-3xl border border-border/70 bg-card/78 p-5 shadow-sm backdrop-blur-sm sm:p-10"
+			class="soft-grid relative min-w-0 overflow-hidden rounded-3xl border border-border/70 bg-card/78 p-5 shadow-sm backdrop-blur-sm sm:p-10"
 		>
 			<div class="space-y-5">
 				<Badge class="border border-primary/20 bg-primary/12 px-3 py-1 text-xs text-primary sm:text-sm">
@@ -53,7 +53,7 @@
 			</div>
 		</div>
 
-		<Card class="border-border/70 bg-card/85 backdrop-blur-sm">
+		<Card class="min-w-0 border-border/70 bg-card/85 backdrop-blur-sm">
 			<CardHeader class="space-y-2">
 				<Badge variant="secondary" class="w-fit border border-border/80 bg-background/70">
 					Featured Post
@@ -83,34 +83,34 @@
 	</section>
 
 	<section class="grid gap-4 sm:grid-cols-3">
-		<Card class="border-border/70 bg-card/80 backdrop-blur-sm">
-			<CardContent class="flex items-center gap-3 py-5">
+		<Card class="min-w-0 border-border/70 bg-card/80 backdrop-blur-sm">
+			<CardContent class="flex min-w-0 items-center gap-3 py-5">
 				<div class="rounded-lg bg-primary/12 p-2 text-primary">
 					<Atom class="size-5" />
 				</div>
-				<div>
+				<div class="min-w-0">
 					<p class="text-base font-semibold sm:text-lg">Interactive first</p>
 					<p class="text-xs text-muted-foreground">Every post includes a visual model.</p>
 				</div>
 			</CardContent>
 		</Card>
-		<Card class="border-border/70 bg-card/80 backdrop-blur-sm">
-			<CardContent class="flex items-center gap-3 py-5">
+		<Card class="min-w-0 border-border/70 bg-card/80 backdrop-blur-sm">
+			<CardContent class="flex min-w-0 items-center gap-3 py-5">
 				<div class="rounded-lg bg-primary/12 p-2 text-primary">
 					<Cpu class="size-5" />
 				</div>
-				<div>
+				<div class="min-w-0">
 					<p class="text-base font-semibold sm:text-lg">WASM experiments</p>
 					<p class="text-xs text-muted-foreground">Numerical kernels run directly in browser.</p>
 				</div>
 			</CardContent>
 		</Card>
-		<Card class="border-border/70 bg-card/80 backdrop-blur-sm">
-			<CardContent class="flex items-center gap-3 py-5">
+		<Card class="min-w-0 border-border/70 bg-card/80 backdrop-blur-sm">
+			<CardContent class="flex min-w-0 items-center gap-3 py-5">
 				<div class="rounded-lg bg-primary/12 p-2 text-primary">
 					<BookOpenText class="size-5" />
 				</div>
-				<div>
+				<div class="min-w-0">
 					<p class="text-base font-semibold sm:text-lg">Static + fast</p>
 					<p class="text-xs text-muted-foreground">Optimized for static hosting and low friction.</p>
 				</div>

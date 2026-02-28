@@ -24,13 +24,13 @@
 	/>
 </svelte:head>
 
-<div class="relative min-h-screen overflow-x-hidden">
-	<div
-		class="math-orb pointer-events-none -left-20 top-24 size-80 bg-gradient-to-br from-cyan-300/60 to-teal-300/30"
-	></div>
-	<div
-		class="math-orb pointer-events-none -right-24 top-96 size-96 bg-gradient-to-br from-sky-300/45 to-blue-300/30 [animation-delay:1.8s]"
-	></div>
+<div class="relative min-h-screen">
+	<div class="pointer-events-none absolute inset-0 overflow-hidden">
+		<div class="math-orb -left-20 top-24 size-80 bg-gradient-to-br from-cyan-300/60 to-teal-300/30"></div>
+		<div
+			class="math-orb -right-24 top-96 size-96 bg-gradient-to-br from-sky-300/45 to-blue-300/30 [animation-delay:1.8s]"
+		></div>
+	</div>
 
 	<header class="sticky top-0 z-40 border-b border-border/70 bg-background/82 backdrop-blur-md">
 		<div class="mx-auto flex max-w-6xl items-center justify-between px-3 py-3 sm:px-6 sm:py-4 lg:px-8">

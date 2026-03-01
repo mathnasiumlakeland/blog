@@ -7,7 +7,7 @@
 	<div class="space-y-2">
 		<h1 class="text-3xl leading-tight sm:text-5xl">All Posts</h1>
 		<p class="max-w-2xl text-sm text-muted-foreground sm:text-base">
-			A curated set of short essays with interactive mathematical visualizations.
+			A curated set of math notes and interactive visual explorations.
 		</p>
 	</div>
 

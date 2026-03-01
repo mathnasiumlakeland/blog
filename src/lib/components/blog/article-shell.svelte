@@ -44,7 +44,9 @@
 
 	<Separator />
 
-	<div class="prose prose-sm max-w-none prose-stone prose-headings:font-semibold prose-a:text-primary prose-code:rounded prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-pre:border prose-pre:border-border/70 sm:prose-base">
+	<div
+		class="prose prose-sm max-w-none prose-headings:font-semibold prose-headings:text-foreground prose-p:text-foreground/90 prose-li:text-foreground/90 prose-strong:text-foreground prose-th:text-foreground prose-td:text-foreground/85 prose-blockquote:text-foreground/80 prose-a:text-primary prose-code:rounded prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:text-foreground prose-pre:border prose-pre:border-border/70 prose-pre:bg-background/80 sm:prose-base"
+	>
 		{@render children?.()}
 	</div>
 </article>

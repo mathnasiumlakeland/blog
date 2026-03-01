@@ -10,6 +10,7 @@ tags:
   - symmetry
   - area
 equation: 'A=2\sqrt{3}-\pi'
+featured: true
 ---
 
 <script>

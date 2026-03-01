@@ -154,16 +154,6 @@
 				<circle cx={point.x} cy={point.y} r="3.3" fill="rgba(217,119,6,0.97)"></circle>
 			{/each}
 		{/if}
-
-		<text x="20" y="30" font-size="14" fill="rgba(15, 23, 42, 0.88)">
-			Highlighted = inside hexagon, outside circles
-		</text>
-		<text x="20" y="50" font-size="13" fill="rgba(15, 23, 42, 0.72)">
-			Unit circles (r = 1) at alternating vertices A, C, E
-		</text>
-		<text x="20" y="69" font-size="13" fill="rgba(15, 23, 42, 0.72)">
-			{circlesTangent ? 'Orange points mark tangency between circle pairs' : 'For n > 2/sqrt(3), circles are separated'}
-		</text>
 	</svg>
 
 	<label class="space-y-1 text-xs font-medium text-muted-foreground">

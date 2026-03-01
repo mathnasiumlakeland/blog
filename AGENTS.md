@@ -11,6 +11,12 @@ Guidance for coding agents working in this repository.
 - Interactive demos: `src/lib/components/math/*`
 - WASM build script: `scripts/build-wasm.mjs`
 
+## Brand/Voice Defaults
+
+- Keep the site title as **Mathnasium Journal**.
+- Homepage language should be center/journal-focused (Mathnasium Lakeland Highlands), not “website feature demo” language.
+- Prefer clear, family/student-friendly copy over product-style buzzwords.
+
 ## Important Paths
 
 - `src/content/posts/*.md`: blog posts (frontmatter + markdown + optional embedded Svelte)
@@ -21,6 +27,7 @@ Guidance for coding agents working in this repository.
 - `src/lib/components/blog/*`: featured/post cards and article shell
 - `src/lib/components/math/*`: reusable math visualizations
 - `static/wasm/*`: wasm binaries served as static assets
+- `.github/workflows/deploy-pages.yml`: GitHub Pages CI/CD
 
 ## Non-Negotiable Math Rules
 
@@ -30,6 +37,23 @@ Guidance for coding agents working in this repository.
 - Equations inside `.svelte` files must use `MathExpression` for TeX rendering. Do not leave TeX/plain equation strings unrendered in UI text.
 - If an equation appears on the page, it should render as math (KaTeX), not raw TeX.
 - For SVG/plain text labels in diagrams, use symbols when appropriate (`θ`, `°`) rather than words like `theta` / `deg`.
+- For embedded iframes in markdown, include a descriptive `title` attribute (accessibility).
+
+## Routing/Base Path Rules
+
+- This project deploys to GitHub Pages under `/blog`.
+- Do not hardcode internal route hrefs as raw `/...` in components:
+  - Use `resolve('/route')` from `$app/paths` for app routes.
+- For static assets that must respect base path (e.g. runtime fetches), use `$app/paths` `base` (e.g. ``${base}/wasm/...``).
+- If behavior could differ in deployment, validate with `BASE_PATH=/blog npm run build`.
+
+## Center Link Conventions
+
+- Canonical center URL:
+  - `https://www.mathnasium.com/math-centers/lakelandhighlands`
+- Homepage hero badge (“Mathnasium Lakeland Highlands” with `MapPin`) should link to the center URL.
+- Header should expose center access via the top-right `Center` button.
+- Footer should keep a direct scheduling CTA to the same center URL.
 
 ## Blog Post Frontmatter Contract
 
@@ -61,6 +85,8 @@ Notes:
 - Prefer clean geometry, readable labels, and sliders with meaningful ranges.
 - Keep style consistent with existing cards, borders, and soft blue/teal visual language.
 - For geometry demos, make sure highlights represent the intended region/angle precisely.
+- Avoid clutter text overlays directly inside plots unless they add clear value.
+- Keep hover states subtle and coherent with the header style; avoid jarring hue shifts.
 
 ## Local Commands
 
@@ -73,6 +99,7 @@ Notes:
 Notes:
 - `predev` and `prebuild` run `npm run build:wasm` automatically.
 - Preserve static compatibility; avoid server-only logic for post rendering.
+- GitHub Pages deploy job sets `BASE_PATH=/blog`.
 
 ## Agent Workflow
 
@@ -82,6 +109,13 @@ Notes:
   - Run `npx @sveltejs/mcp svelte-autofixer <file> --svelte-version 5`
   - Then run `npm run check`
 - For substantial or cross-page changes, also run `npm run build` before finishing.
+
+## Homepage Defaults
+
+- Featured post should be explicitly controlled with frontmatter (`featured: true`) and only one post should be featured at a time.
+- “Interactive Spotlight” currently highlights:
+  - `Patterns` (Lissajous)
+  - `Hexagon Area` (three unit circles visualization)
 
 ## Post Iteration Flow With User
 
@@ -103,3 +137,10 @@ For blog-post requests, follow this interaction flow by default:
 5. Validate every iteration.
    - Run `svelte-autofixer` for touched `.svelte` files, then `npm run check`.
    - Run `npm run build` when changes are substantial or affect multiple pages.
+
+## Skills
+
+Use these repo-local skills when their triggers match user requests:
+
+- `create-blog-post`: Scaffold and iterate new Mathnasium Journal blog posts with valid frontmatter/math conventions and the existing route flow.
+  - File: `skills/create-blog-post/SKILL.md`

@@ -171,7 +171,11 @@
 		</label>
 	</div>
 
-	<Button variant="outline" class="w-full" onclick={() => (isPlaying = !isPlaying)}>
+	<Button
+		variant="outline"
+		class="w-full hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
+		onclick={() => (isPlaying = !isPlaying)}
+	>
 		{isPlaying ? 'Pause motion' : 'Resume motion'}
 	</Button>
 </div>

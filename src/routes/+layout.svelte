@@ -1,11 +1,35 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import '../app.css';
 	import { resolve } from '$app/paths';
-	import { Calculator, ExternalLink, Sigma } from '@lucide/svelte';
+	import { BookOpenText, ExternalLink, Moon, Sigma, Sun } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import favicon from '$lib/assets/favicon.svg';
 
 	let { children } = $props();
+	let isDark = $state(false);
+
+	function applyTheme(nextIsDark: boolean) {
+		document.documentElement.classList.toggle('dark', nextIsDark);
+		isDark = nextIsDark;
+	}
+
+	function toggleTheme() {
+		const nextIsDark = !isDark;
+		applyTheme(nextIsDark);
+		localStorage.setItem('theme', nextIsDark ? 'dark' : 'light');
+	}
+
+	onMount(() => {
+		const savedTheme = localStorage.getItem('theme');
+		if (savedTheme === 'dark' || savedTheme === 'light') {
+			applyTheme(savedTheme === 'dark');
+			return;
+		}
+
+		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		applyTheme(prefersDark);
+	});
 </script>
 
 <svelte:head>
@@ -36,7 +60,7 @@
 		<div class="mx-auto flex max-w-6xl items-center justify-between px-3 py-3 sm:px-6 sm:py-4 lg:px-8">
 			<a
 				href={resolve('/')}
-				class="group inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-2.5 py-1.5 text-sm font-semibold shadow-sm transition hover:bg-card sm:gap-2.5 sm:px-3"
+				class="group inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-2.5 py-1.5 text-sm font-semibold shadow-sm transition hover:bg-card/82 sm:gap-2.5 sm:px-3"
 			>
 				<Sigma class="size-4 text-primary" />
 				<span class="sm:hidden">Mathnasium</span>
@@ -44,15 +68,30 @@
 			</a>
 
 			<div class="flex items-center gap-2">
-				<Button href={resolve('/posts')} size="sm" class="gap-1.5 px-2.5 sm:px-3">
-					<Calculator class="size-4" />
+				<Button
+					size="icon-sm"
+					variant="outline"
+					class="hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
+					onclick={toggleTheme}
+					aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+					title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+				>
+					{#if isDark}
+						<Moon class="size-4" />
+					{:else}
+						<Sun class="size-4" />
+					{/if}
+				</Button>
+
+				<Button href={resolve('/posts')} size="sm" class="gap-1.5 px-2.5 hover:shadow-none sm:px-3">
+					<BookOpenText class="size-4" />
 					<span class="hidden sm:inline">Explore</span>
 				</Button>
 				<Button
 					href="https://www.mathnasium.com/math-centers/lakelandhighlands"
 					size="sm"
 					variant="outline"
-					class="gap-1.5 px-2.5 sm:px-3"
+					class="gap-1.5 px-2.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none sm:px-3"
 					target="_blank"
 					rel="noopener noreferrer"
 				>

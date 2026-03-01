@@ -10,7 +10,7 @@ tags:
   - numerical methods
   - visualization
 equation: 'x_{n+1} = x_n - f(x_n)/f^\prime(x_n)'
-featured: true
+featured: false
 ---
 
 <script>

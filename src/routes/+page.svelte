@@ -1,5 +1,12 @@
 <script lang="ts">
-	import { ArrowRight, Atom, BookOpenText, Cpu, ExternalLink, Sparkles } from '@lucide/svelte';
+	import {
+		ArrowRight,
+		Atom,
+		BookOpenText,
+		Cpu,
+		ExternalLink,
+		MapPin
+	} from '@lucide/svelte';
 	import { resolve } from '$app/paths';
 	import PostCard from '$lib/components/blog/post-card.svelte';
 	import { Badge } from '$lib/components/ui/badge';
@@ -7,8 +14,8 @@
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
 	import MathExpression from '$lib/components/math/math-expression.svelte';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs';
+	import HexagonThreeCirclesVisual from '$lib/components/math/hexagon-three-circles-visual.svelte';
 	import LissajousCanvas from '$lib/components/math/lissajous-canvas.svelte';
-	import WasmPolynomialExplorer from '$lib/components/math/wasm-polynomial-explorer.svelte';
 	import { posts } from '$lib/content/posts';
 
 	const featuredPost = posts.find((post) => post.featured) ?? posts[0];
@@ -21,8 +28,13 @@
 			class="soft-grid relative min-w-0 overflow-hidden rounded-3xl border border-border/70 bg-card/78 p-5 shadow-sm backdrop-blur-sm sm:p-10"
 		>
 			<div class="space-y-5">
-				<Badge class="border border-primary/20 bg-primary/12 px-3 py-1 text-xs text-primary sm:text-sm">
-					<Sparkles class="mr-1.5 size-3.5" />
+				<Badge
+					href="https://www.mathnasium.com/math-centers/lakelandhighlands"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="w-fit border border-primary/20 bg-primary/12 px-3 py-1 text-[11px] text-primary hover:!bg-primary/16 sm:text-sm"
+				>
+					<MapPin class="mr-1.5 size-3.5" />
 					Mathnasium Lakeland Highlands
 				</Badge>
 
@@ -76,7 +88,11 @@
 						<Badge variant="outline">{tag}</Badge>
 					{/each}
 				</div>
-				<Button href={resolve(`/posts/${featuredPost.slug}`)} variant="outline" class="w-full gap-1.5">
+				<Button
+					href={resolve(`/posts/${featuredPost.slug}`)}
+					variant="outline"
+					class="w-full gap-1.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
+				>
 					<BookOpenText class="size-4" />
 					Read "{featuredPost.title}"
 				</Button>
@@ -131,13 +147,13 @@
 		<Tabs value="curves" class="gap-4">
 			<TabsList class="grid w-full grid-cols-2 sm:max-w-xs">
 				<TabsTrigger value="curves">Patterns</TabsTrigger>
-				<TabsTrigger value="wasm">Root Finding</TabsTrigger>
+				<TabsTrigger value="hexagon">Hexagon Area</TabsTrigger>
 			</TabsList>
 			<TabsContent value="curves" class="mt-0">
 				<LissajousCanvas />
 			</TabsContent>
-			<TabsContent value="wasm" class="mt-0">
-				<WasmPolynomialExplorer />
+			<TabsContent value="hexagon" class="mt-0">
+				<HexagonThreeCirclesVisual />
 			</TabsContent>
 		</Tabs>
 	</section>

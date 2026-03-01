@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ArticleShell from '$lib/components/blog/article-shell.svelte';
-	import { getPostComponentBySlug } from '$lib/content/posts';
+	import { getPostComponentBySlug } from '$lib/content/post-components';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();

@@ -6,12 +6,16 @@
 	type Step = 'R' | 'U';
 	type GridPoint = { x: number; y: number };
 	type Segment = { x1: number; y1: number; x2: number; y2: number };
+	type FadingPath = { id: number; points: string; startedAt: number };
 
 	const gridMax = 9;
 	const plotSize = 430;
 	const plotPad = 40;
 	const plotCell = (plotSize - plotPad * 2) / gridMax;
 	const ticks = Array.from({ length: gridMax + 1 }, (_, index) => index);
+	const autoBuildMs = 5;
+	const autoFadeMs = 260;
+	const allPathCache = new Map<number, string[]>();
 
 	let squareN = $state(6);
 	let generalM = $state(7);
@@ -19,10 +23,20 @@
 
 	let placedSteps = $state<Step[]>([]);
 	let savedPathPolylines = $state<string[]>([]);
+	let autoRunning = $state(false);
+	let autoAllPaths = $state<string[]>([]);
+	let autoPathIndex = $state(0);
+	let autoCurrentPath = $state('');
+	let autoVisibleSteps = $state(0);
+	let autoFadingPaths = $state<FadingPath[]>([]);
+	let autoNow = $state(0);
+
 	let mobileMode = $state(false);
 	let dragging = $state(false);
 	let dragChoice = $state<Step | null>(null);
 	let builderSvg: SVGSVGElement | null = null;
+	let autoRaf = 0;
+	let autoPathStartAt = 0;
 
 	const squareManhattan = $derived(2 * squareN);
 	const squareEuclidean = $derived(Math.sqrt(squareN * squareN + squareN * squareN));
@@ -39,6 +53,10 @@
 	const canPlaceRight = $derived(remainingRight > 0);
 	const canPlaceUp = $derived(remainingUp > 0);
 	const isComplete = $derived(remainingRight === 0 && remainingUp === 0);
+	const autoTotalPaths = $derived(autoAllPaths.length);
+	const autoProgressPercent = $derived(
+		autoTotalPaths === 0 ? 0 : Math.min(100, (autoPathIndex / autoTotalPaths) * 100)
+	);
 
 	const walkPoints = $derived.by(() => {
 		const points: GridPoint[] = [{ x: 0, y: 0 }];
@@ -67,7 +85,6 @@
 			.join(' ')
 	);
 
-	const currentSvgPoint = $derived(toSvg(currentPoint));
 	const targetSvgPoint = $derived(toSvg({ x: squareN, y: squareN }));
 
 	const ghostRightSegment = $derived.by(() => {
@@ -109,6 +126,16 @@
 	});
 
 	const stepSymbols = $derived(placedSteps.map((step) => (step === 'R' ? '→' : '↑')).join(' '));
+	const autoCurrentPolyline = $derived(
+		autoCurrentPath.length === 0 ? '' : polylineFromStepString(autoCurrentPath, autoVisibleSteps)
+	);
+	const autoVisibleSymbols = $derived(
+		autoCurrentPath
+			.slice(0, autoVisibleSteps)
+			.split('')
+			.map((step) => (step === 'R' ? '→' : '↑'))
+			.join(' ')
+	);
 
 	function binomial(total: number, chosen: number): bigint {
 		if (chosen < 0 || chosen > total) {
@@ -136,7 +163,62 @@
 		};
 	}
 
+	function polylineFromStepString(steps: string, visibleSteps = steps.length): string {
+		let x = 0;
+		let y = 0;
+		const maxSteps = Math.min(visibleSteps, steps.length);
+		const points = [toSvg({ x: 0, y: 0 })];
+
+		for (let index = 0; index < maxSteps; index += 1) {
+			if (steps[index] === 'R') {
+				x += 1;
+			} else {
+				y += 1;
+			}
+			points.push(toSvg({ x, y }));
+		}
+
+		return points.map((point) => `${point.x},${point.y}`).join(' ');
+	}
+
+	function getAllStepStringsForN(n: number): string[] {
+		const cached = allPathCache.get(n);
+		if (cached) {
+			return cached;
+		}
+
+		const results: string[] = [];
+		const steps: string[] = [];
+
+		const build = (rights: number, ups: number) => {
+			if (rights === n && ups === n) {
+				results.push(steps.join(''));
+				return;
+			}
+
+			if (rights < n) {
+				steps.push('R');
+				build(rights + 1, ups);
+				steps.pop();
+			}
+
+			if (ups < n) {
+				steps.push('U');
+				build(rights, ups + 1);
+				steps.pop();
+			}
+		};
+
+		build(0, 0);
+		allPathCache.set(n, results);
+		return results;
+	}
+
 	function placeStep(step: Step) {
+		if (autoRunning) {
+			return;
+		}
+
 		if (step === 'R' && canPlaceRight) {
 			placedSteps = [...placedSteps, 'R'];
 			return;
@@ -155,6 +237,10 @@
 	}
 
 	function undoStep() {
+		if (autoRunning) {
+			return;
+		}
+
 		if (placedSteps.length === 0) {
 			return;
 		}
@@ -168,7 +254,22 @@
 		dragChoice = null;
 	}
 
+	function stopAutoShow() {
+		autoRunning = false;
+		autoAllPaths = [];
+		autoPathIndex = 0;
+		autoCurrentPath = '';
+		autoVisibleSteps = 0;
+		autoFadingPaths = [];
+		autoNow = 0;
+		if (autoRaf) {
+			cancelAnimationFrame(autoRaf);
+			autoRaf = 0;
+		}
+	}
+
 	function resetAllPaths() {
+		stopAutoShow();
 		resetBuilder();
 		savedPathPolylines = [];
 	}
@@ -180,6 +281,84 @@
 
 		savedPathPolylines = [...savedPathPolylines, pathPolyline];
 		resetBuilder();
+	}
+
+	function tickAutoShow(now: number) {
+		if (!autoRunning) {
+			return;
+		}
+
+		autoNow = now;
+		let fades = autoFadingPaths.filter((path) => now - path.startedAt < autoFadeMs);
+
+		if (autoCurrentPath.length === 0 && autoPathIndex < autoAllPaths.length) {
+			autoCurrentPath = autoAllPaths[autoPathIndex];
+			autoPathStartAt = now;
+		}
+
+		while (autoCurrentPath.length > 0 && now - autoPathStartAt >= autoBuildMs) {
+			fades = [
+				...fades,
+				{
+					id: autoPathIndex,
+					points: polylineFromStepString(autoCurrentPath),
+					startedAt: autoPathStartAt + autoBuildMs
+				}
+			];
+
+			autoPathIndex += 1;
+			if (autoPathIndex >= autoAllPaths.length) {
+				autoCurrentPath = '';
+				autoVisibleSteps = 0;
+				break;
+			}
+
+			autoCurrentPath = autoAllPaths[autoPathIndex];
+			autoPathStartAt += autoBuildMs;
+		}
+
+		if (autoCurrentPath.length > 0) {
+			const elapsed = Math.max(0, now - autoPathStartAt);
+			const ratio = Math.min(1, elapsed / autoBuildMs);
+			autoVisibleSteps = Math.max(1, Math.ceil(ratio * autoCurrentPath.length));
+		}
+
+		autoFadingPaths = fades;
+
+		const done = autoPathIndex >= autoAllPaths.length && autoCurrentPath.length === 0;
+		if (done && autoFadingPaths.length === 0) {
+			stopAutoShow();
+			return;
+		}
+
+		autoRaf = requestAnimationFrame(tickAutoShow);
+	}
+
+	function startAutoShow() {
+		resetAllPaths();
+		const paths = getAllStepStringsForN(squareN);
+		if (paths.length === 0) {
+			return;
+		}
+
+		autoAllPaths = paths;
+		autoRunning = true;
+		autoPathIndex = 0;
+		autoCurrentPath = paths[0];
+		autoVisibleSteps = 0;
+		autoFadingPaths = [];
+		autoNow = performance.now();
+		autoPathStartAt = autoNow;
+		autoRaf = requestAnimationFrame(tickAutoShow);
+	}
+
+	function toggleAutoShow() {
+		if (autoRunning) {
+			stopAutoShow();
+			return;
+		}
+
+		startAutoShow();
 	}
 
 	function pointerToSvg(event: PointerEvent): GridPoint | null {
@@ -226,7 +405,7 @@
 	}
 
 	function startDrag(event: PointerEvent) {
-		if (mobileMode || isComplete || event.pointerType === 'touch') {
+		if (mobileMode || isComplete || autoRunning || event.pointerType === 'touch') {
 			return;
 		}
 
@@ -286,6 +465,7 @@
 		mediaQuery.addEventListener('change', syncMode);
 
 		return () => {
+			stopAutoShow();
 			mediaQuery.removeEventListener('change', syncMode);
 		};
 	});
@@ -347,20 +527,16 @@
 		<div class="space-y-3 rounded-2xl border border-border/70 bg-card/75 p-4 sm:p-5">
 			<div class="space-y-1">
 				<h3 class="text-lg font-semibold sm:text-xl">Build a Path for <code>({squareN},{squareN})</code></h3>
-				<p class="text-sm text-muted-foreground">
-					The grid stays at 9 by 9, but the active target follows the slider. Place exactly {squareN} right
-					moves and {squareN} up moves.
-				</p>
 			</div>
 
-			<svg
-				bind:this={builderSvg}
-				viewBox={`0 0 ${plotSize} ${plotSize}`}
-				class="h-auto w-full rounded-xl border border-border/70 bg-background/85"
-				role="img"
-				aria-label={`Interactive lattice path builder from the origin to ${squareN} comma ${squareN}`}
-				onpointerdown={startDrag}
-				onpointermove={updateDragChoice}
+				<svg
+					bind:this={builderSvg}
+					viewBox={`0 0 ${plotSize} ${plotSize}`}
+					class="path-grid h-auto w-full rounded-xl border border-border/70 bg-background/85"
+					role="img"
+					aria-label={`Interactive lattice path builder from the origin to ${squareN} comma ${squareN}`}
+					onpointerdown={startDrag}
+					onpointermove={updateDragChoice}
 				onpointerup={stopDrag}
 				onpointercancel={cancelDrag}
 			>
@@ -407,48 +583,74 @@
 					<circle cx={plotPad} cy={plotSize - plotPad} r="4" fill="rgba(37,99,235,0.9)"></circle>
 					<circle cx={targetSvgPoint.x} cy={targetSvgPoint.y} r="4" fill="rgba(5,150,105,0.95)"></circle>
 
-					{#each savedPathPolylines as savedPath, index (index)}
+					{#if autoRunning || autoFadingPaths.length > 0}
+						{#each autoFadingPaths as fadingPath (fadingPath.id)}
+							{@const age = autoNow - fadingPath.startedAt}
+							{@const opacity = Math.max(0, 1 - age / autoFadeMs)}
+							<polyline
+								points={fadingPath.points}
+								fill="none"
+								stroke="rgba(100,116,139,0.58)"
+								stroke-width="4"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								opacity={opacity}
+							></polyline>
+						{/each}
+
+						{#if autoCurrentPolyline}
+							<polyline
+								points={autoCurrentPolyline}
+								fill="none"
+								stroke="rgba(14,116,144,0.96)"
+								stroke-width="5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							></polyline>
+						{/if}
+					{:else}
+						{#each savedPathPolylines as savedPath, index (index)}
+							<polyline
+								points={savedPath}
+								fill="none"
+								stroke="rgba(100,116,139,0.44)"
+								stroke-width="4"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							></polyline>
+						{/each}
+
 						<polyline
-							points={savedPath}
+							points={pathPolyline}
 							fill="none"
-							stroke="rgba(100,116,139,0.44)"
-							stroke-width="4"
+							stroke="rgba(14,116,144,0.94)"
+							stroke-width="5"
 							stroke-linecap="round"
 							stroke-linejoin="round"
 						></polyline>
-					{/each}
 
-					<polyline
-						points={pathPolyline}
-						fill="none"
-						stroke="rgba(14,116,144,0.94)"
-					stroke-width="5"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				></polyline>
-
-				{#if ghostRightSegment}
-						<line
-							x1={ghostRightSegment.x1}
-							y1={ghostRightSegment.y1}
-							x2={ghostRightSegment.x2}
-							y2={ghostRightSegment.y2}
-							class="ghost-choice ghost-right"
-							stroke="rgba(59,130,246,0.36)"
-							stroke-width="6"
-							stroke-dasharray="6 6"
-							stroke-linecap="round"
-						></line>
-							{#if mobileMode}
-								<line
+						{#if ghostRightSegment}
+							<line
 								x1={ghostRightSegment.x1}
 								y1={ghostRightSegment.y1}
 								x2={ghostRightSegment.x2}
 								y2={ghostRightSegment.y2}
-								stroke="transparent"
-								stroke-width="26"
+								class="ghost-choice ghost-right"
+								stroke="rgba(59,130,246,0.36)"
+								stroke-width="6"
+								stroke-dasharray="6 6"
 								stroke-linecap="round"
-								tabindex="0"
+							></line>
+							{#if mobileMode}
+								<line
+									x1={ghostRightSegment.x1}
+									y1={ghostRightSegment.y1}
+									x2={ghostRightSegment.x2}
+									y2={ghostRightSegment.y2}
+									stroke="transparent"
+									stroke-width="26"
+									stroke-linecap="round"
+									tabindex="0"
 									role="button"
 									aria-label="Add one right move"
 									onclick={() => placeStep('R')}
@@ -457,28 +659,28 @@
 							{/if}
 						{/if}
 
-				{#if ghostUpSegment}
-						<line
-							x1={ghostUpSegment.x1}
-							y1={ghostUpSegment.y1}
-							x2={ghostUpSegment.x2}
-							y2={ghostUpSegment.y2}
-							class="ghost-choice ghost-up"
-							stroke="rgba(16,185,129,0.36)"
-							stroke-width="6"
-							stroke-dasharray="6 6"
-							stroke-linecap="round"
-						></line>
-							{#if mobileMode}
-								<line
+						{#if ghostUpSegment}
+							<line
 								x1={ghostUpSegment.x1}
 								y1={ghostUpSegment.y1}
 								x2={ghostUpSegment.x2}
 								y2={ghostUpSegment.y2}
-								stroke="transparent"
-								stroke-width="26"
+								class="ghost-choice ghost-up"
+								stroke="rgba(16,185,129,0.36)"
+								stroke-width="6"
+								stroke-dasharray="6 6"
 								stroke-linecap="round"
-								tabindex="0"
+							></line>
+							{#if mobileMode}
+								<line
+									x1={ghostUpSegment.x1}
+									y1={ghostUpSegment.y1}
+									x2={ghostUpSegment.x2}
+									y2={ghostUpSegment.y2}
+									stroke="transparent"
+									stroke-width="26"
+									stroke-linecap="round"
+									tabindex="0"
 									role="button"
 									aria-label="Add one up move"
 									onclick={() => placeStep('U')}
@@ -487,74 +689,95 @@
 							{/if}
 						{/if}
 
-				{#if dragPreviewSegment}
-					<line
-						x1={dragPreviewSegment.x1}
-						y1={dragPreviewSegment.y1}
-						x2={dragPreviewSegment.x2}
-						y2={dragPreviewSegment.y2}
-						stroke="rgba(245,158,11,0.95)"
-						stroke-width="7"
-						stroke-linecap="round"
-					></line>
-				{/if}
+						{#if dragPreviewSegment}
+							<line
+								x1={dragPreviewSegment.x1}
+								y1={dragPreviewSegment.y1}
+								x2={dragPreviewSegment.x2}
+								y2={dragPreviewSegment.y2}
+								stroke="rgba(245,158,11,0.95)"
+								stroke-width="7"
+								stroke-linecap="round"
+							></line>
+						{/if}
 
-				{#each walkPoints as point, index (index)}
-					{@const plotted = toSvg(point)}
-					<circle
-						cx={plotted.x}
-						cy={plotted.y}
-						r={index === walkPoints.length - 1 ? 6.5 : 3.2}
-						fill={index === walkPoints.length - 1 ? 'rgba(249,115,22,0.96)' : 'rgba(15,23,42,0.76)'}
-					></circle>
-				{/each}
-			</svg>
+						{#each walkPoints as point, index (index)}
+							{@const plotted = toSvg(point)}
+							<circle
+								cx={plotted.x}
+								cy={plotted.y}
+								r={index === walkPoints.length - 1 ? 6.5 : 3.2}
+								fill={index === walkPoints.length - 1 ? 'rgba(249,115,22,0.96)' : 'rgba(15,23,42,0.76)'}
+							></circle>
+						{/each}
+					{/if}
+				</svg>
 
-			<p class="text-xs text-muted-foreground">
-				{#if mobileMode}
-					Mobile mode: tap a faded segment at the current point to place the next move.
-				{:else}
-					Desktop mode: drag from the orange point right or up to place the next move.
-				{/if}
-			</p>
+				<p class="text-xs text-muted-foreground">
+					{#if autoRunning}
+						Showing every path in order. Finished paths fade out quickly while new paths are built.
+					{:else if mobileMode}
+						Mobile mode: tap a faded segment at the current point to place the next move.
+					{:else}
+						Desktop mode: drag from the orange point right or up to place the next move.
+					{/if}
+				</p>
 		</div>
 
-		<div class="space-y-3 rounded-2xl border border-border/70 bg-card/75 p-4 sm:p-5">
-			<h4 class="text-base font-semibold">Move Ledger (for <code>({squareN},{squareN})</code>)</h4>
+			<div class="space-y-3 rounded-2xl border border-border/70 bg-card/75 p-4 sm:p-5">
+				<h4 class="text-base font-semibold">Move Ledger (for <code>({squareN},{squareN})</code>)</h4>
 
 				<div class="grid grid-cols-2 gap-2 text-sm">
-				<p class="rounded-lg border border-border/70 bg-background/80 px-3 py-2 text-muted-foreground">
-					Right left:
-					<span class="font-semibold text-foreground">{remainingRight}</span>
-				</p>
-				<p class="rounded-lg border border-border/70 bg-background/80 px-3 py-2 text-muted-foreground">
-					Up left:
-					<span class="font-semibold text-foreground">{remainingUp}</span>
-				</p>
-				<p class="rounded-lg border border-border/70 bg-background/80 px-3 py-2 text-muted-foreground">
-					Placed:
-					<span class="font-semibold text-foreground">{placedSteps.length}/{totalBoardSteps}</span>
-				</p>
+					<p class="rounded-lg border border-border/70 bg-background/80 px-3 py-2 text-muted-foreground">
+						Right left:
+						<span class="font-semibold text-foreground">{remainingRight}</span>
+					</p>
+					<p class="rounded-lg border border-border/70 bg-background/80 px-3 py-2 text-muted-foreground">
+						Up left:
+						<span class="font-semibold text-foreground">{remainingUp}</span>
+					</p>
+					<p class="rounded-lg border border-border/70 bg-background/80 px-3 py-2 text-muted-foreground">
+						Placed:
+						<span class="font-semibold text-foreground">{placedSteps.length}/{totalBoardSteps}</span>
+					</p>
 					<p class="rounded-lg border border-border/70 bg-background/80 px-3 py-2 text-muted-foreground">
 						Current point:
 						<span class="font-semibold text-foreground">({currentPoint.x},{currentPoint.y})</span>
 					</p>
-					<p class="col-span-2 rounded-lg border border-border/70 bg-background/80 px-3 py-2 text-muted-foreground">
-						Saved gray paths:
-						<span class="font-semibold text-foreground">{savedPathPolylines.length}</span>
-					</p>
-				</div>
-
-			<div class="space-y-1 rounded-lg border border-border/70 bg-background/75 p-3">
-				<p class="text-xs font-medium text-muted-foreground">Sequence</p>
-					{#if placedSteps.length === 0}
-						<p class="text-sm text-muted-foreground">No moves yet.</p>
-					{:else}
-						<p class="break-all font-mono text-sm text-foreground">{stepSymbols}</p>
+					{#if autoRunning}
+						<p class="col-span-2 rounded-lg border border-border/70 bg-background/80 px-3 py-2 text-muted-foreground">
+							Live counter:
+							<span class="font-semibold text-foreground">{Math.min(autoPathIndex, autoTotalPaths)} / {autoTotalPaths}</span>
+							<span class="ml-2 text-foreground/80">({autoProgressPercent.toFixed(1)}%)</span>
+						</p>
 					{/if}
 				</div>
 
-			<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+				{#if autoTotalPaths > 0}
+					<div class="h-2 overflow-hidden rounded-full bg-primary/18">
+						<div
+							class="h-full bg-primary transition-[width] duration-75 ease-linear"
+							style={`width:${autoProgressPercent.toFixed(2)}%`}
+						></div>
+					</div>
+				{/if}
+
+				<div class="space-y-1 rounded-lg border border-border/70 bg-background/75 p-3">
+					<p class="text-xs font-medium text-muted-foreground">Sequence</p>
+					{#if autoRunning}
+						{#if autoVisibleSymbols.length === 0}
+							<p class="truncate text-sm text-muted-foreground">Auto mode preparing next path...</p>
+						{:else}
+							<p class="truncate font-mono text-sm text-foreground">{autoVisibleSymbols}</p>
+						{/if}
+					{:else if placedSteps.length === 0}
+						<p class="truncate text-sm text-muted-foreground">No moves yet.</p>
+					{:else}
+						<p class="truncate font-mono text-sm text-foreground">{stepSymbols}</p>
+					{/if}
+				</div>
+
+				<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 					<MathExpression
 						math={`\\binom{2n}{n}=\\binom{${2 * squareN}}{${squareN}}`}
 						class="font-semibold text-foreground"
@@ -563,28 +786,37 @@
 					<code>R</code>'s and {squareN} <code>U</code>'s.
 				</p>
 
+				<Button variant={autoRunning ? 'secondary' : 'outline'} class="w-full" onclick={toggleAutoShow}>
+					{autoRunning ? 'Stop showing all paths' : 'Show me all paths'}
+				</Button>
+
 				<div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-					<Button variant="outline" class="w-full" onclick={undoStep} disabled={placedSteps.length === 0}>
+					<Button variant="outline" class="w-full" onclick={undoStep} disabled={autoRunning || placedSteps.length === 0}>
 						Undo last move
 					</Button>
-					<Button variant="secondary" class="w-full" onclick={resetBuilder} disabled={placedSteps.length === 0}>
+					<Button
+						variant="secondary"
+						class="w-full"
+						onclick={resetBuilder}
+						disabled={autoRunning || placedSteps.length === 0}
+					>
 						Reset path
 					</Button>
 				</div>
 
-				{#if isComplete}
+				{#if isComplete && !autoRunning}
 					<Button class="w-full" onclick={addAnotherPath}>
 						Add another path
 					</Button>
 				{/if}
 
-					{#if isComplete}
-						<p class="rounded-lg border border-emerald-300/60 bg-emerald-50/75 px-3 py-2 text-sm text-emerald-900">
+				{#if isComplete && !autoRunning}
+					<p class="rounded-lg border border-emerald-300/60 bg-emerald-50/75 px-3 py-2 text-sm text-emerald-900">
 						Complete. You used all {squareN} right moves and all {squareN} up moves to reach
 						<code>({squareN},{squareN})</code>.
 					</p>
 				{/if}
-		</div>
+			</div>
 	</section>
 
 	<section class="space-y-4 rounded-2xl border border-border/70 bg-card/75 p-4 sm:p-5">
@@ -649,5 +881,14 @@
 	.ghost-up:hover {
 		stroke: rgba(5, 150, 105, 0.62);
 		stroke-width: 7;
+	}
+
+	.path-grid {
+		user-select: none;
+		-webkit-user-select: none;
+	}
+
+	.path-grid text {
+		pointer-events: none;
 	}
 </style>

@@ -10,6 +10,7 @@ Guidance for coding agents working in this repository.
 - Svelte math rendering helper: `$lib/components/math/math-expression.svelte`
 - Interactive demos: `src/lib/components/math/*`
 - WASM build script: `scripts/build-wasm.mjs`
+- Post loading is intentionally split: metadata in `src/lib/content/posts.ts`, components in `src/lib/content/post-components.ts`
 
 ## Brand/Voice Defaults
 
@@ -20,7 +21,8 @@ Guidance for coding agents working in this repository.
 ## Important Paths
 
 - `src/content/posts/*.md`: blog posts (frontmatter + markdown + optional embedded Svelte)
-- `src/lib/content/posts.ts`: post index + frontmatter validation + sorting
+- `src/lib/content/posts.ts`: post metadata index + frontmatter validation + sorting (no markdown component imports)
+- `src/lib/content/post-components.ts`: markdown component loader used by slug pages only
 - `src/routes/posts/+page.svelte`: all-post listing
 - `src/routes/posts/[slug]/+page.ts`: slug resolution + prerender entries
 - `src/routes/posts/[slug]/+page.svelte`: post shell renderer
@@ -101,6 +103,27 @@ Notes:
 - Preserve static compatibility; avoid server-only logic for post rendering.
 - GitHub Pages deploy job sets `BASE_PATH=/blog`.
 
+## Performance Defaults
+
+- Keep `src/lib/content/posts.ts` metadata-only:
+  - Use `import.meta.glob('/src/content/posts/*.md', { eager: true, import: 'metadata' })`.
+  - Do not import markdown component `default` exports here.
+- Keep markdown component loading in `src/lib/content/post-components.ts` and only consume it from `src/routes/posts/[slug]/+page.svelte`.
+- Homepage "Interactive Spotlight" should mount only the active tab panel's heavy visual component.
+  - Current implementation uses `spotlightTab` and conditional `{#if ...}` blocks around each `TabsContent`.
+- For new heavy interactive sections (canvas/animation/continuous effects), prefer conditional mount over always-mounted hidden panels.
+
+## Optional WASM Workflow
+
+- Keep WASM optional and additive; core post rendering should still work without WASM.
+- Source files live in `src/lib/wasm/*.wat`; compiled binaries are emitted to `static/wasm/*.wasm`.
+- Compile with:
+  - `npm run build:wasm` (manual)
+  - or rely on `predev` / `prebuild` hooks.
+- In Svelte components, fetch binaries with base-path awareness:
+  - `fetch(\`${base}/wasm/<module>.wasm\`)` using `$app/paths`.
+- Load WASM in `onMount` and provide a JavaScript fallback path for resilience.
+
 ## Agent Workflow
 
 - Prefer small, focused edits over broad refactors.
@@ -126,7 +149,7 @@ For blog-post requests, follow this interaction flow by default:
    - Confirm the main mathematical objective before writing details.
 2. Scaffold first, then narrate where to edit.
    - Create the post skeleton in the background: `src/content/posts/<slug>.md` with valid frontmatter, equation, tags, and initial structure.
-   - Ensure route compatibility is in place through the existing post loader flow (`src/lib/content/posts.ts`, slug page, listing pages) so the new post renders without extra manual steps.
+   - Ensure route compatibility is in place through the existing post loader flow (`src/lib/content/posts.ts`, `src/lib/content/post-components.ts`, slug page, listing pages) so the new post renders without extra manual steps.
    - Explicitly tell the user which markdown file was created/updated.
 3. Hand control back for content iteration.
    - Tell the user they can edit the markdown directly however they want.

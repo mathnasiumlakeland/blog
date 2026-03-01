@@ -1,5 +1,3 @@
-import type { Component } from 'svelte';
-
 export type BlogPost = {
 	slug: string;
 	title: string;
@@ -13,14 +11,7 @@ export type BlogPost = {
 	featured?: boolean;
 };
 
-type PostModule = {
-	metadata: Omit<BlogPost, 'slug'>;
-	default: Component;
-};
-
-type PostRecord = BlogPost & {
-	component: Component;
-};
+type PostMetadata = Partial<Omit<BlogPost, 'slug'>>;
 
 function assertString(value: unknown, field: string, path: string): string {
 	if (typeof value !== 'string' || value.trim() === '') {
@@ -36,15 +27,15 @@ function assertTags(value: unknown, path: string): string[] {
 	return value;
 }
 
-const modules = import.meta.glob<PostModule>('/src/content/posts/*.md', {
-	eager: true
+const metadataModules = import.meta.glob<PostMetadata>('/src/content/posts/*.md', {
+	eager: true,
+	import: 'metadata'
 });
 
-const records: PostRecord[] = Object.entries(modules)
-	.map(([path, module]) => {
+const records: BlogPost[] = Object.entries(metadataModules)
+	.map(([path, metadata]) => {
 		const filename = path.split('/').at(-1) ?? '';
 		const slug = filename.replace('.md', '');
-		const metadata = module.metadata as Partial<Omit<BlogPost, 'slug'>>;
 		return {
 			slug,
 			title: assertString(metadata.title, 'title', path),
@@ -55,30 +46,19 @@ const records: PostRecord[] = Object.entries(modules)
 			readTime: assertString(metadata.readTime, 'readTime', path),
 			tags: assertTags(metadata.tags, path),
 			equation: assertString(metadata.equation, 'equation', path),
-			featured: metadata.featured,
-			component: module.default
+			featured: metadata.featured
 		};
 	})
 	.sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
 
 const postMap = new Map(records.map((record) => [record.slug, record]));
 
-export const posts: BlogPost[] = records.map(({ component, ...post }) => post);
+export const posts: BlogPost[] = records;
 
 export function getPostSlugs() {
 	return records.map((record) => record.slug);
 }
 
 export function getPostBySlug(slug: string) {
-	const post = postMap.get(slug);
-	if (!post) {
-		return undefined;
-	}
-
-	const { component, ...metadata } = post;
-	return metadata;
-}
-
-export function getPostComponentBySlug(slug: string) {
-	return postMap.get(slug)?.component;
+	return postMap.get(slug);
 }

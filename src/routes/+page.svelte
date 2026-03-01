@@ -18,6 +18,8 @@
 	import LissajousCanvas from '$lib/components/math/lissajous-canvas.svelte';
 	import { posts } from '$lib/content/posts';
 
+	let spotlightTab = $state<'curves' | 'hexagon'>('curves');
+
 	const featuredPost = posts.find((post) => post.featured) ?? posts[0];
 	const feed = posts.filter((post) => post.slug !== featuredPost.slug);
 </script>
@@ -144,17 +146,21 @@
 			</p>
 		</div>
 
-		<Tabs value="curves" class="gap-4">
+		<Tabs bind:value={spotlightTab} class="gap-4">
 			<TabsList class="grid w-full grid-cols-2 sm:max-w-xs">
 				<TabsTrigger value="curves">Patterns</TabsTrigger>
 				<TabsTrigger value="hexagon">Hexagon Area</TabsTrigger>
 			</TabsList>
-			<TabsContent value="curves" class="mt-0">
-				<LissajousCanvas />
-			</TabsContent>
-			<TabsContent value="hexagon" class="mt-0">
-				<HexagonThreeCirclesVisual />
-			</TabsContent>
+			{#if spotlightTab === 'curves'}
+				<TabsContent value="curves" class="mt-0">
+					<LissajousCanvas />
+				</TabsContent>
+			{/if}
+			{#if spotlightTab === 'hexagon'}
+				<TabsContent value="hexagon" class="mt-0">
+					<HexagonThreeCirclesVisual />
+				</TabsContent>
+			{/if}
 		</Tabs>
 	</section>
 

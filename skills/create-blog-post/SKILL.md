@@ -47,6 +47,7 @@ featured: false
 - Include a descriptive `title` attribute on embedded iframes.
 
 5. Apply math rendering and visualization rules.
+- If `svelte-code-writer` is installed, use that skill for any `.svelte`, `.svelte.ts`, or `.svelte.js` creation, editing, or analysis.
 - Do not leave raw TeX strings visible in `.svelte` UI text; render equations with `MathExpression`.
 - Reuse or update components in `src/lib/components/math/*`.
 - Keep geometry precise, responsive, and readable.

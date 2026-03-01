@@ -12,7 +12,7 @@
 		<div class="space-y-4">
 			<Badge class="w-fit border border-primary/20 bg-primary/12 px-3 py-1 text-[11px] text-primary sm:text-sm">
 				<BookOpenText class="size-3.5" />
-				Mathnasium Journal
+				Step-by-Step Math
 			</Badge>
 
 			<div class="space-y-2">

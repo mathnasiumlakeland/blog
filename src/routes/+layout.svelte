@@ -73,8 +73,8 @@
 				class="group inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-2.5 py-1.5 text-sm font-semibold shadow-sm transition hover:bg-card/82 sm:gap-2.5 sm:px-3"
 			>
 				<Sigma class="size-4 text-primary" />
-				<span class="sm:hidden">Mathnasium</span>
-				<span class="hidden sm:inline">Mathnasium Journal</span>
+				<span class="sm:hidden">Mathnasium Pro</span>
+				<span class="hidden sm:inline">Mathnasium Pro</span>
 			</a>
 
 			<div class="flex items-center gap-2">

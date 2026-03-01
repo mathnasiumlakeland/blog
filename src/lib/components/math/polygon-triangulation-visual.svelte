@@ -1,11 +1,27 @@
+<script module lang="ts">
+	import type { MathToolMeta } from './tool-meta';
+
+	export const toolMeta: MathToolMeta = {
+		id: 'polygon-triangulation-visual',
+		title: 'Polygon Sum of Interior Angles',
+		description: 'Draw diagonals from one vertex to show why a polygon splits into n - 2 triangles.',
+		inputs: 'Number of polygon sides n.',
+		outputs: 'Triangulated polygon view plus triangle-count and interior-sum formulas.',
+		useCase: 'Use for geometric proofs and interior-angle sum reasoning.',
+		tags: ['geometry', 'proof', 'triangulation', 'polygons', 'angle-sum'],
+		audience: ['students', 'instructors'],
+		kind: 'interactive'
+	};
+</script>
+
 <script lang="ts">
 	import MathExpression from '$lib/components/math/math-expression.svelte';
+	import { TOOL_BG_GRADIENT_END, TOOL_BG_GRADIENT_START } from './tool-visual-theme';
 
 	type Point = { x: number; y: number };
 
 	const width = 620;
 	const height = 360;
-	const padding = 30;
 
 	let sides = $state(6);
 
@@ -83,15 +99,15 @@
 		class="h-auto w-full rounded-xl border border-border/70 bg-card/70"
 		role="img"
 		aria-label="Polygon triangulation into n minus 2 triangles"
-	>
-		<defs>
-			<linearGradient id="poly-bg" x1="0" y1="0" x2="1" y2="1">
-				<stop offset="0%" stop-color="rgba(59,130,246,0.14)"></stop>
-				<stop offset="100%" stop-color="rgba(20,184,166,0.1)"></stop>
-			</linearGradient>
-		</defs>
+		>
+			<defs>
+				<linearGradient id="poly-bg" x1="0" y1="0" x2="1" y2="1">
+					<stop offset="0%" stop-color={TOOL_BG_GRADIENT_START}></stop>
+					<stop offset="100%" stop-color={TOOL_BG_GRADIENT_END}></stop>
+				</linearGradient>
+			</defs>
 
-		<rect x={padding / 2} y={padding / 2} width={width - padding} height={height - padding} fill="url(#poly-bg)"></rect>
+		<rect x="0" y="0" width={width} height={height} fill="url(#poly-bg)"></rect>
 		<path d={polygonPath} fill="rgba(255,255,255,0.68)" stroke="rgba(15,23,42,0.82)" stroke-width="2.1"></path>
 
 		{#each diagonalPaths as line (line.id)}

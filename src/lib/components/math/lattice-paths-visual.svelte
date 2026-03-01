@@ -1,3 +1,19 @@
+<script module lang="ts">
+	import type { MathToolMeta } from './tool-meta';
+
+	export const toolMeta: MathToolMeta = {
+		id: 'lattice-paths-visual',
+		title: 'Lattice Paths Explorer',
+		description: 'Build and animate grid paths to compare Manhattan distance, Euclidean distance, and path counts.',
+		inputs: 'Square size n, optional general grid values m and n, and manual/auto path controls.',
+		outputs: 'Live path visualizations plus combinatorial counts shown with binomial expressions.',
+		useCase: 'Use for counting, combinatorics, coordinate geometry, and strategy discussions.',
+		tags: ['combinatorics', 'geometry', 'counting', 'binomial', 'lattice-paths'],
+		audience: ['students', 'instructors'],
+		kind: 'interactive'
+	};
+</script>
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -234,6 +250,10 @@
 			event.preventDefault();
 			placeStep(step);
 		}
+	}
+
+	function handleGhostPointerDown(event: PointerEvent) {
+		event.stopPropagation();
 	}
 
 	function undoStep() {
@@ -529,10 +549,10 @@
 				<h3 class="text-lg font-semibold sm:text-xl">Build a Path for <code>({squareN},{squareN})</code></h3>
 			</div>
 
-				<svg
-					bind:this={builderSvg}
-					viewBox={`0 0 ${plotSize} ${plotSize}`}
-					class="path-grid h-auto w-full rounded-xl border border-border/70 bg-background/85"
+			<svg
+				bind:this={builderSvg}
+				viewBox={`0 0 ${plotSize} ${plotSize}`}
+				class="path-grid h-auto w-full rounded-xl border border-border/70 bg-background/85"
 					role="img"
 					aria-label={`Interactive lattice path builder from the origin to ${squareN} comma ${squareN}`}
 					onpointerdown={startDrag}
@@ -540,7 +560,7 @@
 				onpointerup={stopDrag}
 				onpointercancel={cancelDrag}
 			>
-				<rect x="0" y="0" width={plotSize} height={plotSize} fill="rgba(248,250,252,0.6)"></rect>
+				<rect x="0" y="0" width={plotSize} height={plotSize} fill="rgba(255,255,255,0.9)"></rect>
 
 				{#each ticks as tick (tick)}
 					<line
@@ -641,22 +661,22 @@
 								stroke-dasharray="6 6"
 								stroke-linecap="round"
 							></line>
-							{#if mobileMode}
-								<line
-									x1={ghostRightSegment.x1}
-									y1={ghostRightSegment.y1}
-									x2={ghostRightSegment.x2}
-									y2={ghostRightSegment.y2}
-									stroke="transparent"
-									stroke-width="26"
-									stroke-linecap="round"
-									tabindex="0"
-									role="button"
-									aria-label="Add one right move"
-									onclick={() => placeStep('R')}
-									onkeydown={(event) => handleGhostKey(event, 'R')}
-								></line>
-							{/if}
+							<line
+								x1={ghostRightSegment.x1}
+								y1={ghostRightSegment.y1}
+								x2={ghostRightSegment.x2}
+								y2={ghostRightSegment.y2}
+								class="ghost-hit"
+								stroke="transparent"
+								stroke-width="26"
+								stroke-linecap="round"
+								tabindex="0"
+								role="button"
+								aria-label="Add one right move"
+								onpointerdown={handleGhostPointerDown}
+								onclick={() => placeStep('R')}
+								onkeydown={(event) => handleGhostKey(event, 'R')}
+							></line>
 						{/if}
 
 						{#if ghostUpSegment}
@@ -671,22 +691,22 @@
 								stroke-dasharray="6 6"
 								stroke-linecap="round"
 							></line>
-							{#if mobileMode}
-								<line
-									x1={ghostUpSegment.x1}
-									y1={ghostUpSegment.y1}
-									x2={ghostUpSegment.x2}
-									y2={ghostUpSegment.y2}
-									stroke="transparent"
-									stroke-width="26"
-									stroke-linecap="round"
-									tabindex="0"
-									role="button"
-									aria-label="Add one up move"
-									onclick={() => placeStep('U')}
-									onkeydown={(event) => handleGhostKey(event, 'U')}
-								></line>
-							{/if}
+							<line
+								x1={ghostUpSegment.x1}
+								y1={ghostUpSegment.y1}
+								x2={ghostUpSegment.x2}
+								y2={ghostUpSegment.y2}
+								class="ghost-hit"
+								stroke="transparent"
+								stroke-width="26"
+								stroke-linecap="round"
+								tabindex="0"
+								role="button"
+								aria-label="Add one up move"
+								onpointerdown={handleGhostPointerDown}
+								onclick={() => placeStep('U')}
+								onkeydown={(event) => handleGhostKey(event, 'U')}
+							></line>
 						{/if}
 
 						{#if dragPreviewSegment}
@@ -786,17 +806,26 @@
 					<code>R</code>'s and {squareN} <code>U</code>'s.
 				</p>
 
-				<Button variant={autoRunning ? 'secondary' : 'outline'} class="w-full" onclick={toggleAutoShow}>
-					{autoRunning ? 'Stop showing all paths' : 'Show me all paths'}
-				</Button>
+					<Button
+						variant={autoRunning ? 'secondary' : 'outline'}
+						class="w-full hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
+						onclick={toggleAutoShow}
+					>
+						{autoRunning ? 'Stop showing all paths' : 'Show me all paths'}
+					</Button>
 
 				<div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-					<Button variant="outline" class="w-full" onclick={undoStep} disabled={autoRunning || placedSteps.length === 0}>
+					<Button
+						variant="outline"
+						class="w-full hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
+						onclick={undoStep}
+						disabled={autoRunning || placedSteps.length === 0}
+					>
 						Undo last move
 					</Button>
 					<Button
 						variant="secondary"
-						class="w-full"
+						class="w-full hover:!bg-secondary hover:!text-secondary-foreground hover:!shadow-none"
 						onclick={resetBuilder}
 						disabled={autoRunning || placedSteps.length === 0}
 					>
@@ -805,7 +834,7 @@
 				</div>
 
 				{#if isComplete && !autoRunning}
-					<Button class="w-full" onclick={addAnotherPath}>
+					<Button class="w-full hover:!bg-card/82 hover:!text-foreground hover:!shadow-none" onclick={addAnotherPath}>
 						Add another path
 					</Button>
 				{/if}
@@ -871,6 +900,15 @@
 <style>
 	.ghost-choice {
 		transition: stroke 120ms ease, stroke-width 120ms ease;
+	}
+
+	.ghost-hit {
+		cursor: pointer;
+	}
+
+	.ghost-hit:focus,
+	.ghost-hit:focus-visible {
+		outline: none;
 	}
 
 	.ghost-right:hover {

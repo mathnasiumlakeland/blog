@@ -1,3 +1,19 @@
+<script module lang="ts">
+	import type { MathToolMeta } from './tool-meta';
+
+	export const toolMeta: MathToolMeta = {
+		id: 'pascal-modulo-canvas',
+		title: 'Pascal Triangle Modulo Patterns',
+		description: 'Plot Pascal triangle entries modulo k to reveal repeating and fractal-like structure.',
+		inputs: 'Row count, modulo base, and dot size.',
+		outputs: 'Canvas plot of nonzero modulo entries colored by remainder value.',
+		useCase: 'Use for number patterns, modular arithmetic, and pattern recognition activities.',
+		tags: ['number-theory', 'modular-arithmetic', 'patterns', 'pascal-triangle', 'combinatorics'],
+		audience: ['students', 'instructors'],
+		kind: 'interactive'
+	};
+</script>
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 
@@ -39,7 +55,7 @@
 		const stepX = (width - padding * 2) / Math.max(2, rowCount + 1);
 
 		context.clearRect(0, 0, width, height);
-		context.fillStyle = 'rgba(255, 255, 255, 0.86)';
+		context.fillStyle = 'rgba(255,255,255,0.9)';
 		context.fillRect(0, 0, width, height);
 
 		let currentRow: number[] = [1];

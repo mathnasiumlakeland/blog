@@ -1,5 +1,22 @@
+<script module lang="ts">
+	import type { MathToolMeta } from './tool-meta';
+
+	export const toolMeta: MathToolMeta = {
+		id: 'hexagon-three-circles-visual',
+		title: 'Hexagon Minus Three Circles',
+		description: 'Show a regular hexagon with three unit circles removed to visualize a target area.',
+		inputs: 'Hexagon radius n controlled by a slider; tangent highlight updates automatically.',
+		outputs: 'Hexagon area, center distance, target area, and tangent/non-tangent visual status.',
+		useCase: 'Use for geometry lessons on composite area and tangent-circle constraints.',
+		tags: ['geometry', 'area', 'circles', 'hexagon', 'tangent'],
+		audience: ['students', 'instructors'],
+		kind: 'interactive'
+	};
+</script>
+
 <script lang="ts">
 	import MathExpression from '$lib/components/math/math-expression.svelte';
+	import { TOOL_BG_GRADIENT_END, TOOL_BG_GRADIENT_START } from './tool-visual-theme';
 
 	type Point = { x: number; y: number };
 
@@ -97,12 +114,17 @@
 		class="h-auto w-full rounded-xl border border-border/70 bg-card/70"
 		role="img"
 		aria-label="Regular hexagon with three unit circles and highlighted target area"
-	>
-		<defs>
-			<linearGradient id="target-gradient" x1="0" y1="0" x2="1" y2="1">
-				<stop offset="0%" stop-color="rgba(14, 165, 233, 0.72)"></stop>
-				<stop offset="100%" stop-color="rgba(20, 184, 166, 0.72)"></stop>
-			</linearGradient>
+		>
+			<defs>
+				<linearGradient id="hex-bg" x1="0" y1="0" x2="1" y2="1">
+					<stop offset="0%" stop-color={TOOL_BG_GRADIENT_START}></stop>
+					<stop offset="100%" stop-color={TOOL_BG_GRADIENT_END}></stop>
+				</linearGradient>
+
+				<linearGradient id="target-gradient" x1="0" y1="0" x2="1" y2="1">
+					<stop offset="0%" stop-color="rgba(14, 165, 233, 0.72)"></stop>
+					<stop offset="100%" stop-color="rgba(20, 184, 166, 0.72)"></stop>
+				</linearGradient>
 
 			<pattern id="target-grid" width="12" height="12" patternUnits="userSpaceOnUse">
 				<path d="M 12 0 L 0 0 0 12" fill="none" stroke="rgba(255,255,255,0.27)" stroke-width="1"></path>
@@ -117,7 +139,7 @@
 			</mask>
 		</defs>
 
-		<rect x="0" y="0" width={viewWidth} height={viewHeight} fill="rgba(255,255,255,0.7)"></rect>
+			<rect x="0" y="0" width={viewWidth} height={viewHeight} fill="url(#hex-bg)"></rect>
 		<rect
 			x="0"
 			y="0"

@@ -48,6 +48,7 @@ featured: false
 
 5. Apply math rendering and visualization rules.
 - If `svelte-code-writer` is installed, use that skill for any `.svelte`, `.svelte.ts`, or `.svelte.js` creation, editing, or analysis.
+- If `create-component` is installed and the post needs a new or updated visualization, use it to build/refine the tool in `src/lib/components/math/*`, add `toolMeta` metadata, and register it in `src/lib/components/math/tool-registry.ts` before embedding it in the post.
 - Do not leave raw TeX strings visible in `.svelte` UI text; render equations with `MathExpression`.
 - Reuse or update components in `src/lib/components/math/*`.
 - Keep geometry precise, responsive, and readable.

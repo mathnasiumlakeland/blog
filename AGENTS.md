@@ -9,6 +9,7 @@ Guidance for coding agents working in this repository.
 - Markdown math pipeline: `mdsvex` + `remark-math` + `rehype-katex`
 - Svelte math rendering helper: `$lib/components/math/math-expression.svelte`
 - Interactive demos: `src/lib/components/math/*`
+- Tools/resources index: `src/routes/tools/+page.svelte` backed by `src/lib/components/math/tool-registry.ts`
 - WASM build script: `scripts/build-wasm.mjs`
 - Post loading is intentionally split: metadata in `src/lib/content/posts.ts`, components in `src/lib/content/post-components.ts`
 
@@ -26,8 +27,12 @@ Guidance for coding agents working in this repository.
 - `src/routes/posts/+page.svelte`: all-post listing
 - `src/routes/posts/[slug]/+page.ts`: slug resolution + prerender entries
 - `src/routes/posts/[slug]/+page.svelte`: post shell renderer
+- `src/routes/tools/+page.svelte`: tools/resources grid with live component previews
 - `src/lib/components/blog/*`: featured/post cards and article shell
 - `src/lib/components/math/*`: reusable math visualizations
+- `src/lib/components/math/tool-meta.ts`: shared tool metadata types
+- `src/lib/components/math/tool-registry.ts`: canonical list of tools shown on `/tools`
+- `src/lib/components/math/tool-visual-theme.ts`: shared plot background tokens/helpers for tool visuals
 - `static/wasm/*`: wasm binaries served as static assets
 - `.github/workflows/deploy-pages.yml`: GitHub Pages CI/CD
 
@@ -40,6 +45,9 @@ Guidance for coding agents working in this repository.
 - If an equation appears on the page, it should render as math (KaTeX), not raw TeX.
 - For SVG/plain text labels in diagrams, use symbols when appropriate (`θ`, `°`) rather than words like `theta` / `deg`.
 - For embedded iframes in markdown, include a descriptive `title` attribute (accessibility).
+- Every tool component in `src/lib/components/math/*.svelte` must export `toolMeta` with:
+  - `id`, `title`, `description`, `inputs`, `outputs`, `useCase`, `tags`, `audience`, `kind`.
+- New/updated tools must be added to `src/lib/components/math/tool-registry.ts` so they appear on `/tools`.
 
 ## Routing/Base Path Rules
 
@@ -86,6 +94,8 @@ Notes:
 - Keep visualizations responsive (`viewBox` + fluid width).
 - Prefer clean geometry, readable labels, and sliders with meaningful ranges.
 - Keep style consistent with existing cards, borders, and soft blue/teal visual language.
+- Plot-style tools (grids/charts/data plots) should use white plot backgrounds.
+- Non-plot visual tools should use the shared blue/teal background helpers in `src/lib/components/math/tool-visual-theme.ts`.
 - For geometry demos, make sure highlights represent the intended region/angle precisely.
 - Avoid clutter text overlays directly inside plots unless they add clear value.
 - Keep hover states subtle and coherent with the header style; avoid jarring hue shifts.
@@ -140,6 +150,14 @@ Notes:
   - `Patterns` (Lissajous)
   - `Hexagon Area` (three unit circles visualization)
 
+## Tools/Resources Defaults
+
+- `/tools` is the canonical tools/resources page for students and instructors.
+- Keep tool cards index-friendly: short plain-language summaries plus clear `inputs`, `outputs`, and `useCase`.
+- Keep the header shortcut to `/tools` using the calculator icon.
+- When adding a component preview to the registry, include `previewClass` (and `previewProps` when needed) so cards remain readable on mobile and desktop.
+- Keep plot-tool cards/visuals white in the plot region (for example, lattice/path grids and Pascal-style plots).
+
 ## Post Iteration Flow With User
 
 For blog-post requests, follow this interaction flow by default:
@@ -167,3 +185,5 @@ Use these repo-local skills when their triggers match user requests:
 
 - `create-blog-post`: Scaffold and iterate new Mathnasium Journal blog posts with valid frontmatter/math conventions and the existing route flow.
   - File: `skills/create-blog-post/SKILL.md`
+- `create-component`: Create and refine reusable math tool components with indexable metadata and tools-page registration.
+  - File: `skills/create-component/SKILL.md`

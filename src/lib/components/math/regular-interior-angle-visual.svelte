@@ -1,11 +1,27 @@
+<script module lang="ts">
+	import type { MathToolMeta } from './tool-meta';
+
+	export const toolMeta: MathToolMeta = {
+		id: 'regular-interior-angle-visual',
+		title: 'Regular Interior Angle Visual',
+		description: 'Show how each interior angle changes as the number of regular-polygon sides changes.',
+		inputs: 'Number of sides n.',
+		outputs: 'Total interior-angle sum and one interior angle with highlighted angle arc.',
+		useCase: 'Use for polygon-angle lessons and formula-to-figure connections.',
+		tags: ['geometry', 'angles', 'polygons', 'regular-polygons', 'formula'],
+		audience: ['students', 'instructors'],
+		kind: 'interactive'
+	};
+</script>
+
 <script lang="ts">
 	import MathExpression from '$lib/components/math/math-expression.svelte';
+	import { TOOL_BG_GRADIENT_END, TOOL_BG_GRADIENT_START } from './tool-visual-theme';
 
 	type Point = { x: number; y: number };
 
 	const width = 620;
 	const height = 360;
-	const pad = 30;
 
 	let sides = $state(6);
 
@@ -96,14 +112,14 @@
 		class="h-auto w-full rounded-xl border border-border/70 bg-card/70"
 		role="img"
 		aria-label="Interior angle of a regular polygon"
-	>
-		<defs>
-			<linearGradient id="angle-bg" x1="0" y1="0" x2="1" y2="1">
-				<stop offset="0%" stop-color="rgba(59,130,246,0.14)"></stop>
-				<stop offset="100%" stop-color="rgba(20,184,166,0.08)"></stop>
-			</linearGradient>
-		</defs>
-		<rect x={pad / 2} y={pad / 2} width={width - pad} height={height - pad} fill="url(#angle-bg)"></rect>
+		>
+			<defs>
+				<linearGradient id="angle-bg" x1="0" y1="0" x2="1" y2="1">
+					<stop offset="0%" stop-color={TOOL_BG_GRADIENT_START}></stop>
+					<stop offset="100%" stop-color={TOOL_BG_GRADIENT_END}></stop>
+				</linearGradient>
+			</defs>
+		<rect x="0" y="0" width={width} height={height} fill="url(#angle-bg)"></rect>
 		<path d={path} fill="rgba(255,255,255,0.68)" stroke="rgba(15,23,42,0.84)" stroke-width="2.1"></path>
 		<path d={angleArc.fillPath} fill="rgba(251,191,36,0.42)" stroke="none"></path>
 		<path

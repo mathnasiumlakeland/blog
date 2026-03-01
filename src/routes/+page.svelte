@@ -5,7 +5,7 @@
 		BookOpenText,
 		Cpu,
 		ExternalLink,
-		MapPin
+		School
 	} from '@lucide/svelte';
 	import { resolve } from '$app/paths';
 	import PostCard from '$lib/components/blog/post-card.svelte';
@@ -36,7 +36,7 @@
 					rel="noopener noreferrer"
 					class="w-fit border border-primary/20 bg-primary/12 px-3 py-1 text-[11px] text-primary hover:!bg-primary/16 sm:text-sm"
 				>
-					<MapPin class="mr-1.5 size-3.5" />
+					<School class="mr-1.5 size-3.5" />
 					Mathnasium Lakeland Highlands
 				</Badge>
 
@@ -138,13 +138,13 @@
 		</Card>
 	</section>
 
-	<section class="space-y-4 rounded-3xl border border-border/70 bg-card/78 p-5 shadow-sm backdrop-blur-sm sm:p-8">
-		<div class="space-y-1">
-			<h2 class="text-2xl leading-tight sm:text-3xl">Interactive Spotlight</h2>
-			<p class="text-sm text-muted-foreground">
-				Two visuals from our journal that make abstract ideas easier to see.
-			</p>
-		</div>
+		<section class="space-y-4 rounded-3xl border border-border/70 bg-card/78 p-5 shadow-sm backdrop-blur-sm sm:p-8">
+			<div class="space-y-1">
+				<h2 class="text-2xl leading-tight sm:text-3xl">Tool Spotlight</h2>
+				<p class="text-sm text-muted-foreground">
+					Two featured tools that make abstract ideas easier to see.
+				</p>
+			</div>
 
 		<Tabs bind:value={spotlightTab} class="gap-4">
 			<TabsList class="grid w-full grid-cols-2 sm:max-w-xs">

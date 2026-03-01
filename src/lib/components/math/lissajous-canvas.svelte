@@ -1,3 +1,19 @@
+<script module lang="ts">
+	import type { MathToolMeta } from './tool-meta';
+
+	export const toolMeta: MathToolMeta = {
+		id: 'lissajous-canvas',
+		title: 'Lissajous Pattern Lab',
+		description: 'Animate Lissajous curves to connect frequency ratios with visible symmetry.',
+		inputs: 'Frequency A, frequency B, phase, speed, and play/pause state.',
+		outputs: 'A continuously drawn curve that changes shape as trigonometric parameters change.',
+		useCase: 'Use for algebra and trigonometry discussions on periodic functions and parameter effects.',
+		tags: ['algebra', 'trigonometry', 'patterns', 'animation', 'functions'],
+		audience: ['students', 'instructors'],
+		kind: 'interactive'
+	};
+</script>
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -11,6 +27,8 @@
 
 	let frame = 0;
 	let raf = 0;
+	let canvasWidth = 0;
+	let canvasHeight = 0;
 
 	const TAU = Math.PI * 2;
 
@@ -18,8 +36,10 @@
 		const ratio = window.devicePixelRatio || 1;
 		const { width } = target.getBoundingClientRect();
 		const height = width * 0.7;
-		target.width = Math.floor(width * ratio);
-		target.height = Math.floor(height * ratio);
+		canvasWidth = width;
+		canvasHeight = height;
+		target.width = Math.ceil(width * ratio);
+		target.height = Math.ceil(height * ratio);
 		target.style.height = `${height}px`;
 
 		const context = target.getContext('2d');
@@ -73,8 +93,8 @@
 		}
 
 		const render = () => {
-			const width = canvas?.clientWidth ?? 0;
-			const height = canvas?.clientHeight ?? 0;
+			const width = canvasWidth || canvas?.getBoundingClientRect().width || 0;
+			const height = canvasHeight || canvas?.getBoundingClientRect().height || 0;
 			draw(context, width, height);
 		};
 
@@ -114,12 +134,14 @@
 			return;
 		}
 
-		draw(context, canvas.clientWidth, canvas.clientHeight);
+		const width = canvasWidth || canvas.getBoundingClientRect().width;
+		const height = canvasHeight || canvas.getBoundingClientRect().height;
+		draw(context, width, height);
 	});
 </script>
 
 <div class="space-y-4">
-	<canvas bind:this={canvas} class="w-full rounded-xl border border-border/70 bg-card/60"></canvas>
+	<canvas bind:this={canvas} class="block w-full rounded-xl border border-border/70 bg-card/60"></canvas>
 
 	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 		<label class="space-y-1 text-xs font-medium text-muted-foreground">

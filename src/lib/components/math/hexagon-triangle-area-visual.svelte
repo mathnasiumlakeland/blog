@@ -1,11 +1,27 @@
+<script module lang="ts">
+	import type { MathToolMeta } from './tool-meta';
+
+	export const toolMeta: MathToolMeta = {
+		id: 'hexagon-triangle-area-visual',
+		title: 'Hexagon Triangle Decomposition',
+		description: 'Break a regular hexagon into six equilateral triangles and track area values.',
+		inputs: 'Hexagon side/radius n selected by slider.',
+		outputs: 'Triangle height, one-triangle area, and full hexagon area with live diagram updates.',
+		useCase: 'Use for geometry instruction on decomposition and area formulas.',
+		tags: ['geometry', 'area', 'hexagon', 'triangles', 'decomposition'],
+		audience: ['students', 'instructors'],
+		kind: 'interactive'
+	};
+</script>
+
 <script lang="ts">
 	import MathExpression from '$lib/components/math/math-expression.svelte';
+	import { TOOL_BG_GRADIENT_END, TOOL_BG_GRADIENT_START } from './tool-visual-theme';
 
 	type Point = { x: number; y: number };
 
 	const width = 620;
 	const height = 360;
-	const padding = 30;
 	const tangentN = 2 / Math.sqrt(3);
 
 	let n = $state(tangentN);
@@ -64,14 +80,14 @@
 		class="h-auto w-full rounded-xl border border-border/70 bg-card/70"
 		role="img"
 		aria-label="Hexagon decomposed into six equilateral triangles"
-	>
-		<defs>
-			<linearGradient id="tri-bg" x1="0" y1="0" x2="1" y2="1">
-				<stop offset="0%" stop-color="rgba(59,130,246,0.12)"></stop>
-				<stop offset="100%" stop-color="rgba(20,184,166,0.09)"></stop>
-			</linearGradient>
-		</defs>
-		<rect x={padding / 2} y={padding / 2} width={width - padding} height={height - padding} fill="url(#tri-bg)"></rect>
+		>
+			<defs>
+				<linearGradient id="tri-bg" x1="0" y1="0" x2="1" y2="1">
+					<stop offset="0%" stop-color={TOOL_BG_GRADIENT_START}></stop>
+					<stop offset="100%" stop-color={TOOL_BG_GRADIENT_END}></stop>
+				</linearGradient>
+			</defs>
+		<rect x="0" y="0" width={width} height={height} fill="url(#tri-bg)"></rect>
 		<path d={path} fill="rgba(255,255,255,0.68)" stroke="rgba(15,23,42,0.84)" stroke-width="2.1"></path>
 
 		{#each vertices as point, idx (idx)}

@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import '../app.css';
 	import { resolve } from '$app/paths';
-	import { BookOpenText, ExternalLink, Moon, Sigma, Sun } from '@lucide/svelte';
+	import { BookOpenText, Calculator, ExternalLink, Moon, Sigma, Sun } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import favicon from '$lib/assets/favicon.svg';
 
@@ -88,6 +88,15 @@
 					<span class="hidden sm:inline">Explore</span>
 				</Button>
 				<Button
+					href={resolve('/tools')}
+					size="sm"
+					variant="outline"
+					class="gap-1.5 px-2.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none sm:px-3"
+				>
+					<Calculator class="size-4" />
+					<span class="hidden sm:inline">Tools</span>
+				</Button>
+				<Button
 					href="https://www.mathnasium.com/math-centers/lakelandhighlands"
 					size="sm"
 					variant="outline"
@@ -121,7 +130,7 @@
 					Schedule now
 				</a>
 			</p>
-			<p class="text-xs text-foreground/70">Mathnasium Lakeland Highlands</p>
+			<p class="text-xs text-foreground/70">Made by Mathnasium Lakeland Highlands</p>
 		</div>
 	</footer>
 </div>

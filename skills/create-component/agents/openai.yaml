@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Component"
+  short_description: "Build and refine reusable math tool components"
+  default_prompt: "Create or improve a reusable math visualization component with metadata and tools-page integration."

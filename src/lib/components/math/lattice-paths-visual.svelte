@@ -808,7 +808,9 @@
 
 					<Button
 						variant={autoRunning ? 'secondary' : 'outline'}
-						class="w-full hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
+						class={`w-full hover:!shadow-none ${autoRunning
+							? 'hover:!bg-secondary hover:!text-secondary-foreground'
+							: 'hover:!bg-card/82 hover:!text-foreground'}`}
 						onclick={toggleAutoShow}
 					>
 						{autoRunning ? 'Stop showing all paths' : 'Show me all paths'}

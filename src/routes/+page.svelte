@@ -147,9 +147,26 @@
 			</div>
 
 		<Tabs bind:value={spotlightTab} class="gap-4">
-			<TabsList class="grid w-full grid-cols-2 sm:max-w-xs">
-				<TabsTrigger value="curves">Patterns</TabsTrigger>
-				<TabsTrigger value="hexagon">Hexagon Area</TabsTrigger>
+			<TabsList
+				class="relative grid h-10 w-full grid-cols-2 overflow-hidden rounded-xl border border-border/70 bg-muted/70 p-1 sm:max-w-xs"
+			>
+				<div aria-hidden="true" class="pointer-events-none absolute inset-1 z-0">
+					<div
+						class={`h-full w-1/2 rounded-lg border border-border/80 bg-background/95 shadow-[0_1px_2px_rgba(15,23,42,0.08)] transition-transform duration-300 ease-out ${spotlightTab === 'hexagon' ? 'translate-x-full' : 'translate-x-0'}`}
+					></div>
+				</div>
+				<TabsTrigger
+					value="curves"
+					class="relative z-10 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+				>
+					Patterns
+				</TabsTrigger>
+				<TabsTrigger
+					value="hexagon"
+					class="relative z-10 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+				>
+					Hexagon Area
+				</TabsTrigger>
 			</TabsList>
 			{#if spotlightTab === 'curves'}
 				<TabsContent value="curves" class="mt-0">

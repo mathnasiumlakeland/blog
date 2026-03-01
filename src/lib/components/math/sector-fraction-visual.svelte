@@ -70,7 +70,7 @@
 
 	<svg
 		viewBox={`0 0 ${width} ${height}`}
-		class="h-auto w-full rounded-xl border border-border/70 bg-card/70"
+		class="h-auto w-full rounded-xl border border-border/70 bg-card/70 text-slate-900 dark:text-slate-100"
 		role="img"
 		aria-label="Circle sector fraction visualization"
 		>
@@ -95,10 +95,16 @@
 			<path d={sectorPath} fill="rgba(59,130,246,0.3)" stroke="rgba(37,99,235,0.92)" stroke-width="2"></path>
 		{/if}
 		<circle cx={center.x} cy={center.y} r="3.5" fill="rgba(15,23,42,0.85)"></circle>
-		<text x={label.x} y={label.y} font-size="14" fill="rgba(30,64,175,0.95)">
+		<text
+			x={label.x}
+			y={label.y}
+			font-size="14"
+			fill="currentColor"
+			class="text-blue-900 dark:text-blue-100"
+		>
 			θ = {theta.toFixed(0)}°
 		</text>
-		<text x="20" y="30" font-size="14" fill="rgba(15,23,42,0.84)">Sector area uses fraction θ/360°</text>
+		<text x="20" y="30" font-size="14" fill="currentColor">Sector area uses fraction θ/360°</text>
 	</svg>
 
 	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">

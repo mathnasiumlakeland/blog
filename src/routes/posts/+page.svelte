@@ -18,14 +18,12 @@
 			<div class="space-y-2">
 				<h1 class="text-3xl leading-tight sm:text-4xl">All Posts</h1>
 				<p class="max-w-3xl text-sm text-muted-foreground sm:text-base">
-					Explore center-inspired explanations, visual math models, and take-home ideas for students and
-					families.
+					Explore center-inspired explanations, visual math models, and take-home ideas for students.
 				</p>
 			</div>
 
 			<div class="flex flex-wrap gap-2 text-xs sm:text-sm">
 				<Badge variant="outline">{posts.length} published posts</Badge>
-				<Badge variant="outline">family-friendly math notes</Badge>
 			</div>
 
 			<div class="flex flex-wrap gap-2">

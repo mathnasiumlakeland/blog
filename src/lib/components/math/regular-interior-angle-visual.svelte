@@ -109,7 +109,7 @@
 
 	<svg
 		viewBox={`0 0 ${width} ${height}`}
-		class="h-auto w-full rounded-xl border border-border/70 bg-card/70"
+		class="h-auto w-full rounded-xl border border-border/70 bg-card/70 text-slate-900 dark:text-slate-100"
 		role="img"
 		aria-label="Interior angle of a regular polygon"
 		>
@@ -129,10 +129,16 @@
 			stroke-width="2.6"
 			stroke-linecap="round"
 		></path>
-		<text x={angleArc.label.x} y={angleArc.label.y} font-size="14" fill="rgba(120,53,15,0.94)">
+		<text
+			x={angleArc.label.x}
+			y={angleArc.label.y}
+			font-size="14"
+			fill="currentColor"
+			class="text-amber-800 dark:text-amber-200"
+		>
 			{interior.toFixed(1)}°
 		</text>
-		<text x="20" y="30" font-size="14" fill="rgba(15,23,42,0.84)">Regular polygon interior angle</text>
+		<text x="20" y="30" font-size="14" fill="currentColor">Regular polygon interior angle</text>
 	</svg>
 
 	<label class="space-y-1 text-xs font-medium text-muted-foreground">

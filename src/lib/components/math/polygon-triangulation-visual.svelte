@@ -96,7 +96,7 @@
 
 	<svg
 		viewBox={`0 0 ${width} ${height}`}
-		class="h-auto w-full rounded-xl border border-border/70 bg-card/70"
+		class="h-auto w-full rounded-xl border border-border/70 bg-card/70 text-slate-900 dark:text-slate-100"
 		role="img"
 		aria-label="Polygon triangulation into n minus 2 triangles"
 		>
@@ -138,15 +138,16 @@
 				font-size="13"
 				text-anchor="middle"
 				dominant-baseline="central"
-				fill={label.id === 0 ? 'rgba(120,53,15,0.95)' : 'rgba(15,23,42,0.85)'}
+				fill="currentColor"
+				class={label.id === 0 ? 'text-amber-800 dark:text-amber-200' : undefined}
 				font-weight={label.id === 0 ? '700' : '500'}
 			>
 				{label.text}
 			</text>
 		{/each}
 
-		<text x="20" y="30" font-size="14" fill="rgba(15,23,42,0.84)">Draw diagonals from one vertex</text>
-		<text x="20" y="50" font-size="13" fill="rgba(15,23,42,0.74)">You always create n - 2 triangles</text>
+		<text x="20" y="30" font-size="14" fill="currentColor">Draw diagonals from one vertex</text>
+		<text x="20" y="50" font-size="13" fill="currentColor">You always create n - 2 triangles</text>
 	</svg>
 
 	<label class="space-y-1 text-xs font-medium text-muted-foreground">

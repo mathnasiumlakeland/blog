@@ -77,7 +77,7 @@
 
 	<svg
 		viewBox={`0 0 ${width} ${height}`}
-		class="h-auto w-full rounded-xl border border-border/70 bg-card/70"
+		class="h-auto w-full rounded-xl border border-border/70 bg-card/70 text-slate-900 dark:text-slate-100"
 		role="img"
 		aria-label="Hexagon decomposed into six equilateral triangles"
 		>
@@ -111,9 +111,17 @@
 			stroke-dasharray="5 4"
 		></line>
 		<circle cx={midpoint.x} cy={midpoint.y} r="3.2" fill="rgba(217,119,6,0.95)"></circle>
-		<text x={midpoint.x + 8} y={midpoint.y + 2} font-size="13" fill="rgba(120,53,15,0.95)">h</text>
+		<text
+			x={midpoint.x + 8}
+			y={midpoint.y + 2}
+			font-size="13"
+			fill="currentColor"
+			class="text-amber-800 dark:text-amber-200"
+		>
+			h
+		</text>
 
-		<text x="20" y="30" font-size="14" fill="rgba(15,23,42,0.84)">6 equilateral triangles build the hexagon</text>
+		<text x="20" y="30" font-size="14" fill="currentColor">6 equilateral triangles build the hexagon</text>
 	</svg>
 
 	<label class="space-y-1 text-xs font-medium text-muted-foreground">

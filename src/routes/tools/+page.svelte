@@ -49,9 +49,7 @@
 						<p class="text-sm text-muted-foreground">{tool.meta.description}</p>
 					</CardHeader>
 					<CardContent class="space-y-3">
-						<div class="rounded-xl border border-border/70 bg-background/75 p-2">
-							<LazyToolPreview toolId={tool.id} title={tool.meta.title} />
-						</div>
+						<LazyToolPreview toolId={tool.id} title={tool.meta.title} />
 
 						<div class="space-y-1 text-sm text-muted-foreground">
 							<p><span class="font-semibold text-foreground">Inputs:</span> {tool.meta.inputs}</p>

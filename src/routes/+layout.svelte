@@ -2,12 +2,22 @@
 	import { onMount } from 'svelte';
 	import '../app.css';
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
 	import { BookOpenText, Calculator, ExternalLink, Moon, Sigma, Sun } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import favicon from '$lib/assets/favicon.svg';
 
 	let { children } = $props();
 	let isDark = $state(false);
+	const postsPath = resolve('/posts');
+	const toolsPath = resolve('/tools');
+	const currentPath = $derived(page.url.pathname);
+	const onPostsPage = $derived(currentPath === postsPath || currentPath.startsWith(`${postsPath}/`));
+	const onToolsPage = $derived(currentPath === toolsPath || currentPath.startsWith(`${toolsPath}/`));
+
+	const activeNavClass = 'gap-1.5 px-2.5 hover:shadow-none sm:px-3';
+	const inactiveNavClass =
+		'gap-1.5 px-2.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none sm:px-3';
 
 	function applyTheme(nextIsDark: boolean) {
 		document.documentElement.classList.toggle('dark', nextIsDark);
@@ -83,15 +93,22 @@
 					{/if}
 				</Button>
 
-				<Button href={resolve('/posts')} size="sm" class="gap-1.5 px-2.5 hover:shadow-none sm:px-3">
+				<Button
+					href={postsPath}
+					size="sm"
+					variant={onPostsPage ? 'default' : 'outline'}
+					class={onPostsPage ? activeNavClass : inactiveNavClass}
+					aria-current={onPostsPage ? 'page' : undefined}
+				>
 					<BookOpenText class="size-4" />
 					<span class="hidden sm:inline">Explore</span>
 				</Button>
 				<Button
-					href={resolve('/tools')}
+					href={toolsPath}
 					size="sm"
-					variant="outline"
-					class="gap-1.5 px-2.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none sm:px-3"
+					variant={onToolsPage ? 'default' : 'outline'}
+					class={onToolsPage ? activeNavClass : inactiveNavClass}
+					aria-current={onToolsPage ? 'page' : undefined}
 				>
 					<Calculator class="size-4" />
 					<span class="hidden sm:inline">Tools</span>

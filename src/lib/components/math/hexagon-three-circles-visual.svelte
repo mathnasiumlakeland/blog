@@ -2,7 +2,7 @@
 	import type { MathToolMeta } from './tool-meta';
 
 	export const toolMeta: MathToolMeta = {
-		id: 'hexagon-three-circles-visual',
+		id: 'hexagon-minus-three-circles',
 		title: 'Hexagon Minus Three Circles',
 		description: 'Show a regular hexagon with three unit circles removed to visualize a target area.',
 		inputs: 'Hexagon radius n controlled by a slider; tangent highlight updates automatically.',

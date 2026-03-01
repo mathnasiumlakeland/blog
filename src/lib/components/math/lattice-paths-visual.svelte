@@ -2,7 +2,7 @@
 	import type { MathToolMeta } from './tool-meta';
 
 	export const toolMeta: MathToolMeta = {
-		id: 'lattice-paths-visual',
+		id: 'lattice-paths-explorer',
 		title: 'Lattice Paths Explorer',
 		description: 'Build and animate grid paths to compare Manhattan distance, Euclidean distance, and path counts.',
 		inputs: 'Square size n, optional general grid values m and n, and manual/auto path controls.',

@@ -2,7 +2,7 @@
 	import type { MathToolMeta } from './tool-meta';
 
 	export const toolMeta: MathToolMeta = {
-		id: 'lissajous-canvas',
+		id: 'lissajous-pattern-lab',
 		title: 'Lissajous Pattern Lab',
 		description: 'Animate Lissajous curves to connect frequency ratios with visible symmetry.',
 		inputs: 'Frequency A, frequency B, phase, speed, and play/pause state.',

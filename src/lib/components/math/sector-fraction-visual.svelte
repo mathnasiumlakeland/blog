@@ -2,8 +2,8 @@
 	import type { MathToolMeta } from './tool-meta';
 
 	export const toolMeta: MathToolMeta = {
-		id: 'sector-fraction-visual',
-		title: 'Sector Fraction Area Visual',
+		id: 'sector-fraction-area',
+		title: 'Sector Fraction Area',
 		description: 'Connect angle measure to area by shading a circle sector and scaling equal sectors.',
 		inputs: 'Central angle theta in degrees and number of equal sectors.',
 		outputs: 'Single-sector area and scaled total area with a live sector diagram.',

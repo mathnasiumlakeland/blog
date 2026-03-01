@@ -41,43 +41,56 @@
 	--sidebar-ring: oklch(0.62 0.086 217.6);
 }
 
+/* Original dark mode reference (before Mathnasium palette updates):
+   Asphalt surfaces:
+   - --background: oklch(0.2 0.018 262.4)
+   - --card / --popover: oklch(0.245 0.017 262.2)
+   Yellow accents:
+   - --primary / --ring: oklch(0.79 0.138 80.9)
+   - --chart-1: oklch(0.78 0.138 80.9)
+   Supporting accents:
+   - --accent: oklch(0.36 0.066 34.8)
+   Original dark page gradient:
+   - radial-gradient(circle at 50% -25%, rgba(252, 211, 77, 0.1), transparent 44%)
+   - linear-gradient(180deg, rgba(26, 30, 43, 0.98), rgba(16, 18, 30, 0.995))
+*/
 .dark {
-	--background: oklch(0.2 0.018 262.4);
-	--foreground: oklch(0.966 0.009 92.4);
-	--card: oklch(0.245 0.017 262.2);
-	--card-foreground: oklch(0.966 0.009 92.4);
-	--popover: oklch(0.245 0.017 262.2);
-	--popover-foreground: oklch(0.966 0.009 92.4);
-	--primary: oklch(0.79 0.138 80.9);
-	--primary-foreground: oklch(0.23 0.02 262.1);
-	--secondary: oklch(0.33 0.021 264);
-	--secondary-foreground: oklch(0.966 0.009 92.4);
-	--muted: oklch(0.33 0.021 264);
-	--muted-foreground: oklch(0.78 0.014 258.1);
-	--accent: oklch(0.36 0.066 34.8);
-	--accent-foreground: oklch(0.968 0.009 92.2);
-	--destructive: oklch(0.68 0.198 30.5);
-	--border: oklch(1 0 0 / 11%);
-	--input: oklch(1 0 0 / 15%);
-	--ring: oklch(0.79 0.138 80.9);
-	--chart-1: oklch(0.78 0.138 80.9);
-	--chart-2: oklch(0.72 0.145 147.3);
-	--chart-3: oklch(0.71 0.177 37.4);
-	--chart-4: oklch(0.75 0.126 238.5);
-	--chart-5: oklch(0.73 0.142 320.2);
-	--sidebar: oklch(0.235 0.017 261.9);
-	--sidebar-foreground: oklch(0.966 0.009 92.4);
-	--sidebar-primary: oklch(0.79 0.138 80.9);
-	--sidebar-primary-foreground: oklch(0.23 0.02 262.1);
-	--sidebar-accent: oklch(0.36 0.066 34.8);
-	--sidebar-accent-foreground: oklch(0.968 0.009 92.2);
-	--sidebar-border: oklch(1 0 0 / 11%);
-	--sidebar-ring: oklch(0.79 0.138 80.9);
+	--background: rgb(37 23 20);
+	--foreground: rgb(241 240 236);
+	--card: rgb(155 57 54 / 16%);
+	--card-foreground: rgb(241 240 236);
+	--popover: rgb(155 57 54 / 22%);
+	--popover-foreground: rgb(241 240 236);
+	--primary: rgb(242 53 38);
+	--primary-foreground: rgb(241 240 236);
+	--secondary: rgb(155 57 54);
+	--secondary-foreground: rgb(241 240 236);
+	--muted: rgb(93 97 91 / 35%);
+	--muted-foreground: rgb(201 204 208);
+	--accent: rgb(194 142 89);
+	--accent-foreground: rgb(37 23 20);
+	--destructive: rgb(244 97 85);
+	--border: rgb(199 191 186 / 34%);
+	--input: rgb(150 149 149 / 30%);
+	--ring: rgb(244 137 128);
+	--chart-1: rgb(242 53 38);
+	--chart-2: rgb(244 97 85);
+	--chart-3: rgb(194 142 89);
+	--chart-4: rgb(57 90 158);
+	--chart-5: rgb(211 164 178);
+	--sidebar: rgb(155 57 54 / 14%);
+	--sidebar-foreground: rgb(241 240 236);
+	--sidebar-primary: rgb(242 53 38);
+	--sidebar-primary-foreground: rgb(241 240 236);
+	--sidebar-accent: rgb(207 168 142);
+	--sidebar-accent-foreground: rgb(37 23 20);
+	--sidebar-border: rgb(199 191 186 / 34%);
+	--sidebar-ring: rgb(244 137 128);
 }
 
 @theme inline {
-	--font-sans: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
-	--font-display: "Fraunces", "Iowan Old Style", "Times New Roman", serif;
+	--font-sans: "Geist", "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+	--font-display: "IBM Plex Sans", "Geist", "Manrope", "Avenir Next", "Segoe UI", sans-serif;
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
@@ -132,15 +145,14 @@
 
 	.dark body {
 		background-image:
-			radial-gradient(circle at 50% -25%, rgba(252, 211, 77, 0.1), transparent 44%),
-			linear-gradient(180deg, rgba(26, 30, 43, 0.98), rgba(16, 18, 30, 0.995));
+			radial-gradient(circle at 6% -8%, rgb(242 53 38 / 30%), transparent 40%),
+			radial-gradient(circle at 100% 8%, rgb(155 57 54 / 26%), transparent 34%),
+			radial-gradient(circle at 80% -12%, rgb(57 90 158 / 18%), transparent 32%),
+			linear-gradient(180deg, rgb(37 23 20 / 99%), rgb(37 23 20 / 100%));
 	}
 
 	h1,
-	h2,
-	h3,
-	h4,
-	h5 {
+	h2 {
 		font-family: var(--font-display);
 		letter-spacing: -0.02em;
 	}
@@ -179,8 +191,8 @@
 
 	.dark .soft-grid {
 		background-image:
-			linear-gradient(to right, rgba(236, 241, 249, 0.09) 1px, transparent 1px),
-			linear-gradient(to bottom, rgba(236, 241, 249, 0.09) 1px, transparent 1px);
+			linear-gradient(to right, rgb(201 204 208 / 12%) 1px, transparent 1px),
+			linear-gradient(to bottom, rgb(201 204 208 / 12%) 1px, transparent 1px);
 		background-size: 32px 32px;
 	}
 

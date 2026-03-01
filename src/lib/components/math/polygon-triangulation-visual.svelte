@@ -2,7 +2,7 @@
 	import type { MathToolMeta } from './tool-meta';
 
 	export const toolMeta: MathToolMeta = {
-		id: 'polygon-triangulation-visual',
+		id: 'polygon-sum-of-interior-angles',
 		title: 'Polygon Sum of Interior Angles',
 		description: 'Draw diagonals from one vertex to show why a polygon splits into n - 2 triangles.',
 		inputs: 'Number of polygon sides n.',

@@ -47,6 +47,7 @@ Guidance for coding agents working in this repository.
 - For embedded iframes in markdown, include a descriptive `title` attribute (accessibility).
 - Every tool component in `src/lib/components/math/*.svelte` must export `toolMeta` with:
   - `id`, `title`, `description`, `inputs`, `outputs`, `useCase`, `tags`, `audience`, `kind`.
+  - Keep `toolMeta.tags` concise and capped at 5 items.
 - New/updated tools must be added to `src/lib/components/math/tool-registry.ts` so they appear on `/tools`.
 
 ## Routing/Base Path Rules
@@ -94,8 +95,10 @@ Notes:
 - Keep visualizations responsive (`viewBox` + fluid width).
 - Prefer clean geometry, readable labels, and sliders with meaningful ranges.
 - Keep style consistent with existing cards, borders, and soft blue/teal visual language.
-- Plot-style tools (grids/charts/data plots) should use white plot backgrounds.
-- Non-plot visual tools should use the shared blue/teal background helpers in `src/lib/components/math/tool-visual-theme.ts`.
+- Background choice is component-type specific and must follow existing tool patterns.
+- Plot-style tools (grids/charts/data plots) should keep a white plot region for data readability.
+- Non-plot explanatory visuals (geometry/angle/concept diagrams) should use the shared blue/teal theme tokens from `src/lib/components/math/tool-visual-theme.ts`.
+- Before finalizing a new/reworked component, compare with at least one similar existing math tool and match its background treatment approach (container + drawing surface), not just a similar hue.
 - For geometry demos, make sure highlights represent the intended region/angle precisely.
 - Avoid clutter text overlays directly inside plots unless they add clear value.
 - Keep hover states subtle and coherent with the header style; avoid jarring hue shifts.
@@ -153,10 +156,14 @@ Notes:
 ## Tools/Resources Defaults
 
 - `/tools` is the canonical tools/resources page for students and instructors.
+- Tool slug/route convention:
+  - `/tools/[id]` must use a kebab-case slug derived from the tool title (`toolMeta.title`).
+  - Do not append generic suffixes not present in the title (for example, avoid forced `-visual` or `-canvas`).
+  - Keep the same slug in component `toolMeta.id`, `tool-registry.ts` entry `id`, registry `meta.id`, `tool-component-map.ts` key, and `tool-practice.ts` key.
 - Keep tool cards index-friendly: short plain-language summaries plus clear `inputs`, `outputs`, and `useCase`.
 - Keep the header shortcut to `/tools` using the calculator icon.
 - When adding a component preview to the registry, include `previewClass` (and `previewProps` when needed) so cards remain readable on mobile and desktop.
-- Keep plot-tool cards/visuals white in the plot region (for example, lattice/path grids and Pascal-style plots).
+- Keep plot-tool cards/visuals white in the plot region (for example, lattice/path grids and chart-like views).
 
 ## Post Iteration Flow With User
 

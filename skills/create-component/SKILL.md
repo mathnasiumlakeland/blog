@@ -17,16 +17,21 @@ Build reusable, center-friendly math visualizations that are easy to discover an
 - Work in `src/lib/components/math/<tool-name>.svelte`.
 - Keep visuals responsive (`viewBox` + fluid width).
 - Prefer simple controls with meaningful ranges.
-- Plot-style tools (grids/charts/data plots) should keep a white plot background.
-- Non-plot visual tools should reuse `src/lib/components/math/tool-visual-theme.ts` for consistent blue/teal backgrounds (SVG tokens + canvas fill helper).
+- Choose background treatment by component type, not personal preference.
+- Plot-style tools (grids/charts/data plots) should keep a white plot region for readability.
+- Non-plot explanatory visuals should reuse `src/lib/components/math/tool-visual-theme.ts` for consistent blue/teal backgrounds (SVG tokens and related helpers).
+- Before finalizing, inspect at least one similar existing tool and mirror its background pattern (wrapper class + drawing surface behavior), not only its color family.
 
 3. Add required indexable metadata inside the component.
 - Export a `toolMeta` object from module scope and keep fields complete.
+- Set `toolMeta.id` to a kebab-case slug derived from `toolMeta.title` because `/tools/[id]` routes by this value.
+- Do not append generic suffixes not present in the title (for example, avoid forced `-visual` or `-canvas`).
+- Keep `toolMeta.tags` concise and capped at 5 items.
 - Use this contract:
 
 ```ts
 export const toolMeta = {
-  id: 'kebab-case-id',
+  id: 'kebab-case-title-slug',
   title: 'Human Title',
   description: 'One-sentence summary.',
   inputs: 'What students/teachers can control.',
@@ -43,10 +48,11 @@ export const toolMeta = {
 - Do not leave raw TeX visible in UI text.
 - Use symbols like `θ` and `°` in labels when appropriate.
 - Keep plot regions white for plot tools unless the user explicitly requests a custom background.
-- For non-plot visuals, default to the shared tool background theme.
+- For non-plot visuals, default to the shared blue/teal tool background theme.
 
 5. Register tool for discovery.
 - Add or update entries in `src/lib/components/math/tool-registry.ts`.
+- Keep ID parity across `toolMeta.id`, registry entry `id`, registry `meta.id`, `tool-component-map.ts` key, and `tool-practice.ts` key.
 - Include component import, `toolMeta`, and optional preview settings.
 - Ensure the tool appears on `src/routes/tools/+page.svelte`.
 

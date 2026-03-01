@@ -2,8 +2,8 @@
 title: 'Counting Up-Right Paths on a Grid'
 subtitle: 'From (n,n) symmetry to the general (m,n) counting rule'
 excerpt: 'Use Manhattan distance, binomial coefficients, and an interactive path builder to count right-up lattice paths.'
-publishedOn: 'March 1, 2026'
-publishedAt: '2026-03-01'
+publishedOn: 'February 28, 2026'
+publishedAt: '2026-02-28'
 readTime: '7 min'
 tags:
   - combinatorics

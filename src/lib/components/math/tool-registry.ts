@@ -2,9 +2,9 @@ import type { ToolListEntry } from './tool-meta';
 
 export const interactiveMathTools: ToolListEntry[] = [
 	{
-		id: 'hexagon-three-circles-visual',
+		id: 'hexagon-minus-three-circles',
 		meta: {
-			id: 'hexagon-three-circles-visual',
+			id: 'hexagon-minus-three-circles',
 			title: 'Hexagon Minus Three Circles',
 			description: 'Show a regular hexagon with three unit circles removed to visualize a target area.',
 			inputs: 'Hexagon radius n controlled by a slider; tangent highlight updates automatically.',
@@ -16,9 +16,9 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
-		id: 'hexagon-triangle-area-visual',
+		id: 'hexagon-triangle-decomposition',
 		meta: {
-			id: 'hexagon-triangle-area-visual',
+			id: 'hexagon-triangle-decomposition',
 			title: 'Hexagon Triangle Decomposition',
 			description: 'Break a regular hexagon into six equilateral triangles and track area values.',
 			inputs: 'Hexagon side/radius n selected by slider.',
@@ -30,9 +30,9 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
-		id: 'lattice-paths-visual',
+		id: 'lattice-paths-explorer',
 		meta: {
-			id: 'lattice-paths-visual',
+			id: 'lattice-paths-explorer',
 			title: 'Lattice Paths Explorer',
 			description:
 				'Build and animate grid paths to compare Manhattan distance, Euclidean distance, and path counts.',
@@ -45,9 +45,9 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
-		id: 'lissajous-canvas',
+		id: 'lissajous-pattern-lab',
 		meta: {
-			id: 'lissajous-canvas',
+			id: 'lissajous-pattern-lab',
 			title: 'Lissajous Pattern Lab',
 			description: 'Animate Lissajous curves to connect frequency ratios with visible symmetry.',
 			inputs: 'Frequency A, frequency B, phase, speed, and play/pause state.',
@@ -61,23 +61,24 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
-		id: 'pascal-modulo-canvas',
+		id: 'pascal-triangle-modulo-explorer',
 		meta: {
-			id: 'pascal-modulo-canvas',
-			title: 'Pascal Triangle Modulo Patterns',
-			description: 'Plot Pascal triangle entries modulo k to reveal repeating and fractal-like structure.',
-			inputs: 'Row count, modulo base, and dot size.',
-			outputs: 'Canvas plot of nonzero modulo entries colored by remainder value.',
-			useCase: 'Use for number patterns, modular arithmetic, and pattern recognition activities.',
-			tags: ['number-theory', 'modular-arithmetic', 'patterns', 'pascal-triangle', 'combinatorics'],
+			id: 'pascal-triangle-modulo-explorer',
+			title: 'Pascal Triangle Modulo Explorer',
+			description:
+				'Explore Pascal triangle coefficients modulo k with a live plot and a selectable coefficient inspector.',
+			inputs: 'Row count, modulo base, dot size, zero-remainder toggle, and selected row/column.',
+			outputs: 'Color-coded modulo plot plus exact binomial value and remainder for the selected entry.',
+			useCase: 'Use for modular arithmetic, binomial coefficients, and visual pattern recognition.',
+			tags: ['number-theory', 'modular-arithmetic', 'patterns', 'pascal-triangle', 'binomial'],
 			audience: ['students', 'instructors'],
 			kind: 'interactive'
 		}
 	},
 	{
-		id: 'polygon-triangulation-visual',
+		id: 'polygon-sum-of-interior-angles',
 		meta: {
-			id: 'polygon-triangulation-visual',
+			id: 'polygon-sum-of-interior-angles',
 			title: 'Polygon Sum of Interior Angles',
 			description: 'Draw diagonals from one vertex to show why a polygon splits into n - 2 triangles.',
 			inputs: 'Number of polygon sides n.',
@@ -89,10 +90,10 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
-		id: 'regular-interior-angle-visual',
+		id: 'regular-interior-angle',
 		meta: {
-			id: 'regular-interior-angle-visual',
-			title: 'Regular Interior Angle Visual',
+			id: 'regular-interior-angle',
+			title: 'Regular Interior Angle',
 			description:
 				'Show how each interior angle changes as the number of regular-polygon sides changes.',
 			inputs: 'Number of sides n.',
@@ -122,10 +123,10 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
-		id: 'sector-fraction-visual',
+		id: 'sector-fraction-area',
 		meta: {
-			id: 'sector-fraction-visual',
-			title: 'Sector Fraction Area Visual',
+			id: 'sector-fraction-area',
+			title: 'Sector Fraction Area',
 			description:
 				'Connect angle measure to area by shading a circle sector and scaling equal sectors.',
 			inputs: 'Central angle theta in degrees and number of equal sectors.',

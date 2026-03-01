@@ -40,7 +40,7 @@ function binomial(n: number, k: number): number {
 }
 
 const practiceFactories: Record<string, PracticeFactory> = {
-	'hexagon-three-circles-visual': () => {
+	'hexagon-minus-three-circles': () => {
 		const n = randomStep(1.2, 4, 0.1);
 		const answer = ((3 * Math.sqrt(3)) / 2) * n * n - Math.PI;
 		return {
@@ -50,7 +50,7 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Round to 2 decimal places.'
 		};
 	},
-	'hexagon-triangle-area-visual': () => {
+	'hexagon-triangle-decomposition': () => {
 		const n = randomStep(1.2, 3, 0.1);
 		const answer = ((3 * Math.sqrt(3)) / 2) * n * n;
 		return {
@@ -60,7 +60,7 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Use A = (3√3/2)n².'
 		};
 	},
-	'lattice-paths-visual': () => {
+	'lattice-paths-explorer': () => {
 		const m = randomInt(2, 8);
 		const n = randomInt(2, 8);
 		const answer = binomial(m + n, m);
@@ -71,7 +71,7 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Use C(m+n, m).'
 		};
 	},
-	'lissajous-canvas': () => {
+	'lissajous-pattern-lab': () => {
 		const frequencyA = randomInt(2, 9);
 		const frequencyB = randomInt(2, 9);
 		const closureTurns = frequencyB / gcd(frequencyA, frequencyB);
@@ -82,7 +82,7 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Use B / gcd(A, B).'
 		};
 	},
-	'pascal-modulo-canvas': () => {
+	'pascal-triangle-modulo-explorer': () => {
 		const n = randomInt(5, 12);
 		const k = randomInt(2, n - 2);
 		const mod = randomInt(2, 9);
@@ -94,7 +94,7 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Compute the binomial value first, then take remainder.'
 		};
 	},
-	'polygon-triangulation-visual': () => {
+	'polygon-sum-of-interior-angles': () => {
 		const sides = randomInt(3, 12);
 		const answer = (sides - 2) * 180;
 		return {
@@ -104,7 +104,7 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Use (n − 2) × 180.'
 		};
 	},
-	'regular-interior-angle-visual': () => {
+	'regular-interior-angle': () => {
 		const sides = randomInt(3, 12);
 		const answer = ((sides - 2) * 180) / sides;
 		return {
@@ -114,7 +114,7 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Use ((n − 2) × 180) / n.'
 		};
 	},
-	'sector-fraction-visual': () => {
+	'sector-fraction-area': () => {
 		const theta = randomStep(15, 330, 15);
 		const answer = (theta / 360) * Math.PI;
 		return {

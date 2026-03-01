@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import '../app.css';
-	import { resolve } from '$app/paths';
+	import { base, resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { BookOpenText, Calculator, ExternalLink, Moon, Sigma, Sun } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
-	import favicon from '$lib/assets/favicon.svg';
 
 	let { children } = $props();
 	let isDark = $state(false);
@@ -43,8 +42,8 @@
 </script>
 
 <svelte:head>
-	<title>Mathnasium Journal</title>
-	<link rel="icon" href={favicon} />
+	<title>Mathnasium Pro</title>
+	<link rel="icon" href={`${base}/sigma2.svg`} type="image/svg+xml" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta
 		name="description"
@@ -137,15 +136,12 @@
 			class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 text-center text-sm text-muted-foreground sm:flex-row sm:items-center sm:px-6 sm:text-left lg:px-8"
 		>
 			<p>
-				Schedule a free assessment for your child today.
-				<a
+				Schedule a <a
 					href="https://www.mathnasium.com/math-centers/lakelandhighlands"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="ml-1 font-medium text-primary underline-offset-4 hover:underline"
-				>
-					Schedule now
-				</a>
+					class="font-medium text-primary underline-offset-4 hover:underline"
+				>free assessment</a> for your child today.
 			</p>
 			<p class="text-xs text-foreground/70">Made by Mathnasium Lakeland Highlands</p>
 		</div>

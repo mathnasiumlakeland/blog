@@ -2,7 +2,7 @@
 	import type { MathToolMeta } from './tool-meta';
 
 	export const toolMeta: MathToolMeta = {
-		id: 'hexagon-triangle-area-visual',
+		id: 'hexagon-triangle-decomposition',
 		title: 'Hexagon Triangle Decomposition',
 		description: 'Break a regular hexagon into six equilateral triangles and track area values.',
 		inputs: 'Hexagon side/radius n selected by slider.',

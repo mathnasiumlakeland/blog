@@ -2,8 +2,8 @@
 title: "Pascal Triangle Patterns Mod n"
 subtitle: "Combinatorics turns into geometry"
 excerpt: "A visual study of binomial coefficients modulo small integers, revealing symmetry and fractal-like motifs."
-publishedOn: "February 21, 2026"
-publishedAt: "2026-02-21"
+publishedOn: "February 27, 2026"
+publishedAt: "2026-02-27"
 readTime: "6 min"
 tags:
   - combinatorics

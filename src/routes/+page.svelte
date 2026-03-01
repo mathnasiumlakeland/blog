@@ -41,11 +41,11 @@
 				</Badge>
 
 				<div class="space-y-4">
-					<h1 class="max-w-xl text-3xl leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-						Math stories from our center, built for students and families.
+					<h1 class="max-w-xl text-3xl leading-tight tracking-tight sm:text-4xl lg:text-5xl">
+						Math resources from our center, built for students and families.
 					</h1>
 					<p class="max-w-2xl text-sm text-muted-foreground sm:text-lg">
-						Mathnasium Journal shares clear explanations, interactive visuals, and take-home ideas from
+						Clear explanations, interactive visuals, and take-home ideas from
 						Mathnasium Lakeland Highlands.
 					</p>
 				</div>

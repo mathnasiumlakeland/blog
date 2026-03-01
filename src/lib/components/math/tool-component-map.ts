@@ -3,15 +3,15 @@ import type { Component } from 'svelte';
 export type ToolComponentLoader = () => Promise<{ default: Component }>;
 
 const interactiveToolLoaders: Record<string, ToolComponentLoader> = {
-	'hexagon-three-circles-visual': () => import('./hexagon-three-circles-visual.svelte'),
-	'hexagon-triangle-area-visual': () => import('./hexagon-triangle-area-visual.svelte'),
-	'lattice-paths-visual': () => import('./lattice-paths-visual.svelte'),
-	'lissajous-canvas': () => import('./lissajous-canvas.svelte'),
-	'pascal-modulo-canvas': () => import('./pascal-modulo-canvas.svelte'),
-	'polygon-triangulation-visual': () => import('./polygon-triangulation-visual.svelte'),
-	'regular-interior-angle-visual': () => import('./regular-interior-angle-visual.svelte'),
+	'hexagon-minus-three-circles': () => import('./hexagon-three-circles-visual.svelte'),
+	'hexagon-triangle-decomposition': () => import('./hexagon-triangle-area-visual.svelte'),
+	'lattice-paths-explorer': () => import('./lattice-paths-visual.svelte'),
+	'lissajous-pattern-lab': () => import('./lissajous-canvas.svelte'),
+	'pascal-triangle-modulo-explorer': () => import('./pascal-modulo-canvas.svelte'),
+	'polygon-sum-of-interior-angles': () => import('./polygon-triangulation-visual.svelte'),
+	'regular-interior-angle': () => import('./regular-interior-angle-visual.svelte'),
 	'scientific-calculator': () => import('./scientific-calculator.svelte'),
-	'sector-fraction-visual': () => import('./sector-fraction-visual.svelte')
+	'sector-fraction-area': () => import('./sector-fraction-visual.svelte')
 };
 
 export function getInteractiveToolLoaderById(id: string) {

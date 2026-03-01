@@ -21,7 +21,7 @@
 			<div class="space-y-2">
 				<h1 class="text-3xl leading-tight sm:text-4xl">Practice and Teaching Tools</h1>
 				<p class="max-w-3xl text-sm text-muted-foreground sm:text-base">
-					Use these resources at home for extra practice or in-center for teaching moments.
+					Resources for extra practice and in-center teaching.
 				</p>
 			</div>
 			<div class="flex flex-wrap gap-2 text-xs sm:text-sm">
@@ -48,16 +48,9 @@
 						<CardTitle class="text-xl">{tool.meta.title}</CardTitle>
 						<p class="text-sm text-muted-foreground">{tool.meta.description}</p>
 					</CardHeader>
-					<CardContent class="space-y-3">
+					<CardContent class="flex flex-1 flex-col gap-3">
 						<LazyToolPreview toolId={tool.id} title={tool.meta.title} />
-
-						<div class="space-y-1 text-sm text-muted-foreground">
-							<p><span class="font-semibold text-foreground">Inputs:</span> {tool.meta.inputs}</p>
-							<p><span class="font-semibold text-foreground">Outputs:</span> {tool.meta.outputs}</p>
-							<p><span class="font-semibold text-foreground">Used for:</span> {tool.meta.useCase}</p>
-						</div>
-
-						<div class="flex flex-wrap gap-1.5">
+						<div class="mt-auto flex flex-wrap gap-1.5">
 							{#each tool.meta.tags as tag (tag)}
 								<Badge variant="outline">{tag}</Badge>
 							{/each}

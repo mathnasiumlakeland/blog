@@ -2,8 +2,8 @@
 title: "Lissajous Curves And Harmonic Motion"
 subtitle: "When frequency ratios draw art"
 excerpt: "Animated parametric curves show how tiny ratio shifts transform shape, rhythm, and symmetry."
-publishedOn: "February 14, 2026"
-publishedAt: "2026-02-14"
+publishedOn: "February 27, 2026"
+publishedAt: "2026-02-27"
 readTime: "5 min"
 tags:
   - trigonometry

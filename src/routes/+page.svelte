@@ -26,7 +26,8 @@
 </script>
 
 <div class="space-y-10 sm:space-y-12">
-	<section class="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+	<!-- <section class="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-start"> -->
+	<section class="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
 		<div
 			class="soft-grid relative min-w-0 overflow-hidden rounded-3xl border border-border/70 bg-card/78 p-5 shadow-sm backdrop-blur-sm sm:p-10"
 		>

@@ -212,7 +212,7 @@
 		<div class="flex items-end justify-between gap-3">
 			<div>
 				<h2 class="text-2xl leading-tight sm:text-3xl">Latest Posts</h2>
-				<p class="text-sm text-muted-foreground">Recent notes and visuals from Mathnasium Journal.</p>
+				<p class="text-sm text-muted-foreground">Read our most recent posts.</p>
 			</div>
 			<Button
 				href={resolve('/posts')}

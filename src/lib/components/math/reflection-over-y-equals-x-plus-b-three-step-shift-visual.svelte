@@ -38,8 +38,8 @@
 	] as const;
 
 	let b = $state(2);
-	let x = $state(3);
-	let y = $state(6);
+	let x = $state(-4);
+	let y = $state(7);
 	let stepIndex = $state(0);
 	let plotSvg: SVGSVGElement | null = $state(null);
 	let activeDrag = $state(false);

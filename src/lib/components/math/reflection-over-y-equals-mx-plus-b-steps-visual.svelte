@@ -32,6 +32,8 @@
 
 	type PlotPoint = { x: number; y: number };
 	type LineEndpoints = { start: PlotPoint; end: PlotPoint };
+	type ScreenPoint = { x: number; y: number };
+	type ArrowSegment = { start: ScreenPoint; end: ScreenPoint; mid: ScreenPoint };
 
 	const steps = [
 		'Choose P and y=mx+b',
@@ -40,15 +42,16 @@
 		'Show angle θ',
 		'Rotate to y=0',
 		'Reflect across y=0',
-		'Rotate back',
+		'Show rotate-back cue: +θ',
+		'Apply rotate back',
 		'Show shift cue: +b',
 		'Translate back'
 	] as const;
 
 	let m = $state(1);
 	let b = $state(2);
-	let x = $state(3);
-	let y = $state(5);
+	let x = $state(-7);
+	let y = $state(3);
 	let stepIndex = $state(0);
 	let plotSvg: SVGSVGElement | null = $state(null);
 	let activeDrag = $state(false);
@@ -71,23 +74,26 @@
 	const canGoBack = $derived(stepIndex > 0);
 	const canGoForward = $derived(stepIndex < steps.length - 1);
 
-	const showMinusShiftCue = $derived(stepIndex === 1 && Math.abs(b) > 1e-9);
-	const showPlusShiftCue = $derived(stepIndex === 7 && Math.abs(b) > 1e-9);
+	const hasVerticalShift = $derived(Math.abs(b) > 1e-9);
+	const showMinusShiftCue = $derived(stepIndex === 1 && hasVerticalShift);
+	const showPlusShiftCue = $derived(stepIndex === 8 && hasVerticalShift);
+	const showShiftPreviewGhosts = $derived(stepIndex === 1 && hasVerticalShift);
+	const showRotateBackCue = $derived(stepIndex === 6);
 	const showTheta = $derived(stepIndex === 3);
 	const showReflectionStep = $derived(stepIndex === 5);
 	const showShiftedGhosts = $derived(stepIndex === 2);
-	const showFinalTranslationGhosts = $derived(stepIndex === 8);
+	const showFinalTranslationGhosts = $derived(stepIndex === 9);
 	const showOriginalReference = $derived(stepIndex >= 2);
 	const showSecondDistanceLabel = $derived(Math.abs(rotatedPoint.y) >= DISTANCE_LABEL_HIDE_THRESHOLD);
 
 	const currentLineSlope = $derived.by(() => {
-		if (stepIndex === 4 || stepIndex === 5) {
+		if (stepIndex === 4 || stepIndex === 5 || stepIndex === 6) {
 			return 0;
 		}
 		return m;
 	});
 	const currentLineIntercept = $derived.by(() => {
-		if (stepIndex <= 1 || stepIndex === 8) {
+		if (stepIndex <= 1 || stepIndex === 9) {
 			return b;
 		}
 		return 0;
@@ -95,7 +101,19 @@
 	const currentLine = $derived.by(() => getLineEndpoints(currentLineSlope, currentLineIntercept));
 
 	const ghostLine = $derived.by<LineEndpoints | null>(() => {
+		if (showShiftPreviewGhosts) {
+			return getLineEndpoints(m, 0);
+		}
+		if (showTheta) {
+			return getLineEndpoints(0, 0);
+		}
 		if (showShiftedGhosts) {
+			return getLineEndpoints(m, b);
+		}
+		if (showRotateBackCue) {
+			return getLineEndpoints(m, 0);
+		}
+		if (showPlusShiftCue) {
 			return getLineEndpoints(m, b);
 		}
 		if (showFinalTranslationGhosts) {
@@ -117,7 +135,10 @@
 		if (stepIndex === 5) {
 			return reflectedRotatedPoint;
 		}
-		if (stepIndex <= 7) {
+		if (stepIndex === 6) {
+			return reflectedRotatedPoint;
+		}
+		if (stepIndex <= 8) {
 			return unrotatedReflectedPoint;
 		}
 		return finalReflectedPoint;
@@ -128,6 +149,12 @@
 		if (stepIndex <= 4) {
 			return 'P';
 		}
+		if (stepIndex === 6) {
+			return "Q'";
+		}
+		if (stepIndex === 7 || stepIndex === 8) {
+			return 'P3';
+		}
 		return "P'";
 	});
 
@@ -135,15 +162,110 @@
 	const activePointScreenY = $derived(toScreenY(activePoint.y));
 	const originalPointScreenX = $derived(toScreenX(originalPoint.x));
 	const originalPointScreenY = $derived(toScreenY(originalPoint.y));
+	const shiftedPointScreenX = $derived(toScreenX(shiftedPoint.x));
+	const shiftedPointScreenY = $derived(toScreenY(shiftedPoint.y));
 	const rotatedPointScreenX = $derived(toScreenX(rotatedPoint.x));
 	const rotatedPointScreenY = $derived(toScreenY(rotatedPoint.y));
 	const reflectedRotatedScreenX = $derived(toScreenX(reflectedRotatedPoint.x));
 	const reflectedRotatedScreenY = $derived(toScreenY(reflectedRotatedPoint.y));
+	const unrotatedReflectedScreenX = $derived(toScreenX(unrotatedReflectedPoint.x));
+	const unrotatedReflectedScreenY = $derived(toScreenY(unrotatedReflectedPoint.y));
+	const finalReflectedScreenX = $derived(toScreenX(finalReflectedPoint.x));
+	const finalReflectedScreenY = $derived(toScreenY(finalReflectedPoint.y));
 	const axisYScreen = $derived(toScreenY(0));
 
-	const thetaArcPoints = $derived.by(() => buildThetaArcPolyline(theta, THETA_ARC_RADIUS));
-	const thetaLabelX = $derived(toScreenX(THETA_ARC_RADIUS * 1.32 * Math.cos(theta / 2)));
-	const thetaLabelY = $derived(toScreenY(THETA_ARC_RADIUS * 1.32 * Math.sin(theta / 2)));
+	const minusShiftPointArrow = $derived.by<ArrowSegment | null>(() => {
+		if (!showMinusShiftCue) {
+			return null;
+		}
+		return trimArrowSegment(
+			{ x: originalPointScreenX, y: originalPointScreenY },
+			{ x: shiftedPointScreenX, y: shiftedPointScreenY },
+			8,
+			10
+		);
+	});
+	const minusShiftLineArrow = $derived.by<ArrowSegment | null>(() => {
+		if (!showMinusShiftCue) {
+			return null;
+		}
+		return trimArrowSegment(
+			{ x: toScreenX(0), y: toScreenY(b) },
+			{ x: toScreenX(0), y: toScreenY(0) },
+			6,
+			6
+		);
+	});
+	const rotateToAxisPointArrow = $derived.by<ArrowSegment | null>(() => {
+		if (!showTheta) {
+			return null;
+		}
+		return trimArrowSegment(
+			{ x: shiftedPointScreenX, y: shiftedPointScreenY },
+			{ x: rotatedPointScreenX, y: rotatedPointScreenY },
+			8,
+			10
+		);
+	});
+	const rotateToAxisLineArrow = $derived.by<ArrowSegment | null>(() => {
+		if (!showTheta) {
+			return null;
+		}
+		const cueStart = { x: 3, y: 3 * m };
+		const cueEnd = rotateToXAxis(cueStart);
+		return trimArrowSegment(
+			{ x: toScreenX(cueStart.x), y: toScreenY(cueStart.y) },
+			{ x: toScreenX(cueEnd.x), y: toScreenY(cueEnd.y) },
+			6,
+			6
+		);
+	});
+	const rotateBackPointArrow = $derived.by<ArrowSegment | null>(() => {
+		if (!showRotateBackCue) {
+			return null;
+		}
+		return trimArrowSegment(
+			{ x: reflectedRotatedScreenX, y: reflectedRotatedScreenY },
+			{ x: unrotatedReflectedScreenX, y: unrotatedReflectedScreenY },
+			8,
+			10
+		);
+	});
+	const plusShiftPointArrow = $derived.by<ArrowSegment | null>(() => {
+		if (!showPlusShiftCue) {
+			return null;
+		}
+		return trimArrowSegment(
+			{ x: unrotatedReflectedScreenX, y: unrotatedReflectedScreenY },
+			{ x: finalReflectedScreenX, y: finalReflectedScreenY },
+			8,
+			10
+		);
+	});
+	const plusShiftLineArrow = $derived.by<ArrowSegment | null>(() => {
+		if (!showPlusShiftCue) {
+			return null;
+		}
+		return trimArrowSegment(
+			{ x: toScreenX(0), y: toScreenY(0) },
+			{ x: toScreenX(0), y: toScreenY(b) },
+			6,
+			6
+		);
+	});
+
+	const rotateToAxisArcPoints = $derived.by(() =>
+		reversePolylinePoints(buildThetaArcPolyline(theta, THETA_ARC_RADIUS + 0.7))
+	);
+	const rotateToAxisLabelX = $derived(
+		toScreenX((THETA_ARC_RADIUS + 0.7) * 1.32 * Math.cos(theta / 2))
+	);
+	const rotateToAxisLabelY = $derived(
+		toScreenY((THETA_ARC_RADIUS + 0.7) * 1.32 * Math.sin(theta / 2))
+	);
+	const rotateBackArcPoints = $derived.by(() => buildThetaArcPolyline(theta, THETA_ARC_RADIUS + 0.7));
+	const rotateBackLabelX = $derived(toScreenX((THETA_ARC_RADIUS + 0.7) * 1.32 * Math.cos(theta / 2)));
+	const rotateBackLabelY = $derived(toScreenY((THETA_ARC_RADIUS + 0.7) * 1.32 * Math.sin(theta / 2)));
 
 	const currentLineMath = $derived.by(() => lineToTeX(currentLineSlope, currentLineIntercept));
 	const originalLineMath = $derived.by(() => lineToTeX(m, b));
@@ -162,14 +284,16 @@
 			case 2:
 				return `${pointToTeX('P_1', shiftedPoint)},\\;\\ell_1:${shiftedLineMath}`;
 			case 3:
-				return thetaMath;
+				return `${thetaMath},\\;\\text{Cue: rotate by }-\\theta`;
 			case 4:
 				return "P_2=R_{-\\theta}P_1,\\;\\ell_2:y=0";
 			case 5:
 				return `${pointToTeX('Q', rotatedPoint)},\\;${pointToTeX("Q'", reflectedRotatedPoint)},\\;Q'=(u,-v)`;
 			case 6:
-				return "P_3=R_{\\theta}Q'";
+				return "\\text{Cue: rotate by }+\\theta";
 			case 7:
+				return "P_3=R_{\\theta}Q',\\;\\ell_3:y=mx";
+			case 8:
 				return 'y\\leftarrow y+b';
 			default:
 				return `${finalPointMath},\\;\\ell:${originalLineMath}`;
@@ -181,19 +305,21 @@
 			case 0:
 				return 'Set m and b, then drag the blue point.';
 			case 1:
-				return 'Cue only: subtract b from every y-value.';
+				return 'Preview the -b move: arrows and ghosts show where the line and point will land.';
 			case 2:
 				return 'Line and point are shifted by -b so the line passes through the origin.';
 			case 3:
-				return 'Measure θ between the x-axis and y=mx.';
+				return 'Preview the -θ rotation with line and point arrows.';
 			case 4:
 				return 'Rotate by -θ so the mirror line becomes y=0.';
 			case 5:
 				return 'Reflect by flipping the y-coordinate in this rotated frame.';
 			case 6:
-				return 'Rotate back by +θ.';
+				return 'Preview the +θ rotation back to line y=mx.';
 			case 7:
-				return 'Cue only: add b back to y-values.';
+				return 'Apply the +θ rotation so the mirror line returns to y=mx.';
+			case 8:
+				return 'Preview the +b move with line and point arrows.';
 			default:
 				return 'Final translated reflection in the original frame.';
 		}
@@ -293,6 +419,44 @@
 		return result;
 	}
 
+	function trimArrowSegment(
+		start: ScreenPoint,
+		end: ScreenPoint,
+		startInset: number,
+		endInset: number
+	): ArrowSegment {
+		const dx = end.x - start.x;
+		const dy = end.y - start.y;
+		const distance = Math.hypot(dx, dy);
+		if (distance < 1e-6) {
+			return { start, end, mid: start };
+		}
+
+		const unitX = dx / distance;
+		const unitY = dy / distance;
+		const maxInset = Math.max(distance - 2, 0);
+		const safeStartInset = Math.min(startInset, maxInset / 2);
+		const safeEndInset = Math.min(endInset, maxInset - safeStartInset);
+
+		const trimmedStart = {
+			x: start.x + unitX * safeStartInset,
+			y: start.y + unitY * safeStartInset
+		};
+		const trimmedEnd = {
+			x: end.x - unitX * safeEndInset,
+			y: end.y - unitY * safeEndInset
+		};
+
+		return {
+			start: trimmedStart,
+			end: trimmedEnd,
+			mid: {
+				x: (trimmedStart.x + trimmedEnd.x) / 2,
+				y: (trimmedStart.y + trimmedEnd.y) / 2
+			}
+		};
+	}
+
 	function getLineEndpoints(slope: number, intercept: number): LineEndpoints {
 		const candidates: PlotPoint[] = [];
 
@@ -344,6 +508,17 @@
 		}
 
 		return points.join(' ');
+	}
+
+	function reversePolylinePoints(polylinePoints: string) {
+		if (!polylinePoints) {
+			return '';
+		}
+		return polylinePoints
+			.trim()
+			.split(/\s+/)
+			.reverse()
+			.join(' ');
 	}
 
 	function pointerToSvgPoint(event: PointerEvent) {
@@ -604,58 +779,188 @@
 			stroke-width="2.6"
 		/>
 
-		{#if showTheta && thetaArcPoints}
+		{#if showTheta && rotateToAxisArcPoints}
 			<polyline
-				points={thetaArcPoints}
+				points={rotateToAxisArcPoints}
 				fill="none"
 				stroke="#d97706"
 				stroke-width="2"
+				stroke-dasharray="5 4"
 				stroke-linecap="round"
 				stroke-linejoin="round"
+				marker-end="url(#general-reflection-step-arrow)"
 			/>
-			<text x={thetaLabelX} y={thetaLabelY} class="fill-amber-700 text-[11px] font-semibold" text-anchor="middle">
-				θ
+			<text
+				x={rotateToAxisLabelX}
+				y={rotateToAxisLabelY}
+				class="fill-amber-700 text-[11px] font-semibold"
+				text-anchor="middle"
+			>
+				−θ
+			</text>
+		{/if}
+
+		{#if showTheta && rotateToAxisLineArrow}
+			<line
+				x1={rotateToAxisLineArrow.start.x}
+				y1={rotateToAxisLineArrow.start.y}
+				x2={rotateToAxisLineArrow.end.x}
+				y2={rotateToAxisLineArrow.end.y}
+				stroke="#0f766e"
+				stroke-width="2"
+				stroke-dasharray="5 4"
+				marker-end="url(#general-reflection-step-arrow)"
+			/>
+			<text
+				x={rotateToAxisLineArrow.mid.x + 8}
+				y={rotateToAxisLineArrow.mid.y - 6}
+				class="fill-teal-700 text-[10px] font-semibold"
+			>
+				line rotate
+			</text>
+		{/if}
+
+		{#if showTheta && rotateToAxisPointArrow}
+			<line
+				x1={rotateToAxisPointArrow.start.x}
+				y1={rotateToAxisPointArrow.start.y}
+				x2={rotateToAxisPointArrow.end.x}
+				y2={rotateToAxisPointArrow.end.y}
+				stroke="#d97706"
+				stroke-width="2"
+				stroke-dasharray="6 4"
+				marker-end="url(#general-reflection-step-arrow)"
+			/>
+			<text
+				x={rotateToAxisPointArrow.mid.x + 8}
+				y={rotateToAxisPointArrow.mid.y - 6}
+				class="fill-amber-700 text-[10px] font-semibold"
+			>
+				point rotate
 			</text>
 		{/if}
 
 		{#if showMinusShiftCue}
-			<line
-				x1={b > 0 ? toScreenX(3) : toScreenX(-3)}
-				y1={toScreenY(8.7)}
-				x2={b > 0 ? toScreenX(-3) : toScreenX(3)}
-				y2={toScreenY(8.7)}
-				stroke="#1d4ed8"
+			{#if minusShiftLineArrow}
+				<line
+					x1={minusShiftLineArrow.start.x}
+					y1={minusShiftLineArrow.start.y}
+					x2={minusShiftLineArrow.end.x}
+					y2={minusShiftLineArrow.end.y}
+					stroke="#0f766e"
+					stroke-width="2"
+					stroke-dasharray="5 4"
+					marker-end="url(#general-reflection-step-arrow)"
+				/>
+				<text
+					x={minusShiftLineArrow.mid.x + 8}
+					y={minusShiftLineArrow.mid.y - 6}
+					class="fill-teal-700 text-[10px] font-semibold"
+				>
+					line −b
+				</text>
+			{/if}
+			{#if minusShiftPointArrow}
+				<line
+					x1={minusShiftPointArrow.start.x}
+					y1={minusShiftPointArrow.start.y}
+					x2={minusShiftPointArrow.end.x}
+					y2={minusShiftPointArrow.end.y}
+					stroke="#1d4ed8"
+					stroke-width="2"
+					stroke-dasharray="6 4"
+					marker-end="url(#general-reflection-step-arrow)"
+				/>
+				<text
+					x={minusShiftPointArrow.mid.x + 8}
+					y={minusShiftPointArrow.mid.y - 6}
+					class="fill-blue-700 text-[10px] font-semibold"
+				>
+					point −b
+				</text>
+			{/if}
+		{/if}
+
+		{#if showRotateBackCue && rotateBackArcPoints}
+			<polyline
+				points={rotateBackArcPoints}
+				fill="none"
+				stroke="#d97706"
 				stroke-width="2"
+				stroke-dasharray="5 4"
+				stroke-linecap="round"
+				stroke-linejoin="round"
 				marker-end="url(#general-reflection-step-arrow)"
 			/>
 			<text
-				x={toScreenX(0)}
-				y={toScreenY(9.2)}
-				class="fill-blue-700 text-[10px] font-semibold"
+				x={rotateBackLabelX}
+				y={rotateBackLabelY}
+				class="fill-amber-700 text-[11px] font-semibold"
 				text-anchor="middle"
 			>
-				−b shift cue
+				+θ
+			</text>
+		{/if}
+
+		{#if showRotateBackCue && rotateBackPointArrow}
+			<line
+				x1={rotateBackPointArrow.start.x}
+				y1={rotateBackPointArrow.start.y}
+				x2={rotateBackPointArrow.end.x}
+				y2={rotateBackPointArrow.end.y}
+				stroke="#d97706"
+				stroke-width="2"
+				stroke-dasharray="6 4"
+				marker-end="url(#general-reflection-step-arrow)"
+			/>
+			<text
+				x={rotateBackPointArrow.mid.x + 8}
+				y={rotateBackPointArrow.mid.y - 6}
+				class="fill-amber-700 text-[10px] font-semibold"
+			>
+				rotate +θ
 			</text>
 		{/if}
 
 		{#if showPlusShiftCue}
-			<line
-				x1={b > 0 ? toScreenX(-3) : toScreenX(3)}
-				y1={toScreenY(8.7)}
-				x2={b > 0 ? toScreenX(3) : toScreenX(-3)}
-				y2={toScreenY(8.7)}
-				stroke="#1d4ed8"
-				stroke-width="2"
-				marker-end="url(#general-reflection-step-arrow)"
-			/>
-			<text
-				x={toScreenX(0)}
-				y={toScreenY(9.2)}
-				class="fill-blue-700 text-[10px] font-semibold"
-				text-anchor="middle"
-			>
-				+b shift cue
-			</text>
+			{#if plusShiftLineArrow}
+				<line
+					x1={plusShiftLineArrow.start.x}
+					y1={plusShiftLineArrow.start.y}
+					x2={plusShiftLineArrow.end.x}
+					y2={plusShiftLineArrow.end.y}
+					stroke="#0f766e"
+					stroke-width="2"
+					stroke-dasharray="5 4"
+					marker-end="url(#general-reflection-step-arrow)"
+				/>
+				<text
+					x={plusShiftLineArrow.mid.x + 8}
+					y={plusShiftLineArrow.mid.y - 6}
+					class="fill-teal-700 text-[10px] font-semibold"
+				>
+					line +b
+				</text>
+			{/if}
+			{#if plusShiftPointArrow}
+				<line
+					x1={plusShiftPointArrow.start.x}
+					y1={plusShiftPointArrow.start.y}
+					x2={plusShiftPointArrow.end.x}
+					y2={plusShiftPointArrow.end.y}
+					stroke="#1d4ed8"
+					stroke-width="2"
+					stroke-dasharray="6 4"
+					marker-end="url(#general-reflection-step-arrow)"
+				/>
+				<text
+					x={plusShiftPointArrow.mid.x + 8}
+					y={plusShiftPointArrow.mid.y - 6}
+					class="fill-blue-700 text-[10px] font-semibold"
+				>
+					point +b
+				</text>
+			{/if}
 		{/if}
 
 		{#if showReflectionStep}
@@ -693,6 +998,70 @@
 					d={formatNumber(Math.abs(rotatedPoint.y))}
 				</text>
 			{/if}
+		{/if}
+
+		{#if showShiftPreviewGhosts}
+			<circle
+				cx={shiftedPointScreenX}
+				cy={shiftedPointScreenY}
+				r="5.5"
+				fill="#eff6ff"
+				stroke="#60a5fa"
+				stroke-width="1.4"
+				stroke-dasharray="4 3"
+			/>
+			<text x={shiftedPointScreenX + 8} y={shiftedPointScreenY - 8} class="fill-blue-600 text-[10px] font-semibold">
+				P1
+			</text>
+		{/if}
+
+		{#if showTheta}
+			<circle
+				cx={rotatedPointScreenX}
+				cy={rotatedPointScreenY}
+				r="5.5"
+				fill="#eff6ff"
+				stroke="#60a5fa"
+				stroke-width="1.4"
+				stroke-dasharray="4 3"
+			/>
+			<text x={rotatedPointScreenX + 8} y={rotatedPointScreenY - 8} class="fill-blue-600 text-[10px] font-semibold">
+				P2
+			</text>
+		{/if}
+
+		{#if showRotateBackCue}
+			<circle
+				cx={unrotatedReflectedScreenX}
+				cy={unrotatedReflectedScreenY}
+				r="5.5"
+				fill="#ecfeff"
+				stroke="#14b8a6"
+				stroke-width="1.4"
+				stroke-dasharray="4 3"
+			/>
+			<text
+				x={unrotatedReflectedScreenX + 8}
+				y={unrotatedReflectedScreenY - 8}
+				class="fill-teal-700 text-[10px] font-semibold"
+			>
+				P3
+			</text>
+		{/if}
+
+		{#if showPlusShiftCue}
+			<circle
+				cx={finalReflectedScreenX}
+				cy={finalReflectedScreenY}
+				r="5.5"
+				fill="#ecfeff"
+				stroke="#14b8a6"
+				stroke-width="1.4"
+				stroke-dasharray="4 3"
+			/>
+			<text x={finalReflectedScreenX + 8} y={finalReflectedScreenY - 8} class="fill-teal-700 text-[10px] font-semibold">
+				P'
+			</text>
 		{/if}
 
 		{#if showOriginalReference}

@@ -332,13 +332,6 @@ $$
 Now we can just plug and chug to find any reflected point across any line.
 
 
-
-For a line with point $P_0$ and normal vector $n$, the reflected point of $P$ is:
-
-$$
-P' = P - 2\frac{(P-P_0)\cdot n}{\|n\|^2}n
-$$
-
 ## Recovering the rules for simple reflections
 
 How do we know this crazy formula is correct? Well, because this is the general formula for *any* line $y=mx+b$, it should work for any particular line we choose to throw at it. Let's try a few:

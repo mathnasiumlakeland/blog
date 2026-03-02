@@ -113,7 +113,7 @@
 					id="tool-search"
 					aria-label="Search tools"
 					bind:value={searchQuery}
-					placeholder="Search by title, topic, or use case"
+					placeholder="Search"
 					class="pl-9"
 				/>
 			</div>
@@ -121,13 +121,14 @@
 				type="button"
 				size="sm"
 				variant="outline"
-				class="shrink-0 gap-1.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
+				class="shrink-0 gap-1 text-xs hover:!bg-card/82 hover:!text-foreground hover:!shadow-none sm:gap-1.5 sm:text-sm"
 				aria-expanded={filtersExpanded}
 				aria-controls="tool-filters-panel"
 				onclick={() => (filtersExpanded = !filtersExpanded)}
 			>
-				<SlidersHorizontal class="size-3.5" />
-				Filter by topic
+				<SlidersHorizontal class="hidden size-3.5 sm:block" />
+				<span class="sm:hidden">Filter</span>
+				<span class="hidden sm:inline">Filter by topic</span>
 				{#if filtersExpanded}
 					<ChevronUp class="size-3.5" />
 				{:else}

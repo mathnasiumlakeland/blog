@@ -25,17 +25,6 @@ Throw a ball off a cliff, fire an arrow at a target, or launch a rocket at an en
 
 What makes this topic so satisfying is a single, powerful insight: **horizontal and vertical motion are completely independent of each other.** The ball moves sideways at a steady pace while simultaneously falling straight down. Two simple equations, combined, give you the full picture.
 
-## Table of Contents
-
-- [Setting Up the Problem](#setting-up-the-problem)
-- [Breaking Down the Initial Velocity](#breaking-down-the-initial-velocity)
-- [Equations of Motion](#equations-of-motion)
-- [Key Measurements](#key-measurements)
-- [The Trajectory Equation](#the-trajectory-equation)
-- [The Best Launch Angle](#the-best-launch-angle)
-- [Real World Example: A Ballistic Missile](#real-world-example-a-ballistic-missile)
-
-
 # Setting Up the Problem
 
 ## Variables and Assumptions

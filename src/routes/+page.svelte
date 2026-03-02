@@ -29,30 +29,32 @@
 	<!-- <section class="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-start"> -->
 	<section class="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
 		<div
-			class="soft-grid relative min-w-0 overflow-hidden rounded-3xl border border-border/70 bg-card/78 p-5 shadow-sm backdrop-blur-sm sm:p-10"
+			class="soft-grid relative min-w-0 overflow-hidden rounded-3xl border border-border/70 bg-card/78 p-5 shadow-sm backdrop-blur-sm sm:p-10 lg:flex lg:h-full lg:flex-col"
 		>
-			<div class="space-y-5">
-				<Badge
-					href="https://www.mathnasium.com/math-centers/lakelandhighlands"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="w-fit border border-primary/20 bg-primary/12 px-3 py-1 text-[11px] text-primary hover:!bg-primary/16 sm:text-sm"
-				>
-					<School class="mr-1.5 size-3.5" />
-					Mathnasium Lakeland Highlands
-				</Badge>
+			<div class="space-y-5 lg:flex lg:h-full lg:flex-col lg:space-y-0">
+				<div class="space-y-5">
+					<Badge
+						href="https://www.mathnasium.com/math-centers/lakelandhighlands"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="w-fit border border-primary/20 bg-primary/12 px-3 py-1 text-[11px] text-primary hover:!bg-primary/16 sm:text-sm"
+					>
+						<School class="mr-1.5 size-3.5" />
+						Mathnasium Lakeland Highlands
+					</Badge>
 
-				<div class="space-y-4">
-					<h1 class="max-w-xl text-3xl leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-						Math resources from our center, built for students and families.
-					</h1>
-					<p class="max-w-2xl text-sm text-muted-foreground sm:text-lg">
-						Clear explanations, interactive visuals, and take-home ideas from
-						Mathnasium Lakeland Highlands.
-					</p>
+					<div class="space-y-4">
+						<h1 class="max-w-xl text-3xl leading-tight tracking-tight sm:text-4xl lg:text-5xl">
+							Math resources from our center, built for students and families.
+						</h1>
+						<p class="max-w-2xl text-sm text-muted-foreground sm:text-lg">
+							Clear explanations, interactive visuals, and take-home ideas from
+							Mathnasium Lakeland Highlands.
+						</p>
+					</div>
 				</div>
 
-				<div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+				<div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 lg:mt-auto">
 					<Button href={resolve('/posts')} class="w-full justify-center gap-1.5 sm:w-auto">
 						Read latest posts
 						<ArrowRight class="size-4" />
@@ -71,7 +73,7 @@
 			</div>
 		</div>
 
-		<Card class="min-w-0 border-border/70 bg-card/85 backdrop-blur-sm">
+		<Card class="flex h-full min-w-0 flex-col border-border/70 bg-card/85 backdrop-blur-sm lg:py-10">
 			<CardHeader class="space-y-2">
 				<Badge variant="secondary" class="w-fit border border-border/80 bg-background/70">
 					Featured Post
@@ -83,28 +85,30 @@
 					<InlineMathText text={featuredPost.subtitle} />
 				</p>
 			</CardHeader>
-			<CardContent class="space-y-4 text-sm">
-				<p class="text-muted-foreground">
-					<InlineMathText text={featuredPost.excerpt} />
-				</p>
-				<p class="text-xs text-muted-foreground">
-					By {featuredPost.author} • {featuredPost.publishedOn} • {featuredPost.readTime}
-				</p>
-				<p class="rounded-lg border border-border/70 bg-background/70 px-3 py-2 text-xs">
-					<MathExpression
-						math={featuredPost.equation}
-						class="overflow-x-auto [&_.katex]:text-[0.95em]"
-					/>
-				</p>
-				<div class="flex flex-wrap gap-2">
-					{#each featuredPost.tags as tag (tag)}
-						<Badge variant="outline">{tag}</Badge>
-					{/each}
+			<CardContent class="flex grow flex-col gap-4 text-sm">
+				<div class="space-y-4">
+					<p class="text-muted-foreground">
+						<InlineMathText text={featuredPost.excerpt} />
+					</p>
+					<p class="text-xs text-muted-foreground">
+						By {featuredPost.author} • {featuredPost.publishedOn} • {featuredPost.readTime}
+					</p>
+					<p class="rounded-lg border border-border/70 bg-background/70 px-3 py-2 text-xs">
+						<MathExpression
+							math={featuredPost.equation}
+							class="overflow-x-auto [&_.katex]:text-[0.95em]"
+						/>
+					</p>
+					<div class="flex flex-wrap gap-2">
+						{#each featuredPost.tags as tag (tag)}
+							<Badge variant="outline">{tag}</Badge>
+						{/each}
+					</div>
 				</div>
 				<Button
 					href={resolve(`/posts/${featuredPost.slug}`)}
 					variant="outline"
-					class="w-full gap-1.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
+					class="mt-auto w-full gap-1.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
 				>
 					<BookOpenText class="size-4" />
 					<span>Read "</span>

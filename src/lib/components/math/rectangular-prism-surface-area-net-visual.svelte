@@ -32,18 +32,18 @@
 		vertexIndexes: number[];
 	};
 
-type NetFaceRect = {
-	id: FaceId;
-	label: string;
-	shortLabel: string;
-	color: string;
-	shape?: 'rect' | 'triangle' | 'circle';
-	triangleDirection?: 'up' | 'down' | 'left' | 'right';
-	x: number;
-	y: number;
-	width: number;
-	height: number;
-	centerX: number;
+	type NetFaceRect = {
+		id: FaceId;
+		label: string;
+		shortLabel: string;
+		color: string;
+		shape?: 'rect' | 'triangle' | 'circle';
+		triangleDirection?: 'up' | 'down' | 'left' | 'right';
+		x: number;
+		y: number;
+		width: number;
+		height: number;
+		centerX: number;
 		centerY: number;
 	};
 
@@ -66,6 +66,7 @@ type NetFaceRect = {
 
 	type RenderFace = {
 		id: FaceId;
+		canonicalId: FaceId;
 		color: string;
 		path: string;
 		alpha: number;
@@ -99,7 +100,12 @@ type NetFaceRect = {
 	const CAMERA_DISTANCE = 11;
 	const MAX_PITCH = Math.PI / 2.05;
 	const ROTATION_SENSITIVITY = 0.01;
+	const WHEEL_ZOOM_SENSITIVITY = 0.0014;
+	const MIN_ZOOM = 0.55;
+	const MAX_ZOOM = 2.4;
 	const FACE_ROTATION_DURATION_MS = 420;
+	const DEFAULT_ANGLED_YAW = -0.7;
+	const DEFAULT_ANGLED_PITCH = 0.35;
 
 	const colors = {
 		orange: '#fb923c',
@@ -295,11 +301,63 @@ type NetFaceRect = {
 			const baseX = offsetX + rectLeftWidth;
 			const baseY = offsetY + triHeight;
 			return withCenters([
-				{ id: 'rect-left', label: 'Rectangle Left', shortLabel: 'RL', color: colors.purple, x: offsetX, y: baseY, width: rectLeftWidth, height: rectBaseHeight },
-				{ id: 'rect-base', label: 'Rectangle Base', shortLabel: 'RB', color: colors.blue, x: baseX, y: baseY, width: rectBaseWidth, height: rectBaseHeight },
-				{ id: 'rect-right', label: 'Rectangle Right', shortLabel: 'RR', color: colors.red, x: baseX + rectBaseWidth, y: baseY, width: rectRightWidth, height: rectBaseHeight },
-				{ id: 'triangle-front', label: 'Triangle Front', shortLabel: 'TF', color: colors.orange, x: baseX, y: offsetY, width: rectBaseWidth, height: triHeight },
-				{ id: 'triangle-back', label: 'Triangle Back', shortLabel: 'TB', color: colors.green, x: baseX, y: baseY + rectBaseHeight, width: rectBaseWidth, height: triHeight }
+				{
+					id: 'rect-left',
+					label: 'Rectangle Left',
+					shortLabel: 'RL',
+					color: colors.purple,
+					shape: 'rect',
+					x: offsetX,
+					y: baseY,
+					width: rectLeftWidth,
+					height: rectBaseHeight
+				},
+				{
+					id: 'rect-base',
+					label: 'Rectangle Base',
+					shortLabel: 'RB',
+					color: colors.blue,
+					shape: 'rect',
+					x: baseX,
+					y: baseY,
+					width: rectBaseWidth,
+					height: rectBaseHeight
+				},
+				{
+					id: 'rect-right',
+					label: 'Rectangle Right',
+					shortLabel: 'RR',
+					color: colors.red,
+					shape: 'rect',
+					x: baseX + rectBaseWidth,
+					y: baseY,
+					width: rectRightWidth,
+					height: rectBaseHeight
+				},
+				{
+					id: 'triangle-front',
+					label: 'Triangle Front',
+					shortLabel: 'TF',
+					color: colors.orange,
+					shape: 'triangle',
+					triangleDirection: 'up',
+					x: baseX,
+					y: offsetY,
+					width: rectBaseWidth,
+					height: triHeight
+				},
+				{
+					id: 'triangle-back',
+					label: 'Triangle Back',
+					shortLabel: 'TB',
+					color: colors.green,
+					shape: 'triangle',
+					triangleDirection: 'down',
+					x: baseX,
+					y: baseY + rectBaseHeight,
+					width: rectBaseWidth,
+					height: triHeight
+				}
 			]);
 		},
 		buildFoldLines: (rects) => {
@@ -361,11 +419,11 @@ type NetFaceRect = {
 			];
 		},
 		faces: [
-			{ id: 'base', label: 'Base', shortLabel: 'B', color: colors.blue, vertexIndexes: [0, 3, 2, 1] },
 			{ id: 'front-tri', label: 'Front Triangle', shortLabel: 'F', color: colors.orange, vertexIndexes: [3, 2, 4] },
 			{ id: 'right-tri', label: 'Right Triangle', shortLabel: 'R', color: colors.red, vertexIndexes: [2, 1, 4] },
 			{ id: 'back-tri', label: 'Back Triangle', shortLabel: 'Bk', color: colors.green, vertexIndexes: [1, 0, 4] },
-			{ id: 'left-tri', label: 'Left Triangle', shortLabel: 'L', color: colors.purple, vertexIndexes: [0, 3, 4] }
+			{ id: 'left-tri', label: 'Left Triangle', shortLabel: 'L', color: colors.purple, vertexIndexes: [0, 3, 4] },
+			{ id: 'base', label: 'Base', shortLabel: 'B', color: colors.blue, vertexIndexes: [0, 1, 2, 3] }
 		],
 		faceOrientationById: {
 			base: { yaw: 0, pitch: -Math.PI / 2 },
@@ -375,21 +433,75 @@ type NetFaceRect = {
 			'left-tri': { yaw: Math.PI / 2, pitch: 0.25 }
 		},
 		buildNetRects: ({ baseSide, slantHeight }) => {
-			const unit = fitNetUnit(baseSide * 3, baseSide * 3);
+			const unit = fitNetUnit(baseSide + 2 * slantHeight, baseSide + 2 * slantHeight);
 			const square = baseSide * unit;
-			const triHeight = slantHeight * unit * 0.7;
-			const gridWidth = square * 3;
+			const triHeight = slantHeight * unit;
+			const gridWidth = square + triHeight * 2;
 			const gridHeight = square + triHeight * 2;
 			const offsetX = (NET_WIDTH - gridWidth) / 2;
 			const offsetY = (NET_HEIGHT - gridHeight) / 2;
-			const baseX = offsetX + square;
+			const baseX = offsetX + triHeight;
 			const baseY = offsetY + triHeight;
 			return withCenters([
-				{ id: 'left-tri', label: 'Left Triangle', shortLabel: 'L', color: colors.purple, x: offsetX, y: baseY, width: square, height: square },
-				{ id: 'base', label: 'Base', shortLabel: 'B', color: colors.blue, x: baseX, y: baseY, width: square, height: square },
-				{ id: 'right-tri', label: 'Right Triangle', shortLabel: 'R', color: colors.red, x: baseX + square, y: baseY, width: square, height: square },
-				{ id: 'front-tri', label: 'Front Triangle', shortLabel: 'F', color: colors.orange, x: baseX, y: offsetY, width: square, height: triHeight },
-				{ id: 'back-tri', label: 'Back Triangle', shortLabel: 'Bk', color: colors.green, x: baseX, y: baseY + square, width: square, height: triHeight }
+				{
+					id: 'left-tri',
+					label: 'Left Triangle',
+					shortLabel: 'L',
+					color: colors.purple,
+					shape: 'triangle',
+					triangleDirection: 'left',
+					x: offsetX,
+					y: baseY,
+					width: triHeight,
+					height: square
+				},
+				{
+					id: 'base',
+					label: 'Base',
+					shortLabel: 'B',
+					color: colors.blue,
+					shape: 'rect',
+					x: baseX,
+					y: baseY,
+					width: square,
+					height: square
+				},
+				{
+					id: 'right-tri',
+					label: 'Right Triangle',
+					shortLabel: 'R',
+					color: colors.red,
+					shape: 'triangle',
+					triangleDirection: 'right',
+					x: baseX + square,
+					y: baseY,
+					width: triHeight,
+					height: square
+				},
+				{
+					id: 'front-tri',
+					label: 'Front Triangle',
+					shortLabel: 'F',
+					color: colors.orange,
+					shape: 'triangle',
+					triangleDirection: 'up',
+					x: baseX,
+					y: offsetY,
+					width: square,
+					height: triHeight
+				},
+				{
+					id: 'back-tri',
+					label: 'Back Triangle',
+					shortLabel: 'Bk',
+					color: colors.green,
+					shape: 'triangle',
+					triangleDirection: 'down',
+					x: baseX,
+					y: baseY + square,
+					width: square,
+					height: triHeight
+				}
 			]);
 		},
 		buildFoldLines: (rects) => {
@@ -400,10 +512,10 @@ type NetFaceRect = {
 			const back = findRect(rects, 'back-tri');
 			if (!base || !left || !right || !front || !back) return [];
 			return [
-				{ id: 'lb', x1: left.x + left.width, y1: left.y, x2: left.x + left.width, y2: left.y + left.height },
-				{ id: 'br', x1: right.x, y1: right.y, x2: right.x, y2: right.y + right.height },
-				{ id: 'fb', x1: front.x, y1: front.y + front.height, x2: front.x + front.width, y2: front.y + front.height },
-				{ id: 'bb', x1: back.x, y1: back.y, x2: back.x + back.width, y2: back.y }
+				{ id: 'lb', x1: base.x, y1: base.y, x2: base.x, y2: base.y + base.height },
+				{ id: 'br', x1: base.x + base.width, y1: base.y, x2: base.x + base.width, y2: base.y + base.height },
+				{ id: 'fb', x1: base.x, y1: base.y, x2: base.x + base.width, y2: base.y },
+				{ id: 'bb', x1: base.x, y1: base.y + base.height, x2: base.x + base.width, y2: base.y + base.height }
 			];
 		},
 		buildFormulaRows: ({ baseSide, slantHeight }) => {
@@ -462,15 +574,28 @@ type NetFaceRect = {
 					id: `side-${i}`,
 					label: 'Curved Side',
 					shortLabel: 'S',
-					color: i % 2 === 0 ? colors.teal : colors.pink,
+					color: colors.teal,
 					vertexIndexes: [i, next, segments + next, segments + i]
 				});
 			}
-			faces.push({ id: 'top-circle', label: 'Top Circle', shortLabel: 'T', color: colors.yellow, vertexIndexes: Array.from({ length: segments }, (_, i) => i) });
-			faces.push({ id: 'bottom-circle', label: 'Bottom Circle', shortLabel: 'B', color: colors.blue, vertexIndexes: Array.from({ length: segments }, (_, i) => segments - 1 - i + segments) });
+			faces.push({
+				id: 'top-circle',
+				label: 'Top Circle',
+				shortLabel: 'T',
+				color: colors.yellow,
+				vertexIndexes: Array.from({ length: segments }, (_, i) => segments - 1 - i)
+			});
+			faces.push({
+				id: 'bottom-circle',
+				label: 'Bottom Circle',
+				shortLabel: 'B',
+				color: colors.blue,
+				vertexIndexes: Array.from({ length: segments }, (_, i) => segments + i)
+			});
 			return faces;
 		})(),
 		faceOrientationById: {
+			'curved-side': { yaw: 0, pitch: 0 },
 			'top-circle': { yaw: 0, pitch: Math.PI / 2 },
 			'bottom-circle': { yaw: 0, pitch: -Math.PI / 2 },
 			'side-0': { yaw: 0, pitch: 0 }
@@ -486,9 +611,39 @@ type NetFaceRect = {
 			const ox = (NET_WIDTH - gridW) / 2;
 			const oy = (NET_HEIGHT - gridH) / 2;
 			return withCenters([
-				{ id: 'curved-side', label: 'Curved Side', shortLabel: 'S', color: colors.teal, x: ox, y: oy + (gridH - rectH) / 2, width: rectW, height: rectH },
-				{ id: 'top-circle', label: 'Top Circle', shortLabel: 'T', color: colors.yellow, x: ox + rectW + 8, y: oy, width: circleSize, height: circleSize },
-				{ id: 'bottom-circle', label: 'Bottom Circle', shortLabel: 'B', color: colors.blue, x: ox + rectW + 8, y: oy + circleSize + 8, width: circleSize, height: circleSize }
+				{
+					id: 'curved-side',
+					label: 'Curved Side',
+					shortLabel: 'S',
+					color: colors.teal,
+					shape: 'rect',
+					x: ox,
+					y: oy + (gridH - rectH) / 2,
+					width: rectW,
+					height: rectH
+				},
+				{
+					id: 'top-circle',
+					label: 'Top Circle',
+					shortLabel: 'T',
+					color: colors.yellow,
+					shape: 'circle',
+					x: ox + rectW + 8,
+					y: oy,
+					width: circleSize,
+					height: circleSize
+				},
+				{
+					id: 'bottom-circle',
+					label: 'Bottom Circle',
+					shortLabel: 'B',
+					color: colors.blue,
+					shape: 'circle',
+					x: ox + rectW + 8,
+					y: oy + circleSize + 8,
+					width: circleSize,
+					height: circleSize
+				}
 			]);
 		},
 		buildFoldLines: (rects) => {
@@ -542,8 +697,9 @@ type NetFaceRect = {
 		radius: 3
 	});
 
-	let yaw = $state(-0.7);
-	let pitch = $state(0.35);
+	let yaw = $state(DEFAULT_ANGLED_YAW);
+	let pitch = $state(DEFAULT_ANGLED_PITCH);
+	let zoom = $state(getDefaultZoom(selectedShapeId));
 	let activeFaceId = $state<FaceId>('front');
 
 	let polySvg: SVGSVGElement | null = $state(null);
@@ -565,7 +721,7 @@ type NetFaceRect = {
 
 	const shapeFaces = $derived(selectedShape.faces);
 	const prismVertices = $derived(selectedShape.buildVertices(currentDimensionValues));
-	const projectionScale = $derived(164 / (maxAbsCoordinate(prismVertices) + 0.9));
+	const projectionScale = $derived((164 / (maxAbsCoordinate(prismVertices) + 0.9)) * zoom);
 	const rotatedVertices = $derived.by(() => prismVertices.map((point) => rotatePoint(point, yaw, pitch)));
 
 	const renderedFaces = $derived.by<RenderFace[]>(() => {
@@ -588,6 +744,7 @@ type NetFaceRect = {
 				const light = clamp(dotVec(normal, lightDirection), 0, 1);
 				return {
 					id: face.id,
+					canonicalId: toCanonicalFaceId(selectedShapeId, face.id),
 					color: face.color,
 					path: `${path} Z`,
 					alpha: 0.62 + light * 0.24,
@@ -600,12 +757,9 @@ type NetFaceRect = {
 	});
 
 	const frontFacingFaceId = $derived.by(() => {
-		if (renderedFaces.length === 0) return activeFaceId;
+		if (renderedFaces.length === 0) return toCanonicalFaceId(selectedShapeId, activeFaceId);
 		const top = renderedFaces.reduce((winner, face) => (face.viewDot > winner.viewDot ? face : winner));
-		if (selectedShapeId === 'cylinder' && top.id.startsWith('side-')) {
-			return 'curved-side';
-		}
-		return top.id;
+		return top.canonicalId;
 	});
 
 	const highlightedFaceId = $derived(dragPointerId !== null ? frontFacingFaceId : activeFaceId);
@@ -623,8 +777,10 @@ type NetFaceRect = {
 		selectedShapeId = shapeId;
 		const first = shapeDefinitions[shapeId].faces[0]?.id;
 		if (!first) return;
-		activeFaceId = first;
-		const orientation = shapeDefinitions[shapeId].faceOrientationById[first] ?? { yaw: 0, pitch: 0 };
+		const canonicalFirst = toCanonicalFaceId(shapeId, first);
+		activeFaceId = canonicalFirst;
+		zoom = getDefaultZoom(shapeId);
+		const orientation = getDefaultOrientation(shapeId);
 		yaw = orientation.yaw;
 		pitch = orientation.pitch;
 	}
@@ -665,6 +821,12 @@ type NetFaceRect = {
 		const deltaY = event.clientY - dragStartY;
 		yaw = dragStartYaw + deltaX * ROTATION_SENSITIVITY;
 		pitch = clamp(dragStartPitch + deltaY * ROTATION_SENSITIVITY, -MAX_PITCH, MAX_PITCH);
+	}
+
+	function handlePolyWheel(event: WheelEvent) {
+		event.preventDefault();
+		const factor = Math.exp(-event.deltaY * WHEEL_ZOOM_SENSITIVITY);
+		zoom = clamp(zoom * factor, MIN_ZOOM, MAX_ZOOM);
 	}
 
 	function stopPolyDrag(event: PointerEvent) {
@@ -726,6 +888,43 @@ type NetFaceRect = {
 		const availableWidth = NET_WIDTH - NET_PADDING * 2;
 		const availableHeight = NET_HEIGHT - NET_PADDING * 2;
 		return Math.min(availableWidth / Math.max(1, unitsAcross), availableHeight / Math.max(1, unitsDown));
+	}
+
+	function getDefaultZoom(shapeId: ShapeId) {
+		if (shapeId === 'cube') return 0.9;
+		return 1;
+	}
+
+	function getDefaultOrientation(_shapeId: ShapeId) {
+		return { yaw: DEFAULT_ANGLED_YAW, pitch: DEFAULT_ANGLED_PITCH };
+	}
+
+	function toCanonicalFaceId(shapeId: ShapeId, faceId: FaceId) {
+		if (shapeId === 'cylinder' && faceId.startsWith('side-')) {
+			return 'curved-side';
+		}
+		return faceId;
+	}
+
+	function trianglePathForNetFace(face: NetFaceRect) {
+		const left = face.x;
+		const right = face.x + face.width;
+		const top = face.y;
+		const bottom = face.y + face.height;
+		const midX = face.centerX;
+		const midY = face.centerY;
+
+		switch (face.triangleDirection) {
+			case 'down':
+				return `M ${left} ${top} L ${right} ${top} L ${midX} ${bottom} Z`;
+			case 'left':
+				return `M ${right} ${top} L ${right} ${bottom} L ${left} ${midY} Z`;
+			case 'right':
+				return `M ${left} ${top} L ${right} ${midY} L ${left} ${bottom} Z`;
+			case 'up':
+			default:
+				return `M ${left} ${bottom} L ${midX} ${top} L ${right} ${bottom} Z`;
+		}
 	}
 
 	function withCenters(raw: Array<Omit<NetFaceRect, 'centerX' | 'centerY'>>) {
@@ -838,6 +1037,7 @@ type NetFaceRect = {
 			class="h-auto w-full touch-none rounded-xl border border-border/70 bg-card/70"
 			role="img"
 			aria-label={`${selectedShape.title} 3D model for surface area`}
+			onwheel={handlePolyWheel}
 			onpointerdown={handlePolyPointerDown}
 			onpointermove={handlePolyPointerMove}
 			onpointerup={stopPolyDrag}
@@ -856,9 +1056,9 @@ type NetFaceRect = {
 				<path
 					d={renderedFace.path}
 					fill={renderedFace.color}
-					fill-opacity={renderedFace.id === highlightedFaceId ? clamp(renderedFace.alpha + 0.14, 0.2, 1) : renderedFace.alpha}
-					stroke={renderedFace.id === highlightedFaceId ? 'rgba(15,23,42,0.95)' : 'rgba(15,23,42,0.76)'}
-					stroke-width={renderedFace.id === highlightedFaceId ? 2.7 : 1.8}
+					fill-opacity={renderedFace.canonicalId === highlightedFaceId ? clamp(renderedFace.alpha + 0.14, 0.2, 1) : renderedFace.alpha}
+					stroke={renderedFace.canonicalId === highlightedFaceId ? 'rgba(15,23,42,0.95)' : 'rgba(15,23,42,0.76)'}
+					stroke-width={renderedFace.canonicalId === highlightedFaceId ? 2.7 : 1.8}
 				></path>
 			{/each}
 		</svg>
@@ -892,22 +1092,53 @@ type NetFaceRect = {
 
 			{#each netFaceRects as netFace (netFace.id)}
 				<g>
-					<rect
-						x={netFace.x}
-						y={netFace.y}
-						width={netFace.width}
-						height={netFace.height}
-						rx="6"
-						fill={netFace.color}
-						fill-opacity={netFace.id === highlightedFaceId ? 0.88 : 0.68}
-						stroke={netFace.id === highlightedFaceId ? 'rgba(15,23,42,0.96)' : 'rgba(15,23,42,0.72)'}
-						stroke-width={netFace.id === highlightedFaceId ? 2.4 : 1.6}
-						role="button"
-						tabindex="0"
-						aria-label={`Rotate to the ${netFace.label.toLowerCase()} face`}
-						onclick={() => rotateToFace(netFace.id)}
-						onkeydown={(event) => handleNetFaceKeydown(event, netFace.id)}
-					></rect>
+					{#if netFace.shape === 'triangle'}
+						<path
+							d={trianglePathForNetFace(netFace)}
+							fill={netFace.color}
+							fill-opacity={netFace.id === highlightedFaceId ? 0.88 : 0.68}
+							stroke={netFace.id === highlightedFaceId ? 'rgba(15,23,42,0.96)' : 'rgba(15,23,42,0.72)'}
+							stroke-width={netFace.id === highlightedFaceId ? 2.4 : 1.6}
+							role="button"
+							tabindex="0"
+							aria-label={`Rotate to the ${netFace.label.toLowerCase()} face`}
+							onclick={() => rotateToFace(netFace.id)}
+							onkeydown={(event) => handleNetFaceKeydown(event, netFace.id)}
+						></path>
+					{:else if netFace.shape === 'circle'}
+						<ellipse
+							cx={netFace.centerX}
+							cy={netFace.centerY}
+							rx={netFace.width / 2}
+							ry={netFace.height / 2}
+							fill={netFace.color}
+							fill-opacity={netFace.id === highlightedFaceId ? 0.88 : 0.68}
+							stroke={netFace.id === highlightedFaceId ? 'rgba(15,23,42,0.96)' : 'rgba(15,23,42,0.72)'}
+							stroke-width={netFace.id === highlightedFaceId ? 2.4 : 1.6}
+							role="button"
+							tabindex="0"
+							aria-label={`Rotate to the ${netFace.label.toLowerCase()} face`}
+							onclick={() => rotateToFace(netFace.id)}
+							onkeydown={(event) => handleNetFaceKeydown(event, netFace.id)}
+						></ellipse>
+					{:else}
+						<rect
+							x={netFace.x}
+							y={netFace.y}
+							width={netFace.width}
+							height={netFace.height}
+							rx="6"
+							fill={netFace.color}
+							fill-opacity={netFace.id === highlightedFaceId ? 0.88 : 0.68}
+							stroke={netFace.id === highlightedFaceId ? 'rgba(15,23,42,0.96)' : 'rgba(15,23,42,0.72)'}
+							stroke-width={netFace.id === highlightedFaceId ? 2.4 : 1.6}
+							role="button"
+							tabindex="0"
+							aria-label={`Rotate to the ${netFace.label.toLowerCase()} face`}
+							onclick={() => rotateToFace(netFace.id)}
+							onkeydown={(event) => handleNetFaceKeydown(event, netFace.id)}
+						></rect>
+					{/if}
 					<text
 						x={netFace.centerX}
 						y={netFace.centerY - 6}

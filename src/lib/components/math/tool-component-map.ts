@@ -22,6 +22,9 @@ const interactiveToolComponentSources: ToolComponentSourceMap = {
 	'reflection-over-y-equals-x-plus-b': 'reflection-over-y-equals-x-plus-b-visual.svelte',
 	'reflection-over-y-equals-x-plus-b-three-step-shift':
 		'reflection-over-y-equals-x-plus-b-three-step-shift-visual.svelte',
+	'projectile-trajectory': 'projectile-trajectory-visual.svelte',
+	'velocity-components': 'velocity-components-visual.svelte',
+	'projectile-range-vs-angle': 'projectile-range-vs-angle-visual.svelte',
 	'scientific-calculator': 'scientific-calculator.svelte',
 	'sector-fraction-area': 'sector-fraction-visual.svelte'
 };
@@ -48,6 +51,9 @@ const interactiveToolLoaders: Record<string, ToolComponentLoader> = {
 		import('./reflection-over-y-equals-x-plus-b-visual.svelte'),
 	'reflection-over-y-equals-x-plus-b-three-step-shift': () =>
 		import('./reflection-over-y-equals-x-plus-b-three-step-shift-visual.svelte'),
+	'projectile-trajectory': () => import('./projectile-trajectory-visual.svelte'),
+	'velocity-components': () => import('./velocity-components-visual.svelte'),
+	'projectile-range-vs-angle': () => import('./projectile-range-vs-angle-visual.svelte'),
 	'scientific-calculator': () => import('./scientific-calculator.svelte'),
 	'sector-fraction-area': () => import('./sector-fraction-visual.svelte')
 };

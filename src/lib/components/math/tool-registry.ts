@@ -227,6 +227,47 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
+		id: 'projectile-trajectory',
+		meta: {
+			id: 'projectile-trajectory',
+			title: 'Projectile Trajectory',
+			description:
+				'Plot the parabolic arc of a projectile with adjustable launch speed and angle.',
+			inputs: 'Initial speed v₀ (m/s) and launch angle θ (degrees).',
+			outputs: 'Parabolic trajectory plot, time of flight T, maximum height H, and range R.',
+			useCase: 'Use for ballistic kinematics lessons on the equations of motion and projectile arcs.',
+			tags: ['kinematics', 'physics', 'quadratics', 'trigonometry', 'geometry']
+		}
+	},
+	{
+		id: 'velocity-components',
+		meta: {
+			id: 'velocity-components',
+			title: 'Velocity Components',
+			description:
+				'Decompose an initial velocity vector into horizontal and vertical components using trigonometry.',
+			inputs: 'Launch angle θ from 5° to 85°.',
+			outputs: 'Visual vector triangle with vₓ = v₀ cos θ and vy = v₀ sin θ labeled.',
+			useCase:
+				'Use for connecting trigonometric decomposition to real-world projectile motion set-up.',
+			tags: ['kinematics', 'trigonometry', 'vectors', 'physics', 'geometry']
+		}
+	},
+	{
+		id: 'projectile-range-vs-angle',
+		meta: {
+			id: 'projectile-range-vs-angle',
+			title: 'Projectile Range vs Angle',
+			description:
+				'Plot horizontal range as a function of launch angle and find the 45° optimum.',
+			inputs: 'Initial speed v₀ and selected launch angle θ.',
+			outputs: 'Range curve R(θ), peak at 45°, and equal-range complementary angle pair.',
+			useCase:
+				'Use for optimization and symmetry discussions in projectile motion.',
+			tags: ['kinematics', 'optimization', 'trigonometry', 'physics', 'functions']
+		}
+	},
+	{
 		id: 'scientific-calculator',
 		meta: {
 			id: 'scientific-calculator',

@@ -1,8 +1,21 @@
 <script module lang="ts">
 	import type { MathToolMeta } from './tool-meta';
-	import { requireInteractiveToolMetaById } from './tool-registry';
 
-	export const toolMeta: MathToolMeta = requireInteractiveToolMetaById('scientific-calculator');
+	export const toolMeta: MathToolMeta = {
+		id: 'scientific-calculator',
+		title: 'Scientific Calculator',
+		description:
+			'Enter algebraic and trigonometric expressions with live math rendering, instant evaluation, and history.',
+		inputs:
+			'Keyboard or keypad expressions with operators, parentheses, trig/log functions, roots, constants, and Ans.',
+		outputs:
+			'Live rendered math expression, right-aligned running result, and a short recent-results history.',
+		useCase:
+			'Use for arithmetic fluency, function practice, and quick verification during instruction or homework.',
+		tags: ['algebra', 'trigonometry', 'calculator', 'functions', 'evaluation'],
+		audience: ['students', 'instructors'],
+		kind: 'interactive'
+	};
 </script>
 
 <script lang="ts">

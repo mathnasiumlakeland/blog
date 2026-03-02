@@ -238,6 +238,43 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: "Use x' = x - [2m(mx - y + b)] / (m² + 1)."
 		};
 	},
+	'projectile-trajectory': () => {
+		const v0 = randomStep(20, 100, 10);
+		const angleDeg = randomStep(10, 80, 5);
+		const theta = (angleDeg * Math.PI) / 180;
+		const vy = v0 * Math.sin(theta);
+		const answer = (2 * vy) / 9.8;
+		return {
+			prompt: `A projectile is launched at v₀ = ${v0} m/s and θ = ${angleDeg}°. What is the time of flight T in seconds? (Round to 2 decimal places.)`,
+			answer,
+			tolerance: 0.02,
+			hint: 'Use T = 2v₀ sin θ / g with g = 9.8 m/s².'
+		};
+	},
+	'velocity-components': () => {
+		const v0 = randomInt(10, 50);
+		const angleDeg = randomStep(10, 80, 5);
+		const theta = (angleDeg * Math.PI) / 180;
+		const answer = parseFloat((v0 * Math.cos(theta)).toFixed(2));
+		return {
+			prompt: `An object is launched at v₀ = ${v0} m/s at an angle of θ = ${angleDeg}°. What is the horizontal component vₓ (to 2 decimal places)?`,
+			answer,
+			tolerance: 0.05,
+			hint: 'Use vₓ = v₀ cos θ.'
+		};
+	},
+	'projectile-range-vs-angle': () => {
+		const v0 = randomStep(20, 100, 10);
+		const angleDeg = randomStep(10, 80, 5);
+		const theta = (angleDeg * Math.PI) / 180;
+		const answer = parseFloat(((v0 * v0 * Math.sin(2 * theta)) / 9.8).toFixed(1));
+		return {
+			prompt: `A projectile is launched at v₀ = ${v0} m/s and θ = ${angleDeg}°. What is the horizontal range R in meters? (Round to 1 decimal place.)`,
+			answer,
+			tolerance: 0.5,
+			hint: 'Use R = v₀² sin(2θ) / g with g = 9.8 m/s².'
+		};
+	},
 	'sector-fraction-area': () => {
 		const theta = randomStep(15, 330, 15);
 		const answer = (theta / 360) * Math.PI;

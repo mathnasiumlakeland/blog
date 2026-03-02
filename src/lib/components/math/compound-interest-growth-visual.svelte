@@ -14,20 +14,24 @@
 	const PAD_RIGHT = 24;
 	const PAD_TOP = 24;
 	const PAD_BOTTOM = 54;
+	const X_AXIS_MIN = 0;
+	const X_AXIS_MAX = 30;
+	const Y_AXIS_MIN = 0;
+	const BASE_Y_AXIS_MAX = 50000;
+	const Y_TICK_COUNT = 5;
 	const innerWidth = PLOT_WIDTH - PAD_LEFT - PAD_RIGHT;
 	const innerHeight = PLOT_HEIGHT - PAD_TOP - PAD_BOTTOM;
+	const xRange = X_AXIS_MAX - X_AXIS_MIN;
 
 	let principal = $state(2000);
-	let annualRatePercent = $state(6);
+	let annualRatePercent = $state(12);
 	let compoundsPerYear = $state(12);
-	let horizonYears = $state(25);
-	let selectedYear = $state(10);
+	let selectedYear = $state(25);
 
-	const safePrincipal = $derived(Math.max(100, Math.min(50000, Math.round(principal))));
+	const safePrincipal = $derived(Math.max(100, Math.min(2000, Math.round(principal))));
 	const safeAnnualRatePercent = $derived(Math.max(0, Math.min(30, annualRatePercent)));
 	const safeCompoundsPerYear = $derived(Math.max(1, Math.min(365, Math.round(compoundsPerYear))));
-	const safeHorizonYears = $derived(Math.max(1, Math.min(50, Math.round(horizonYears))));
-	const safeSelectedYear = $derived(Math.max(0, Math.min(safeHorizonYears, selectedYear)));
+	const safeSelectedYear = $derived(Math.max(X_AXIS_MIN, Math.min(X_AXIS_MAX, selectedYear)));
 	const annualRateDecimal = $derived(safeAnnualRatePercent / 100);
 	const ratePerPeriod = $derived(annualRateDecimal / safeCompoundsPerYear);
 
@@ -47,63 +51,52 @@
 		}).format(value);
 	}
 
+	function formatAxisValue(value: number) {
+		const normalized = Math.abs(value) < 1e-9 ? 0 : value;
+		const absValue = Math.abs(normalized);
+		let maxFractionDigits = 2;
+		if (absValue >= 1000) {
+			maxFractionDigits = 0;
+		} else if (absValue >= 100) {
+			maxFractionDigits = 1;
+		}
+		return new Intl.NumberFormat('en-US', {
+			maximumFractionDigits: maxFractionDigits
+		}).format(normalized);
+	}
+
+	function clamp(value: number, minValue: number, maxValue: number) {
+		return Math.min(maxValue, Math.max(minValue, value));
+	}
+
 	function toPlotX(timeYears: number) {
-		return PAD_LEFT + (timeYears / safeHorizonYears) * innerWidth;
+		const clampedTime = clamp(timeYears, X_AXIS_MIN, X_AXIS_MAX);
+		return PAD_LEFT + ((clampedTime - X_AXIS_MIN) / xRange) * innerWidth;
 	}
 
 	function toPlotY(amount: number) {
-		return PAD_TOP + ((yMax - amount) / yMax) * innerHeight;
+		const clampedAmount = clamp(amount, Y_AXIS_MIN, yAxisMax);
+		return PAD_TOP + ((yAxisMax - clampedAmount) / yRange) * innerHeight;
 	}
-
-	function niceStep(value: number) {
-		if (value <= 0) {
-			return 1;
-		}
-
-		const exponent = Math.floor(Math.log10(value));
-		const fraction = value / 10 ** exponent;
-
-		let niceFraction = 1;
-		if (fraction <= 1) {
-			niceFraction = 1;
-		} else if (fraction <= 2) {
-			niceFraction = 2;
-		} else if (fraction <= 5) {
-			niceFraction = 5;
-		} else {
-			niceFraction = 10;
-		}
-
-		return niceFraction * 10 ** exponent;
-	}
-
-	function makeYTicks(maxAmount: number) {
-		const step = niceStep(maxAmount / 4);
-		const ceiling = Math.ceil(maxAmount / step) * step;
-		const ticks: number[] = [];
-		for (let tick = 0; tick <= ceiling + step * 0.5; tick += step) {
-			ticks.push(tick);
-		}
-		return ticks;
-	}
-
-	function makeXTicks(maxYears: number) {
-		const rawTicks = [0, maxYears * 0.25, maxYears * 0.5, maxYears * 0.75, maxYears];
-		return [...new Set(rawTicks.map((tick) => Math.round(tick * 10) / 10))];
-	}
-
-	const maxAmount = $derived(Math.max(valueAt(safeHorizonYears), safePrincipal));
-	const yTicks = $derived(makeYTicks(Math.max(10, maxAmount * 1.08)));
-	const yMax = $derived(yTicks[yTicks.length - 1] ?? 10);
-	const xTicks = $derived(makeXTicks(safeHorizonYears));
+	const xTicks = [0, 5, 10, 15, 20, 25, 30];
+	const plottedHorizonYears = X_AXIS_MAX;
+	const plottedMaxAmount = $derived(
+		Math.max(safePrincipal, valueAt(plottedHorizonYears), valueAt(safeSelectedYear))
+	);
+	const yAxisMax = $derived(Math.max(BASE_Y_AXIS_MAX, plottedMaxAmount * 1.12));
+	const yRange = $derived(Math.max(1, yAxisMax - Y_AXIS_MIN));
+	const yTicks = $derived.by(() => {
+		const tickStep = yAxisMax / Y_TICK_COUNT;
+		return Array.from({ length: Y_TICK_COUNT + 1 }, (_, index) => index * tickStep);
+	});
 
 	const curvePoints = $derived.by(() => {
-		const samples = Math.max(30, Math.min(420, safeHorizonYears * 20));
+		const samples = Math.max(30, Math.min(420, plottedHorizonYears * 20));
 		const points: string[] = [];
 
 		for (let index = 0; index < samples; index += 1) {
 			const ratio = samples === 1 ? 0 : index / (samples - 1);
-			const timeYears = ratio * safeHorizonYears;
+			const timeYears = ratio * plottedHorizonYears;
 			points.push(`${toPlotX(timeYears)},${toPlotY(valueAt(timeYears))}`);
 		}
 
@@ -167,7 +160,7 @@
 				class="fill-slate-600 text-[11px]"
 				text-anchor="end"
 			>
-				{formatCompact(tick, tick >= 1000 ? 0 : 1)}
+				{formatAxisValue(tick)}
 			</text>
 		{/each}
 
@@ -186,7 +179,7 @@
 				class="fill-slate-600 text-[11px]"
 				text-anchor="middle"
 			>
-				{formatCompact(tick, 1)}
+				{formatAxisValue(tick)}
 			</text>
 		{/each}
 
@@ -257,11 +250,13 @@
 
 	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 		<label class="space-y-1 text-xs font-medium text-muted-foreground">
-			Principal $P$: {formatCurrency(safePrincipal)}
+			Principal
+			<MathExpression math="P" class="mx-0.5 inline-block text-foreground" />:
+			{formatCurrency(safePrincipal)}
 			<input
 				type="range"
 				min="100"
-				max="50000"
+				max="2000"
 				step="100"
 				bind:value={principal}
 				class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-primary/25 accent-primary"
@@ -269,7 +264,9 @@
 		</label>
 
 		<label class="space-y-1 text-xs font-medium text-muted-foreground">
-			Annual rate $r$: {safeAnnualRatePercent.toFixed(2)}%
+			Annual rate
+			<MathExpression math="r" class="mx-0.5 inline-block text-foreground" />:
+			{safeAnnualRatePercent.toFixed(2)}%
 			<input
 				type="range"
 				min="0"
@@ -281,7 +278,9 @@
 		</label>
 
 		<label class="space-y-1 text-xs font-medium text-muted-foreground">
-			Compounds per year $n$: {safeCompoundsPerYear}
+			Compounds per year
+			<MathExpression math="n" class="mx-0.5 inline-block text-foreground" />:
+			{safeCompoundsPerYear}
 			<input
 				type="range"
 				min="1"
@@ -292,25 +291,13 @@
 			/>
 		</label>
 
-		<label class="space-y-1 text-xs font-medium text-muted-foreground">
-			Horizon (years): {safeHorizonYears}
-			<input
-				type="range"
-				min="1"
-				max="50"
-				step="1"
-				bind:value={horizonYears}
-				class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-primary/25 accent-primary"
-			/>
-		</label>
-
 		<label class="space-y-1 text-xs font-medium text-muted-foreground sm:col-span-2">
 			Selected year: {formatCompact(safeSelectedYear, 1)} (total compounds:
 			{formatCompact(selectedCompounds, 1)})
 			<input
 				type="range"
-				min="0"
-				max={safeHorizonYears}
+				min={X_AXIS_MIN}
+				max={X_AXIS_MAX}
 				step="0.1"
 				bind:value={selectedYear}
 				class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-primary/25 accent-primary"

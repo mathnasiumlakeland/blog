@@ -17,29 +17,31 @@
 	const PAD_RIGHT = 24;
 	const PAD_TOP = 24;
 	const PAD_BOTTOM = 52;
+	const CURVE_COLOR = '#0e7490';
+	const REFERENCE_COLOR = '#0e7490';
+	const X_AXIS_MIN_N = 1;
+	const X_AXIS_MAX_N = 250;
 	const eValue = Math.E;
 
-	let maxN = $state(600);
-	let selectedN = $state(365);
+	let selectedN = $state(50);
 
-	const safeMaxN = $derived(Math.max(10, Math.min(5000, Math.round(maxN))));
-	const safeSelectedN = $derived(Math.max(1, Math.min(safeMaxN, Math.round(selectedN))));
+	const safeSelectedN = $derived(Math.max(X_AXIS_MIN_N, Math.min(X_AXIS_MAX_N, Math.round(selectedN))));
 	const yMin = 1.95;
-	const yMax = 2.75;
+	const yMax = 2.8;
 	const innerWidth = PLOT_WIDTH - PAD_LEFT - PAD_RIGHT;
 	const innerHeight = PLOT_HEIGHT - PAD_TOP - PAD_BOTTOM;
 
-	const yTicks = [2, 2.2, 2.4, 2.6];
+	const yTicks = [2, 2.2, 2.4, 2.6, 2.8];
 
 	function valueForN(n: number) {
 		return Math.pow(1 + 1 / n, n);
 	}
 
-	function toPlotX(n: number, maxNValue: number) {
-		if (maxNValue <= 1) {
+	function toPlotX(n: number) {
+		if (X_AXIS_MAX_N <= X_AXIS_MIN_N) {
 			return PAD_LEFT;
 		}
-		return PAD_LEFT + ((n - 1) / (maxNValue - 1)) * innerWidth;
+		return PAD_LEFT + ((n - X_AXIS_MIN_N) / (X_AXIS_MAX_N - X_AXIS_MIN_N)) * innerWidth;
 	}
 
 	function toPlotY(value: number) {
@@ -50,33 +52,13 @@
 		return value.toFixed(digits);
 	}
 
-	function makeXTicks(maxNValue: number) {
-		const rawTicks = [
-			1,
-			Math.round(1 + 0.25 * (maxNValue - 1)),
-			Math.round(1 + 0.5 * (maxNValue - 1)),
-			Math.round(1 + 0.75 * (maxNValue - 1)),
-			maxNValue
-		];
-
-		return [...new Set(rawTicks)].sort((left, right) => left - right);
-	}
-
-	const xTicks = $derived(makeXTicks(safeMaxN));
+	const xTicks = [1, 50, 100, 150, 200, 250];
 
 	const curvePoints = $derived.by(() => {
-		const maxSamples = Math.min(safeMaxN, 420);
 		const points: string[] = [];
-		let previousN = -1;
 
-		for (let index = 0; index < maxSamples; index += 1) {
-			const ratio = maxSamples === 1 ? 0 : index / (maxSamples - 1);
-			const n = Math.max(1, Math.round(1 + ratio * (safeMaxN - 1)));
-			if (n === previousN) {
-				continue;
-			}
-			previousN = n;
-			points.push(`${toPlotX(n, safeMaxN)},${toPlotY(valueForN(n))}`);
+		for (let n = X_AXIS_MIN_N; n <= X_AXIS_MAX_N; n += 1) {
+			points.push(`${toPlotX(n)},${toPlotY(valueForN(n))}`);
 		}
 
 		return points.join(' ');
@@ -84,8 +66,9 @@
 
 	const selectedValue = $derived(valueForN(safeSelectedN));
 	const selectedGap = $derived(Math.abs(eValue - selectedValue));
-	const selectedX = $derived(toPlotX(safeSelectedN, safeMaxN));
+	const selectedX = $derived(toPlotX(safeSelectedN));
 	const selectedY = $derived(toPlotY(selectedValue));
+	const selectedValueLabelY = $derived(Math.max(PAD_TOP + 14, selectedY - 10));
 </script>
 
 <div class="space-y-4">
@@ -134,9 +117,9 @@
 
 		{#each xTicks as tick (tick)}
 			<line
-				x1={toPlotX(tick, safeMaxN)}
+				x1={toPlotX(tick)}
 				y1={PAD_TOP}
-				x2={toPlotX(tick, safeMaxN)}
+				x2={toPlotX(tick)}
 				y2={PLOT_HEIGHT - PAD_BOTTOM}
 				stroke="#e2e8f0"
 				stroke-width="1"
@@ -148,9 +131,10 @@
 			y1={toPlotY(eValue)}
 			x2={PLOT_WIDTH - PAD_RIGHT}
 			y2={toPlotY(eValue)}
-			stroke="#334155"
+			stroke={REFERENCE_COLOR}
+			stroke-opacity="0.58"
 			stroke-width="1.5"
-			stroke-dasharray="7 6"
+			stroke-dasharray="6 5"
 		/>
 
 		<line
@@ -173,7 +157,7 @@
 		<polyline
 			points={curvePoints}
 			fill="none"
-			stroke="#0f766e"
+			stroke={CURVE_COLOR}
 			stroke-width="2.8"
 			stroke-linejoin="round"
 			stroke-linecap="round"
@@ -184,11 +168,20 @@
 			y1={selectedY}
 			x2={selectedX}
 			y2={PLOT_HEIGHT - PAD_BOTTOM}
-			stroke="#0f766e"
+			stroke={CURVE_COLOR}
 			stroke-width="1.2"
 			stroke-dasharray="4 4"
 		/>
-		<circle cx={selectedX} cy={selectedY} r="4.5" fill="#0f766e"></circle>
+		<circle cx={selectedX} cy={selectedY} r="4.5" fill={CURVE_COLOR}></circle>
+		<text
+			x={selectedX}
+			y={selectedValueLabelY}
+			class="text-[11px] font-semibold"
+			fill={CURVE_COLOR}
+			text-anchor="middle"
+		>
+			{formatFixed(selectedValue, 3)}
+		</text>
 
 		{#each yTicks as tick (tick)}
 			<text
@@ -203,15 +196,16 @@
 		<text
 			x={PAD_LEFT - 10}
 			y={toPlotY(eValue) + 4}
-			class="fill-slate-700 text-[11px] font-semibold"
+			class="text-[11px] font-semibold"
+			fill={REFERENCE_COLOR}
 			text-anchor="end"
 		>
-			e
+			e ≈ 2.72
 		</text>
 
 		{#each xTicks as tick (tick)}
 			<text
-				x={toPlotX(tick, safeMaxN)}
+				x={toPlotX(tick)}
 				y={PLOT_HEIGHT - PAD_BOTTOM + 16}
 				class="fill-slate-600 text-[11px]"
 				text-anchor="middle"
@@ -221,15 +215,6 @@
 		{/each}
 
 		<text
-			x={PLOT_WIDTH - PAD_RIGHT - 6}
-			y={toPlotY(eValue) - 8}
-			class="fill-slate-700 text-[11px] font-semibold"
-			text-anchor="end"
-		>
-			y = e (dotted)
-		</text>
-
-		<text
 			x={(PAD_LEFT + (PLOT_WIDTH - PAD_RIGHT)) / 2}
 			y={PLOT_HEIGHT - 12}
 			class="fill-slate-700 text-[12px]"
@@ -237,37 +222,27 @@
 		>
 			n
 		</text>
-		<text
-			x="16"
-			y={(PAD_TOP + (PLOT_HEIGHT - PAD_BOTTOM)) / 2}
-			class="fill-slate-700 text-[12px]"
-			text-anchor="middle"
+		<foreignObject
+			x="4"
+			y={(PAD_TOP + (PLOT_HEIGHT - PAD_BOTTOM)) / 2 - 40}
+			width="24"
+			height="80"
 			transform={`rotate(-90 16 ${(PAD_TOP + (PLOT_HEIGHT - PAD_BOTTOM)) / 2})`}
 		>
-			A_n
-		</text>
+			<div xmlns="http://www.w3.org/1999/xhtml" class="flex h-full w-full items-center justify-center">
+				<MathExpression math="A_n" class="text-[12px] text-slate-700" />
+			</div>
+		</foreignObject>
 	</svg>
 
-	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+	<div class="grid grid-cols-1 gap-3">
 		<label class="space-y-1 text-xs font-medium text-muted-foreground">
-			Maximum n on x-axis: {safeMaxN}
+			n: {safeSelectedN}
 			<input
 				class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-primary/25 accent-primary"
 				type="range"
-				min="10"
-				max="5000"
-				step="10"
-				bind:value={maxN}
-			/>
-		</label>
-
-		<label class="space-y-1 text-xs font-medium text-muted-foreground">
-			Selected n: {safeSelectedN}
-			<input
-				class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-primary/25 accent-primary"
-				type="range"
-				min="1"
-				max={safeMaxN}
+				min={X_AXIS_MIN_N}
+				max={X_AXIS_MAX_N}
 				step="1"
 				bind:value={selectedN}
 			/>

@@ -218,7 +218,7 @@ We find that increasing the number of times we compound the interest in a single
 
 Another problem is that increasing the number of compounds per year requires us to continually shorten the span of time between said compounds. Compounding twice per year led us to considering periods of 6 months, while compounding 8760 times per year shortened that span of time to 1 hour. We can further this by compounding once every minute, once every second, millisecond, nanosecond, and beyond to infinitesimal spans of time.
 
-The problem of finding the largest amount may seem intractable at first, but surprisingly, we are able to find an exact answer. The solution relies on the fact that the function $A_n$ eventually converges. Essentially, this means that when $n$ is very large, the value of $A_n$ should settle around some number. We can test this by checking large values: $A_{1000} \approx 2.7169$, $A_{10,000} \approx 2.7181$, $A_{100,000} \approx 2.71827$, $A_{1,000,000} \approx 2.71828$. Here we see that $A_n$ does seem to converge around the number $2.71$.
+The problem of finding the largest amount may seem intractable at first, but surprisingly, we are able to find an exact answer. The solution relies on the fact that the function $A_n$ eventually converges. Essentially, this means that when $n$ is very large, the value of $A_n$ should settle around some number. We can test this by checking large values: $A_{1000} \approx 2.7169$, $A_{10,000} \approx 2.7181$, $A_{100,000} \approx 2.71827$, $A_{1,000,000} \approx 2.71828$. Here we see that $A_n$ does seem to converge around the number $2.72$.
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
 	<CompoundInterestConvergenceToEVisual />
@@ -253,7 +253,7 @@ Suppose $\$2000$ is invested at a continuous annual rate of $4.5\%$ for $6$ year
 <details class="rounded-xl border border-border/70 bg-background/70 p-4">
 <summary class="cursor-pointer text-sm font-semibold text-foreground">Reveal solution</summary>
 
-Use equation $(7)$ with $P=\$2000$, $r=0.045$, $t=6$ years, and $e \approx 2.71$:
+Use equation $(7)$ with $P=\$2000$, $r=0.045$, $t=6$ years, and $e \approx 2.72$:
 
 $$
 \begin{aligned}
@@ -294,7 +294,7 @@ $$
 
 **Definition of Euler's number:**
 $$
-e = \lim_{n\to\infty}\left(1+\frac{1}{n}\right)^n \approx 2.71
+e = \lim_{n\to\infty}\left(1+\frac{1}{n}\right)^n \approx 2.72
 $$
 
 **Continuous compounding:**

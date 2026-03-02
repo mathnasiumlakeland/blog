@@ -28,3 +28,26 @@ Open the local URL shown in the terminal.
 ## Iterating With A Coding Agent
 
 When using a coding agent for a new post, start by describing the post idea at a high level (topic, tone, and key math goals); the agent should create the post scaffold in the background (including the markdown file, slug wiring, and any basic route integration), then explicitly point you to the generated `src/content/posts/<slug>.md` file so you can edit freely, and from there you should iterate by asking for targeted refinements to visuals, equations, and narrative sections until the post looks right.
+
+
+## Future work:
+We need to fix the ugly slop UI 🤮. Ideas:
+- https://www.pi.website/
+- https://harmonic.fun/about
+- https://saaspocalypse.now/ haha
+- https://dribbble.com/shots/20860486-Minimal-blog-post-Untitled-UI
+- https://dribbble.com/shots/24074591-Minimal-blog-Untitled-UI
+- https://dribbble.com/shots/26108908-Halftone-blog-Untitled-UI
+- https://dribbble.com/shots/24565936-Minimal-blog-Untitled-UI
+- https://dribbble.com/shots/24365811-Design-journal-Untitled-UI
+
+Lots of blues + lines
+
+Remember ☯ 🐍:
+> Beautiful is better than ugly.  
+> Explicit is better than implicit.  
+> Simple is better than complex.  
+> Complex is better than complicated.  
+> Flat is better than nested.  
+> Sparse is better than dense.  
+> Readability counts.

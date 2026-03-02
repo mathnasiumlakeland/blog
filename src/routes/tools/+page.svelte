@@ -1,5 +1,14 @@
 <script lang="ts">
-	import { BookOpenText, Calculator, House, Search, X } from '@lucide/svelte';
+	import {
+		BookOpenText,
+		Calculator,
+		ChevronDown,
+		ChevronUp,
+		House,
+		Search,
+		SlidersHorizontal,
+		X
+	} from '@lucide/svelte';
 	import { resolve } from '$app/paths';
 	import InlineMathText from '$lib/components/math/inline-math-text.svelte';
 	import LazyToolPreview from '$lib/components/math/lazy-tool-preview.svelte';
@@ -8,6 +17,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
+	import { slide } from 'svelte/transition';
 
 	const tools = interactiveMathTools;
 	const interactiveCount = interactiveMathTools.length;
@@ -16,13 +26,16 @@
 	);
 
 	let searchQuery = $state('');
-	let selectedTag = $state<string | null>(null);
+	let selectedTags = $state<string[]>([]);
+	let filtersExpanded = $state(false);
 
 	const normalizedSearchQuery = $derived(searchQuery.trim().toLowerCase());
-	const hasActiveFilters = $derived(Boolean(normalizedSearchQuery) || selectedTag !== null);
+	const hasSelectedTags = $derived(selectedTags.length > 0);
+	const hasActiveFilters = $derived(Boolean(normalizedSearchQuery) || hasSelectedTags);
+	const showClearAction = $derived(filtersExpanded || hasSelectedTags);
 	const filteredTools = $derived.by(() =>
 		tools.filter((tool) => {
-			const matchesTag = selectedTag === null || tool.meta.tags.includes(selectedTag);
+			const matchesTag = !hasSelectedTags || selectedTags.some((tag) => tool.meta.tags.includes(tag));
 			if (!matchesTag) {
 				return false;
 			}
@@ -48,12 +61,14 @@
 	);
 
 	function toggleTag(tag: string) {
-		selectedTag = selectedTag === tag ? null : tag;
+		selectedTags = selectedTags.includes(tag)
+			? selectedTags.filter((selectedTag) => selectedTag !== tag)
+			: [...selectedTags, tag];
 	}
 
 	function clearFilters() {
 		searchQuery = '';
-		selectedTag = null;
+		selectedTags = [];
 	}
 
 	function formatTag(tag: string) {
@@ -90,50 +105,75 @@
 		</div>
 	</section>
 
-	<section class="space-y-3 rounded-2xl border border-border/70 bg-card/76 p-4 shadow-sm backdrop-blur-sm sm:p-5">
-		<div class="relative">
-			<Search class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-			<Input
-				id="tool-search"
-				aria-label="Search tools"
-				bind:value={searchQuery}
-				placeholder="Search by title, topic, or use case"
-				class="pl-9"
-			/>
+	<section class="space-y-2 rounded-2xl border border-border/70 bg-card/76 p-4 shadow-sm backdrop-blur-sm sm:p-5">
+		<div class="flex items-center gap-2">
+			<div class="relative min-w-0 flex-1">
+				<Search class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+				<Input
+					id="tool-search"
+					aria-label="Search tools"
+					bind:value={searchQuery}
+					placeholder="Search by title, topic, or use case"
+					class="pl-9"
+				/>
+			</div>
+			<Button
+				type="button"
+				size="sm"
+				variant="outline"
+				class="shrink-0 gap-1.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
+				aria-expanded={filtersExpanded}
+				aria-controls="tool-filters-panel"
+				onclick={() => (filtersExpanded = !filtersExpanded)}
+			>
+				<SlidersHorizontal class="size-3.5" />
+				Filter by topic
+				{#if filtersExpanded}
+					<ChevronUp class="size-3.5" />
+				{:else}
+					<ChevronDown class="size-3.5" />
+				{/if}
+			</Button>
 		</div>
-		{#if hasActiveFilters}
-			<p class="text-xs text-muted-foreground sm:text-sm" aria-live="polite">
-				{filteredTools.length} {filteredTools.length === 1 ? 'result' : 'results'}
-			</p>
-		{/if}
-		<div class="flex flex-wrap items-center gap-2">
-			{#each availableTags as tag (tag)}
-				<Button
-					type="button"
-					size="sm"
-					variant={selectedTag === tag ? 'default' : 'outline'}
-					aria-pressed={selectedTag === tag}
-					class={selectedTag === tag
-						? 'capitalize hover:!bg-primary hover:!text-primary-foreground'
-						: 'capitalize hover:!bg-card/82 hover:!text-foreground hover:!shadow-none'}
-					onclick={() => toggleTag(tag)}
-				>
-					{formatTag(tag)}
-				</Button>
-			{/each}
 			{#if hasActiveFilters}
-				<Button
-					type="button"
-					size="sm"
-					variant="outline"
-					class="gap-1 text-muted-foreground hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
-					onclick={clearFilters}
-				>
-					<X class="size-3.5" />
-					Clear
-				</Button>
+				<div class="flex flex-wrap items-center justify-between gap-2">
+					<p class="text-xs text-muted-foreground sm:text-sm" aria-live="polite">
+						{filteredTools.length} {filteredTools.length === 1 ? 'result' : 'results'}
+					</p>
+					{#if showClearAction}
+						<Button
+							type="button"
+							size="sm"
+							variant="outline"
+							class="gap-1 text-muted-foreground hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
+							onclick={clearFilters}
+						>
+							<X class="size-3.5" />
+							Clear
+						</Button>
+					{/if}
+				</div>
 			{/if}
-		</div>
+			{#if filtersExpanded}
+				<div id="tool-filters-panel" class="pt-1" transition:slide={{ duration: 180 }}>
+					<div class="flex flex-wrap items-center gap-2">
+						{#each availableTags as tag (tag)}
+							<Button
+								type="button"
+								size="sm"
+								variant={selectedTags.includes(tag) ? 'default' : 'outline'}
+								aria-pressed={selectedTags.includes(tag)}
+								class={selectedTags.includes(tag)
+									? 'capitalize hover:!bg-primary hover:!text-primary-foreground'
+									: 'capitalize hover:!bg-card/82 hover:!text-foreground hover:!shadow-none'}
+								onclick={() => toggleTag(tag)}
+							>
+							{formatTag(tag)}
+						</Button>
+					{/each}
+				</div>
+			</div>
+		{/if}
 	</section>
 
 	<section class="grid gap-4 lg:grid-cols-2">
@@ -169,16 +209,17 @@
 					</p>
 				</CardHeader>
 				<CardContent>
-					<Button
-						type="button"
-						variant="outline"
-						size="sm"
-						class="gap-1.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
-						onclick={clearFilters}
-						disabled={!hasActiveFilters}
-					>
-						<X class="size-3.5" />
-						Clear filters
+						<Button
+							type="button"
+							variant="outline"
+							size="sm"
+							class="gap-1.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
+							onclick={clearFilters}
+							disabled={!hasActiveFilters}
+							hidden={!showClearAction}
+						>
+							<X class="size-3.5" />
+							Clear filters
 					</Button>
 				</CardContent>
 			</Card>

@@ -25,6 +25,8 @@ Throw a ball off a cliff, fire an arrow at a target, or launch a rocket at an en
 
 What makes this topic so satisfying is a single, powerful insight: **horizontal and vertical motion are completely independent of each other.** The ball moves sideways at a steady pace while simultaneously falling straight down. Two simple equations, combined, give you the full picture.
 
+---
+
 # Setting Up the Problem
 
 ## Variables and Assumptions
@@ -47,6 +49,7 @@ We'll make two simplifying assumptions that let us focus on the core math. First
 
 With those in place, let's get to work.
 
+---
 
 # Breaking Down the Initial Velocity
 
@@ -74,6 +77,7 @@ You can verify that the components obey the Pythagorean theorem: $v_x^2 + v_y^2 
 	<VelocityComponentsVisual />
 </div>
 
+---
 
 # Equations of Motion
 
@@ -97,6 +101,7 @@ $$
 
 The first term, $v_0 \sin\theta \cdot t$, is the upward motion from the initial kick. The second term, $-\frac{1}{2}g t^2$, is the downward pull of gravity. Together they give a **parabola** — the characteristic shape of all projectile paths.
 
+---
 
 # Key Measurements
 
@@ -200,6 +205,7 @@ $$
 
 </details>
 
+---
 
 # The Trajectory Equation
 
@@ -229,6 +235,7 @@ $$
 
 Since $a < 0$, the parabola opens downward, as expected. The roots of this parabola (where $y = 0$) are at $x = 0$ (launch) and $x = R$ (landing), which is consistent with what we found earlier.
 
+---
 
 # The Best Launch Angle
 
@@ -262,6 +269,7 @@ So a $30°$ shot and a $60°$ shot (which are complementary, $30 + 60 = 90$) lan
 
 **Now you try!** Using the range-vs-angle visual above, set $v_0 = 200 \text{ m/s}$. Confirm that the $30°$ and $60°$ markers land on the same height on the curve. Then find two more complementary angle pairs.
 
+---
 
 # Real World Example: A Ballistic Missile
 
@@ -316,6 +324,7 @@ The missile can reach a target roughly $100 \text{ km}$ away — a distance comp
 
 Of course, this is an **idealised model** — reality is messier. Atmospheric drag is enormous at these speeds, the Earth's curvature matters at $100+\text{ km}$, the payload changes the centre of mass, and real missiles use guidance systems to correct their trajectory mid-flight. But the framework above is exactly how engineers start: derive the vacuum solution first, then add corrections layer by layer. The fundamental physics of parabolic flight under gravity never goes away.
 
+---
 
 # Kinematics Cheat Sheet
 

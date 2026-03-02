@@ -10,6 +10,7 @@ export type BlogPost = {
 	tags: string[];
 	equation: string;
 	featured?: boolean;
+	devOnly?: boolean;
 };
 
 type PostMetadata = Partial<Omit<BlogPost, 'slug'>>;
@@ -27,6 +28,24 @@ function assertTags(value: unknown, path: string): string[] {
 	}
 	return value;
 }
+
+function assertBooleanOrUndefined(
+	value: unknown,
+	field: string,
+	path: string
+): boolean | undefined {
+	if (value === undefined) {
+		return undefined;
+	}
+
+	if (typeof value !== 'boolean') {
+		throw new Error(`Invalid frontmatter: "${field}" must be a boolean in ${path}`);
+	}
+
+	return value;
+}
+
+const includeDevOnlyPosts = import.meta.env.DEV;
 
 const metadataModules = import.meta.glob<PostMetadata>('/src/content/posts/*.md', {
 	eager: true,
@@ -48,9 +67,11 @@ const records: BlogPost[] = Object.entries(metadataModules)
 			author: assertString(metadata.author, 'author', path),
 			tags: assertTags(metadata.tags, path),
 			equation: assertString(metadata.equation, 'equation', path),
-			featured: metadata.featured
+			featured: metadata.featured,
+			devOnly: assertBooleanOrUndefined(metadata.devOnly, 'devOnly', path)
 		};
 	})
+	.filter((record) => includeDevOnlyPosts || !record.devOnly)
 	.sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
 
 const postMap = new Map(records.map((record) => [record.slug, record]));

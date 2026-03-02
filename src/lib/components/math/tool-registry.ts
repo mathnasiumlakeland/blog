@@ -14,15 +14,17 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
-		id: 'hexagon-triangle-decomposition',
+		id: 'regular-polygon-triangle-decomposition',
 		meta: {
-			id: 'hexagon-triangle-decomposition',
-			title: 'Hexagon Triangle Decomposition',
-			description: 'Break a regular hexagon into six equilateral triangles and track area values.',
-			inputs: 'Hexagon side/radius n selected by slider.',
-			outputs: 'Triangle height, one-triangle area, and full hexagon area with live diagram updates.',
-			useCase: 'Use for geometry instruction on decomposition and area formulas.',
-			tags: ['geometry', 'area', 'hexagon', 'triangles', 'decomposition']
+			id: 'regular-polygon-triangle-decomposition',
+			title: 'Regular Polygon Triangle Decomposition',
+			description:
+				'Decompose a regular polygon into center triangles to compute area by summing triangle areas.',
+			inputs: 'Number of sides n (5 to 8) and side length s.',
+			outputs:
+				'Apothem, one-triangle area, and total polygon area with a live decomposition diagram.',
+			useCase: 'Use for geometry instruction on regular-polygon area formulas and decomposition.',
+			tags: ['geometry', 'area', 'polygons', 'triangles', 'decomposition']
 		}
 	},
 	{
@@ -57,7 +59,7 @@ export const interactiveMathTools: ToolListEntry[] = [
 		meta: {
 			id: 'simple-interest-growth',
 			title: 'Simple Interest Growth',
-			description: 'Plot A = P(1 + rt) over time with adjustable principal, rate, and years.',
+			description: 'Plot $A = P(1 + rt)$ over time with adjustable principal, rate, and years.',
 			inputs: 'Principal P, annual rate r, graph horizon in years, and selected year marker.',
 			outputs: 'Linear growth curve, selected amount A(t), and total interest A(t) - P.',
 			useCase: 'Use for understanding linear growth and the basic simple-interest formula.',
@@ -69,7 +71,7 @@ export const interactiveMathTools: ToolListEntry[] = [
 		meta: {
 			id: 'compound-interest-growth',
 			title: 'Compound Interest Growth',
-			description: 'Plot A = P(1 + r/n)^{nt} with adjustable compounding frequency n.',
+			description: 'Plot $A = P(1 + r/n)^{nt}$ with adjustable compounding frequency $n$.',
 			inputs: 'Principal P, annual rate r, compounds per year n, years, and selected year marker.',
 			outputs: 'Exponential growth curve, per-period rate r/n, selected amount A(t), and interest earned.',
 			useCase: 'Use for comparing compounding schedules and understanding discrete exponential growth.',
@@ -81,7 +83,7 @@ export const interactiveMathTools: ToolListEntry[] = [
 		meta: {
 			id: 'continuous-compounding-growth',
 			title: 'Continuous Compounding Growth',
-			description: 'Plot A = Pe^{rt} with interactive principal, rate, and time controls.',
+			description: 'Plot $A = Pe^{rt}$ with interactive principal, rate, and time controls.',
 			inputs: 'Principal P, annual rate r, graph horizon in years, and selected year marker.',
 			outputs: 'Continuous exponential curve, selected amount A(t), and total interest A(t) - P.',
 			useCase: 'Use for lessons on Euler-based growth and continuous compounding behavior.',
@@ -94,7 +96,7 @@ export const interactiveMathTools: ToolListEntry[] = [
 			id: 'compound-interest-convergence-to-e',
 			title: 'Compound Interest Convergence to e',
 			description:
-				"Plot A_n = (1 + 1/n)^n to see how increasing n converges toward Euler's number e.",
+				"Plot $A_n = (1 + 1/n)^n$ to see how increasing $n$ converges toward Euler's number $e$.",
 			inputs: 'Maximum n shown on the x-axis and a selected n marker.',
 			outputs: 'Curve values A_n, selected approximation, and the distance between A_n and e.',
 			useCase: 'Use for lessons on compound-interest limits and continuous compounding intuition.',
@@ -119,7 +121,7 @@ export const interactiveMathTools: ToolListEntry[] = [
 		meta: {
 			id: 'polygon-sum-of-interior-angles',
 			title: 'Polygon Sum of Interior Angles',
-			description: 'Draw diagonals from one vertex to show why a polygon splits into n - 2 triangles.',
+			description: 'Draw diagonals from one vertex to show why a polygon splits into $n - 2$ triangles.',
 			inputs: 'Number of polygon sides n.',
 			outputs: 'Triangulated polygon view plus triangle-count and interior-sum formulas.',
 			useCase: 'Use for geometric proofs and interior-angle sum reasoning.',
@@ -173,7 +175,7 @@ export const interactiveMathTools: ToolListEntry[] = [
 			id: 'reflection-over-y-equals-mx-plus-b-steps',
 			title: 'Reflection Over y = mx + b Steps',
 			description:
-				'Walk through translate, rotate, reflect, rotate-back, and translate-back for y = mx + b.',
+				'Walk through translate, rotate, reflect, rotate-back, and translate-back for $y = mx + b$.',
 			inputs: 'Slope m, intercept b, and draggable point P before the sequence starts.',
 			outputs:
 				'Step-by-step transformed line/point states, angle θ cue, and final reflected coordinates P′.',
@@ -188,7 +190,7 @@ export const interactiveMathTools: ToolListEntry[] = [
 			id: 'reflection-over-y-equals-x',
 			title: 'Reflection Over y = x',
 			description:
-				'Move a point and reflect it across the diagonal line y = x on a coordinate grid.',
+				'Move a point and reflect it across the diagonal line $y = x$ on a coordinate grid.',
 			inputs: 'Point coordinates x and y anywhere in the visible window.',
 			outputs:
 				'Live coordinates for P and P′, midpoint on y = x, and equal-distance segments to the mirror line.',
@@ -202,13 +204,26 @@ export const interactiveMathTools: ToolListEntry[] = [
 			id: 'reflection-over-y-equals-x-plus-b',
 			title: 'Reflection Over y = x + b',
 			description:
-				'Move a shifted diagonal mirror line and point to see reflection updates in real time.',
+				'Move a shifted diagonal mirror line and point to see reflection updates in real time for $y = x + b$.',
 			inputs: 'Point coordinates x and y plus shift b for the mirror line y = x + b.',
 			outputs:
 				'Live coordinates for P and P′, midpoint on the mirror line, and matching |dx|/|dy| helper distances.',
 			useCase:
 				'Use for coordinate-geometry reflections when the mirror is a translated diagonal line.',
 			tags: ['geometry', 'transformations', 'reflection', 'coordinates']
+		}
+	},
+	{
+		id: 'reflection-over-y-equals-x-plus-b-three-step-shift',
+		meta: {
+			id: 'reflection-over-y-equals-x-plus-b-three-step-shift',
+			title: 'Reflection Over y = x + b Three-Step Shift',
+			description:
+				'Walk through the shortcut for $y = x + b$: subtract $b$, flip across $y = x$, then add $b$ back.',
+			inputs: 'Point coordinates x and y, shift b, and step focus buttons.',
+			outputs: 'Intermediate points P1 and P2, plus final reflected point P′ with step equations.',
+			useCase: 'Use for teaching the translate-flip-translate method for shifted diagonal reflections.',
+			tags: ['geometry', 'transformations', 'reflection', 'coordinates', 'step-by-step']
 		}
 	},
 	{

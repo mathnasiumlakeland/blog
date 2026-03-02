@@ -50,14 +50,16 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Round to 2 decimal places.'
 		};
 	},
-	'hexagon-triangle-decomposition': () => {
-		const n = randomStep(1.2, 3, 0.1);
-		const answer = ((3 * Math.sqrt(3)) / 2) * n * n;
+	'regular-polygon-triangle-decomposition': () => {
+		const sides = randomInt(5, 8);
+		const sideLength = randomStep(1.2, 3, 0.1);
+		const apothem = sideLength / (2 * Math.tan(Math.PI / sides));
+		const answer = (sides * sideLength * apothem) / 2;
 		return {
-			prompt: `A regular hexagon has side length n = ${n.toFixed(1)}. What is its area?`,
+			prompt: `A regular ${sides}-gon has side length s = ${sideLength.toFixed(1)}. What is its area?`,
 			answer,
 			tolerance: 0.05,
-			hint: 'Use A = (3√3/2)n².'
+			hint: 'Use A = (ns²) / (4 tan(π/n)).'
 		};
 	},
 	'lattice-paths-explorer': () => {
@@ -208,6 +210,17 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			answer,
 			tolerance: 0,
 			hint: "For reflection across y = x + b, use x' = y - b."
+		};
+	},
+	'reflection-over-y-equals-x-plus-b-three-step-shift': () => {
+		const b = randomInt(-5, 5);
+		const x = randomInt(-8, 8);
+		const answer = x + b;
+		return {
+			prompt: `Using the 3-step shift method for y = x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}, reflect P = (${x}, y). What is the reflected y-coordinate?`,
+			answer,
+			tolerance: 0,
+			hint: "Subtract b, swap coordinates, then add b: y' = x + b."
 		};
 	},
 	'reflection-over-y-equals-mx-plus-b-steps': () => {

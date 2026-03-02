@@ -34,6 +34,7 @@ tags:
   - geometry
 equation: "x^2 + y^2 = r^2"
 featured: false
+devOnly: false # optional: set true for dev-only drafts
 ---
 ```
 
@@ -41,6 +42,7 @@ featured: false
 - Keep `author` present as a non-empty string.
 - Keep `equation` present because cards and previews consume it.
 - Keep only one post with `featured: true` across all posts.
+- `devOnly` is optional. Set `devOnly: true` when the post should appear in development only and stay out of production builds.
 
 4. Draft or revise body content.
 - Use short sections with clear headings.

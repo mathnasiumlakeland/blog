@@ -86,6 +86,7 @@ tags:
   - geometry
 equation: "x^2 + y^2 = r^2"
 featured: false
+devOnly: false # optional: set true for dev-only drafts
 ---
 ```
 
@@ -93,6 +94,7 @@ Notes:
 - `publishedAt` must remain ISO (`YYYY-MM-DD`) for sort stability.
 - `author` is required for every post and should be a non-empty string.
 - `equation` is required and is used in featured cards and post previews.
+- `devOnly` is optional. Set `devOnly: true` to keep a post visible in `npm run dev` but exclude it from production builds.
 
 ## Blog Post Table of Contents
 
@@ -134,6 +136,7 @@ Notes:
 - Keep `src/lib/content/posts.ts` metadata-only:
   - Use `import.meta.glob('/src/content/posts/*.md', { eager: true, import: 'metadata' })`.
   - Do not import markdown component `default` exports here.
+- Keep production filtering of `devOnly` posts in `src/lib/content/posts.ts` so dev drafts are hidden from `/posts` and slug prerender output.
 - Keep markdown component loading in `src/lib/content/post-components.ts` and only consume it from `src/routes/posts/[slug]/+page.svelte`.
 - Homepage "Interactive Spotlight" should mount only the active tab panel's heavy visual component.
   - Current implementation uses `spotlightTab` and conditional `{#if ...}` blocks around each `TabsContent`.
@@ -164,7 +167,7 @@ Notes:
 - Featured post should be explicitly controlled with frontmatter (`featured: true`) and only one post should be featured at a time.
 - “Interactive Spotlight” currently highlights:
   - `Patterns` (Lissajous)
-  - `Hexagon Area` (three unit circles visualization)
+  - `Angle Sum` (polygon triangulation visualization)
 
 ## Tools/Resources Defaults
 
@@ -187,6 +190,7 @@ For blog-post requests, follow this interaction flow by default:
    - Confirm the main mathematical objective before writing details.
 2. Scaffold first, then narrate where to edit.
    - Create the post skeleton in the background: `src/content/posts/<slug>.md` with valid frontmatter, equation, tags, and initial structure.
+   - If a post should be a draft/dev preview only, set `devOnly: true` in frontmatter.
    - Include a starter `## Table of Contents` section when the post is expected to have 3 or more major sections.
    - Ensure route compatibility is in place through the existing post loader flow (`src/lib/content/posts.ts`, `src/lib/content/post-components.ts`, slug page, listing pages) so the new post renders without extra manual steps.
    - Explicitly tell the user which markdown file was created/updated.

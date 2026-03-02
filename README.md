@@ -22,6 +22,7 @@ Open the local URL shown in the terminal.
 ## Content
 
 - Posts live in `src/content/posts/*.md`
+- Set `devOnly: true` in post frontmatter for draft articles you want visible only in `npm run dev`
 - Interactive math components live in `src/lib/components/math/*`
 - Post metadata loading/sorting is in `src/lib/content/posts.ts`
 

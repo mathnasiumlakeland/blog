@@ -13,6 +13,7 @@ tags:
   - lattice paths
 equation: '\binom{m+n}{m}'
 featured: false
+devOnly: true
 ---
 
 <script>

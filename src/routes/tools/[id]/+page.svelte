@@ -1,5 +1,13 @@
 <script lang="ts">
-	import { ArrowLeft, Calculator, GraduationCap, Home, RefreshCcw } from '@lucide/svelte';
+	import {
+		ArrowLeft,
+		BookOpenText,
+		Calculator,
+		GraduationCap,
+		Home,
+		ListChecks,
+		RefreshCcw
+	} from '@lucide/svelte';
 	import { browser } from '$app/environment';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
@@ -164,34 +172,6 @@
 
 		<Card class="border-border/70 bg-card/82 backdrop-blur-sm">
 			<CardContent class="space-y-5 p-4 sm:p-6">
-				<details class="rounded-xl border border-border/70 bg-background/70 p-3 sm:p-4">
-					<summary
-						class="cursor-pointer list-none text-sm font-semibold text-foreground [&::-webkit-details-marker]:hidden [&::marker]:hidden"
-					>
-						Show tool details
-					</summary>
-					<div class="mt-3 space-y-4">
-						<div class="space-y-1 text-sm text-muted-foreground">
-							<p>
-								<span class="font-semibold text-foreground">Inputs:</span>
-								<InlineMathText text={tool.meta.inputs} class="ml-1" />
-							</p>
-							<p>
-								<span class="font-semibold text-foreground">Outputs:</span>
-								<InlineMathText text={tool.meta.outputs} class="ml-1" />
-							</p>
-							<p>
-								<span class="font-semibold text-foreground">Used for:</span>
-								<InlineMathText text={tool.meta.useCase} class="ml-1" />
-							</p>
-						</div>
-						<div class="flex flex-wrap gap-1.5">
-							{#each tool.meta.tags as tag (tag)}
-								<Badge variant="outline">{tag}</Badge>
-							{/each}
-						</div>
-					</div>
-				</details>
 				{#if practiceMode && practicePrompt}
 					<div class="rounded-xl border border-primary/35 bg-primary/7 p-3 sm:p-4">
 						<div class="flex flex-wrap items-center justify-between gap-2">
@@ -251,6 +231,71 @@
 						Loading interactive tool...
 					</div>
 				{/if}
+				<details class="rounded-xl border border-border/70 bg-background/70 p-3 sm:p-4">
+					<summary
+						class="cursor-pointer list-none text-sm font-semibold text-foreground [&::-webkit-details-marker]:hidden [&::marker]:hidden"
+					>
+						<span class="inline-flex items-center gap-2">
+							<BookOpenText class="size-4 text-primary" />
+							Read more
+						</span>
+					</summary>
+					{#if data.relatedPosts.length > 0}
+						<p class="mt-3 text-xs text-muted-foreground">
+							This tool appears in the following posts:
+						</p>
+						<ul class="mt-3 space-y-2">
+							{#each data.relatedPosts as relatedPost (relatedPost.slug)}
+								<li class="rounded-lg border border-border/70 bg-card/75 px-3 py-2">
+									<a
+										href={resolve(`/posts/${relatedPost.slug}`)}
+										class="text-sm font-medium text-foreground underline-offset-2 hover:underline"
+									>
+										<InlineMathText text={relatedPost.title} />
+									</a>
+									<p class="mt-0.5 text-xs text-muted-foreground">
+										{relatedPost.publishedOn}
+									</p>
+								</li>
+							{/each}
+						</ul>
+					{:else}
+						<p class="mt-3 text-xs text-muted-foreground">
+							This tool is not linked in a post yet.
+						</p>
+					{/if}
+				</details>
+				<details class="rounded-xl border border-border/70 bg-background/70 p-3 sm:p-4">
+					<summary
+						class="cursor-pointer list-none text-sm font-semibold text-foreground [&::-webkit-details-marker]:hidden [&::marker]:hidden"
+					>
+						<span class="inline-flex items-center gap-2">
+							<ListChecks class="size-4 text-primary" />
+							Show tool details
+						</span>
+					</summary>
+					<div class="mt-3 space-y-4">
+						<div class="space-y-1 text-sm text-muted-foreground">
+							<p>
+								<span class="font-semibold text-foreground">Inputs:</span>
+								<InlineMathText text={tool.meta.inputs} class="ml-1" />
+							</p>
+							<p>
+								<span class="font-semibold text-foreground">Outputs:</span>
+								<InlineMathText text={tool.meta.outputs} class="ml-1" />
+							</p>
+							<p>
+								<span class="font-semibold text-foreground">Used for:</span>
+								<InlineMathText text={tool.meta.useCase} class="ml-1" />
+							</p>
+						</div>
+						<div class="flex flex-wrap gap-1.5">
+							{#each tool.meta.tags as tag (tag)}
+								<Badge variant="outline">{tag}</Badge>
+							{/each}
+						</div>
+					</div>
+				</details>
 			</CardContent>
 		</Card>
 	</div>

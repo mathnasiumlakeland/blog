@@ -15,11 +15,11 @@
 	import InlineMathText from '$lib/components/math/inline-math-text.svelte';
 	import MathExpression from '$lib/components/math/math-expression.svelte';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs';
-	import HexagonThreeCirclesVisual from '$lib/components/math/hexagon-three-circles-visual.svelte';
 	import LissajousCanvas from '$lib/components/math/lissajous-canvas.svelte';
+	import PolygonTriangulationVisual from '$lib/components/math/polygon-triangulation-visual.svelte';
 	import { posts } from '$lib/content/posts';
 
-	let spotlightTab = $state<'curves' | 'hexagon'>('curves');
+	let spotlightTab = $state<'curves' | 'angle-sum'>('curves');
 
 	const featuredPost = posts.find((post) => post.featured) ?? posts[0];
 	const feed = posts.filter((post) => post.slug !== featuredPost.slug);
@@ -174,7 +174,7 @@
 			>
 				<div aria-hidden="true" class="pointer-events-none absolute inset-1 z-0">
 					<div
-						class={`h-full w-1/2 rounded-lg border border-border/80 bg-background/95 shadow-[0_1px_2px_rgba(15,23,42,0.08)] transition-transform duration-300 ease-out ${spotlightTab === 'hexagon' ? 'translate-x-full' : 'translate-x-0'}`}
+						class={`h-full w-1/2 rounded-lg border border-border/80 bg-background/95 shadow-[0_1px_2px_rgba(15,23,42,0.08)] transition-transform duration-300 ease-out ${spotlightTab === 'angle-sum' ? 'translate-x-full' : 'translate-x-0'}`}
 					></div>
 				</div>
 				<TabsTrigger
@@ -184,10 +184,10 @@
 					Patterns
 				</TabsTrigger>
 				<TabsTrigger
-					value="hexagon"
+					value="angle-sum"
 					class="relative z-10 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
 				>
-					Hexagon Area
+					Angle Sum
 				</TabsTrigger>
 			</TabsList>
 			{#if spotlightTab === 'curves'}
@@ -195,9 +195,9 @@
 					<LissajousCanvas />
 				</TabsContent>
 			{/if}
-			{#if spotlightTab === 'hexagon'}
-				<TabsContent value="hexagon" class="mt-0">
-					<HexagonThreeCirclesVisual />
+			{#if spotlightTab === 'angle-sum'}
+				<TabsContent value="angle-sum" class="mt-0">
+					<PolygonTriangulationVisual />
 				</TabsContent>
 			{/if}
 		</Tabs>

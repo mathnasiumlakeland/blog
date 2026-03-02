@@ -2,16 +2,16 @@
 title: "Are You Interested Yet?"
 subtitle: "The basics of interest and Euler's number"
 excerpt: "A walkthrough of simple interest, compound interest, continuous compounding, and Euler's number."
-publishedOn: "October 15, 2022"
-publishedAt: "2022-10-15"
-readTime: "14 min"
+publishedOn: "February 27, 2026"
+publishedAt: "2026-02-27"
+readTime: "15 min"
 author: "Max"
 tags:
   - interest
   - algebra
   - exponential-growth
 equation: "A = P\\left(1 + \\frac{r}{n}\\right)^{nt}"
-featured: false
+featured: true
 ---
 
 <script>
@@ -21,10 +21,9 @@ featured: false
 	import CompoundInterestConvergenceToEVisual from '$lib/components/math/compound-interest-convergence-to-e-visual.svelte';
 </script>
 
-Let's talk about interest and investment growth.
 
 # Introduction
-Here are some relevant variables:
+Let's talk about interest and investment growth. Here are some variables we'll use throughout the post:
 
 | Variable | Meaning |
 | --- | --- |

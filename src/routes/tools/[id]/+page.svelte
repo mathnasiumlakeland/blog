@@ -231,16 +231,16 @@
 						Loading interactive tool...
 					</div>
 				{/if}
-				<details class="rounded-xl border border-border/70 bg-background/70 p-3 sm:p-4">
-					<summary
-						class="cursor-pointer list-none text-sm font-semibold text-foreground [&::-webkit-details-marker]:hidden [&::marker]:hidden"
-					>
-						<span class="inline-flex items-center gap-2">
-							<BookOpenText class="size-4 text-primary" />
-							Read more
-						</span>
-					</summary>
-					{#if data.relatedPosts.length > 0}
+				{#if data.relatedPosts.length > 0}
+					<details class="rounded-xl border border-border/70 bg-background/70 p-3 sm:p-4">
+						<summary
+							class="cursor-pointer list-none text-sm font-semibold text-foreground [&::-webkit-details-marker]:hidden [&::marker]:hidden"
+						>
+							<span class="inline-flex items-center gap-2">
+								<BookOpenText class="size-4 text-primary" />
+								Read more
+							</span>
+						</summary>
 						<p class="mt-3 text-xs text-muted-foreground">
 							This tool appears in the following posts:
 						</p>
@@ -259,12 +259,8 @@
 								</li>
 							{/each}
 						</ul>
-					{:else}
-						<p class="mt-3 text-xs text-muted-foreground">
-							This tool is not linked in a post yet.
-						</p>
-					{/if}
-				</details>
+					</details>
+				{/if}
 				<details class="rounded-xl border border-border/70 bg-background/70 p-3 sm:p-4">
 					<summary
 						class="cursor-pointer list-none text-sm font-semibold text-foreground [&::-webkit-details-marker]:hidden [&::marker]:hidden"

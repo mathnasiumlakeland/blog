@@ -184,7 +184,6 @@ $$
 	<ReflectionOverYEqualsXPlusBVisual />
 </div>
 
-You can use the horizontal and vertical helper distances (`|dx|` and `|dy|`) the same way as the $y=x$ visual.
 
 # General Reflections
 
@@ -192,18 +191,69 @@ You can use the horizontal and vertical helper distances (`|dx|` and `|dy|`) the
 
 We'll be taking a slight detour to talk about rotation matrices -- basically, a set of numbers that represent how we can rotate a point about the origin. This is a little advanced (you'll see it come up in linear algebra) so feel free to skip this section.
 
-The rotation matrix for reflection over the line $y=x$ is:
-
+The general rotation matrix for rotating a point about the origin by an angle $\theta$ in the clockwise direction is:
 $$
+R(\theta) =
 \begin{pmatrix}
-0 & 1 \\
-1 & 0
+\cos(\theta) & \sin(\theta) \\
+-\sin(\theta) & \cos(\theta)
 \end{pmatrix}
 $$
+
+where $\theta$ is the angle between the line of reflection and the x-axis.
+
+For any point $P = (x, y)$, which we can represent as a column vector, the rotated point $P'$ is given by:
+$$
+P' = R(\theta)P
+$$
+
+For example, say we have point $P = (0, 1)$ and we want to rotate it by $\theta = 90^\circ$ clockwise. We'd expect it to land at $P' = (1, 0)$. Let's check:
+$$
+\begin{align*}
+P' &= R(\theta)P 
+\\
+ &= R(90^\circ)
+\begin{pmatrix}
+0 \\
+1
+\end{pmatrix} \\
+&= \begin{pmatrix}
+\cos(90^\circ) & \sin(90^\circ) \\
+-\sin(90^\circ) & \cos(90^\circ)
+\end{pmatrix} \begin{pmatrix}
+0 \\
+1
+\end{pmatrix}
+\\
+&= \begin{pmatrix}
+0 & 1 \\
+-1 & 0
+\end{pmatrix} \begin{pmatrix}
+0 \\
+1
+\end{pmatrix}
+\\
+&= \begin{pmatrix}
+0 \cdot 0 + 1 \cdot 1 \\
+-1 \cdot 0 + 0 \cdot 1
+\end{pmatrix}
+\\
+&= \begin{pmatrix}
+1 \\
+0
+\end{pmatrix}
+\\
+&= (1, 0)
+\end{align*}
+$$
+
+So, we see that rotating a point $P = (0, 1)$ by $\theta = 90^\circ$ clockwise results in the point $P' = (1, 0)$.
 
 ## General Lines: $y=mx+b$
 
 Now let's do something crazy :)
+
+Say we want to find out how to reflect a point $P = (x, y)$ across some general line $y=mx+b$.
 
 <details class="rounded-xl border border-border/70 bg-background/70 p-4">
 <summary class="cursor-pointer text-sm font-semibold text-foreground">Full derivation... not for the faint of heart!</summary>

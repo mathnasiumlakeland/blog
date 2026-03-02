@@ -1,17 +1,8 @@
 <script module lang="ts">
 	import type { MathToolMeta } from './tool-meta';
+	import { requireInteractiveToolMetaById } from './tool-registry';
 
-	export const toolMeta: MathToolMeta = {
-		id: 'hexagon-triangle-decomposition',
-		title: 'Hexagon Triangle Decomposition',
-		description: 'Break a regular hexagon into six equilateral triangles and track area values.',
-		inputs: 'Hexagon side/radius n selected by slider.',
-		outputs: 'Triangle height, one-triangle area, and full hexagon area with live diagram updates.',
-		useCase: 'Use for geometry instruction on decomposition and area formulas.',
-		tags: ['geometry', 'area', 'hexagon', 'triangles', 'decomposition'],
-		audience: ['students', 'instructors'],
-		kind: 'interactive'
-	};
+	export const toolMeta: MathToolMeta = requireInteractiveToolMetaById('hexagon-triangle-decomposition');
 </script>
 
 <script lang="ts">

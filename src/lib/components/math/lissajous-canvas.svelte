@@ -1,17 +1,8 @@
 <script module lang="ts">
 	import type { MathToolMeta } from './tool-meta';
+	import { requireInteractiveToolMetaById } from './tool-registry';
 
-	export const toolMeta: MathToolMeta = {
-		id: 'lissajous-pattern-lab',
-		title: 'Lissajous Pattern Lab',
-		description: 'Animate Lissajous curves to connect frequency ratios with visible symmetry.',
-		inputs: 'Frequency A, frequency B, phase, speed, and play/pause state.',
-		outputs: 'A continuously drawn curve that changes shape as trigonometric parameters change.',
-		useCase: 'Use for algebra and trigonometry discussions on periodic functions and parameter effects.',
-		tags: ['algebra', 'trigonometry', 'patterns', 'animation', 'functions'],
-		audience: ['students', 'instructors'],
-		kind: 'interactive'
-	};
+	export const toolMeta: MathToolMeta = requireInteractiveToolMetaById('lissajous-pattern-lab');
 </script>
 
 <script lang="ts">

@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { EntryGenerator, PageLoad } from './$types';
 import { getPostBySlug, getPostSlugs } from '$lib/content/posts';
+import { getPostHeadingsBySlug } from '$lib/content/post-headings';
 
 export const prerender = true;
 
@@ -15,5 +16,8 @@ export const load: PageLoad = ({ params }) => {
 		throw error(404, 'Post not found');
 	}
 
-	return { post };
+	return {
+		post,
+		headings: getPostHeadingsBySlug(params.slug)
+	};
 };

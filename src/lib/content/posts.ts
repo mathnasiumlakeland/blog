@@ -6,6 +6,7 @@ export type BlogPost = {
 	publishedOn: string;
 	publishedAt: string;
 	readTime: string;
+	author: string;
 	tags: string[];
 	equation: string;
 	featured?: boolean;
@@ -44,6 +45,7 @@ const records: BlogPost[] = Object.entries(metadataModules)
 			publishedOn: assertString(metadata.publishedOn, 'publishedOn', path),
 			publishedAt: assertString(metadata.publishedAt, 'publishedAt', path),
 			readTime: assertString(metadata.readTime, 'readTime', path),
+			author: assertString(metadata.author, 'author', path),
 			tags: assertTags(metadata.tags, path),
 			equation: assertString(metadata.equation, 'equation', path),
 			featured: metadata.featured

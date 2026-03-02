@@ -1,17 +1,8 @@
 <script module lang="ts">
 	import type { MathToolMeta } from './tool-meta';
+	import { requireInteractiveToolMetaById } from './tool-registry';
 
-	export const toolMeta: MathToolMeta = {
-		id: 'regular-interior-angle',
-		title: 'Regular Interior Angle',
-		description: 'Show how each interior angle changes as the number of regular-polygon sides changes.',
-		inputs: 'Number of sides n.',
-		outputs: 'Total interior-angle sum and one interior angle with highlighted angle arc.',
-		useCase: 'Use for polygon-angle lessons and formula-to-figure connections.',
-		tags: ['geometry', 'angles', 'polygons', 'regular-polygons', 'formula'],
-		audience: ['students', 'instructors'],
-		kind: 'interactive'
-	};
+	export const toolMeta: MathToolMeta = requireInteractiveToolMetaById('regular-interior-angle');
 </script>
 
 <script lang="ts">

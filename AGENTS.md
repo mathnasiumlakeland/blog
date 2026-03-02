@@ -46,8 +46,10 @@ Guidance for coding agents working in this repository.
 - For SVG/plain text labels in diagrams, use symbols when appropriate (`θ`, `°`) rather than words like `theta` / `deg`.
 - For embedded iframes in markdown, include a descriptive `title` attribute (accessibility).
 - Every tool component in `src/lib/components/math/*.svelte` must export `toolMeta` with:
-  - `id`, `title`, `description`, `inputs`, `outputs`, `useCase`, `tags`, `audience`, `kind`.
+  - `id`, `title`, `description`, `inputs`, `outputs`, `useCase`, `tags`.
   - Keep `toolMeta.tags` concise and capped at 5 items.
+- Interactive tool metadata has a single source of truth in `src/lib/components/math/tool-registry.ts`.
+  - Update metadata fields there and export `toolMeta` from each interactive component via `requireInteractiveToolMetaById('<tool-id>')`.
 - New/updated tools must be added to `src/lib/components/math/tool-registry.ts` so they appear on `/tools`.
 
 ## Routing/Base Path Rules
@@ -78,6 +80,7 @@ excerpt: "Card summary text"
 publishedOn: "March 1, 2026"
 publishedAt: "2026-03-01"
 readTime: "6 min"
+author: "Author name"
 tags:
   - algebra
   - geometry
@@ -88,7 +91,17 @@ featured: false
 
 Notes:
 - `publishedAt` must remain ISO (`YYYY-MM-DD`) for sort stability.
+- `author` is required for every post and should be a non-empty string.
 - `equation` is required and is used in featured cards and post previews.
+
+## Blog Post Table of Contents
+
+- For posts with 3 or more major sections, include a `## Table of Contents` block near the top of the markdown body.
+- Place the TOC after the opening intro paragraph and before the first major section heading.
+- Use a flat markdown bullet list with anchor links to major `##` headings in reading order.
+- Keep TOC item text aligned with the exact heading text so anchor links stay predictable.
+- If heading text changes during edits, update the TOC links in the same pass.
+- Skip the TOC for very short posts (fewer than 3 major sections).
 
 ## Visual/Interaction Guidance
 
@@ -174,6 +187,7 @@ For blog-post requests, follow this interaction flow by default:
    - Confirm the main mathematical objective before writing details.
 2. Scaffold first, then narrate where to edit.
    - Create the post skeleton in the background: `src/content/posts/<slug>.md` with valid frontmatter, equation, tags, and initial structure.
+   - Include a starter `## Table of Contents` section when the post is expected to have 3 or more major sections.
    - Ensure route compatibility is in place through the existing post loader flow (`src/lib/content/posts.ts`, `src/lib/content/post-components.ts`, slug page, listing pages) so the new post renders without extra manual steps.
    - Explicitly tell the user which markdown file was created/updated.
 3. Hand control back for content iteration.

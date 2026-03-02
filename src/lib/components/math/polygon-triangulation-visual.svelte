@@ -1,17 +1,9 @@
 <script module lang="ts">
 	import type { MathToolMeta } from './tool-meta';
+	import { requireInteractiveToolMetaById } from './tool-registry';
 
-	export const toolMeta: MathToolMeta = {
-		id: 'polygon-sum-of-interior-angles',
-		title: 'Polygon Sum of Interior Angles',
-		description: 'Draw diagonals from one vertex to show why a polygon splits into n - 2 triangles.',
-		inputs: 'Number of polygon sides n.',
-		outputs: 'Triangulated polygon view plus triangle-count and interior-sum formulas.',
-		useCase: 'Use for geometric proofs and interior-angle sum reasoning.',
-		tags: ['geometry', 'proof', 'triangulation', 'polygons', 'angle-sum'],
-		audience: ['students', 'instructors'],
-		kind: 'interactive'
-	};
+	export const toolMeta: MathToolMeta =
+		requireInteractiveToolMetaById('polygon-sum-of-interior-angles');
 </script>
 
 <script lang="ts">

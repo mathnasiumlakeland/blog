@@ -82,6 +82,53 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Use B / gcd(A, B).'
 		};
 	},
+	'simple-interest-growth': () => {
+		const principal = randomInt(500, 6000);
+		const rate = randomStep(0.01, 0.12, 0.005);
+		const years = randomInt(1, 12);
+		const answer = principal * (1 + rate * years);
+		return {
+			prompt: `Using simple interest, find A when P = ${principal}, r = ${rate.toFixed(3)}, and t = ${years}.`,
+			answer,
+			tolerance: 0.1,
+			hint: 'Use A = P(1 + rt).'
+		};
+	},
+	'compound-interest-growth': () => {
+		const principal = randomInt(500, 6000);
+		const rate = randomStep(0.01, 0.12, 0.005);
+		const compoundsPerYear = [1, 2, 4, 12, 52][randomInt(0, 4)];
+		const years = randomInt(1, 12);
+		const answer = principal * (1 + rate / compoundsPerYear) ** (compoundsPerYear * years);
+		return {
+			prompt: `Find A when P = ${principal}, r = ${rate.toFixed(3)}, n = ${compoundsPerYear}, and t = ${years}.`,
+			answer,
+			tolerance: 0.2,
+			hint: 'Use A = P(1 + r/n)^(nt).'
+		};
+	},
+	'continuous-compounding-growth': () => {
+		const principal = randomInt(500, 6000);
+		const rate = randomStep(0.01, 0.12, 0.005);
+		const years = randomInt(1, 12);
+		const answer = principal * Math.exp(rate * years);
+		return {
+			prompt: `With continuous compounding, find A when P = ${principal}, r = ${rate.toFixed(3)}, and t = ${years}.`,
+			answer,
+			tolerance: 0.2,
+			hint: 'Use A = Pe^(rt).'
+		};
+	},
+	'compound-interest-convergence-to-e': () => {
+		const n = randomInt(12, 1500);
+		const answer = Math.pow(1 + 1 / n, n);
+		return {
+			prompt: `For n = ${n}, approximate A_n = (1 + 1/n)^n.`,
+			answer,
+			tolerance: 0.002,
+			hint: 'The value should be between 2 and e.'
+		};
+	},
 	'pascal-triangle-modulo-explorer': () => {
 		const n = randomInt(5, 12);
 		const k = randomInt(2, n - 2);
@@ -112,6 +159,70 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			answer,
 			tolerance: 0.1,
 			hint: 'Use ((n − 2) × 180) / n.'
+		};
+	},
+	'reflection-over-a-horizontal-line': () => {
+		const k = randomInt(-6, 6);
+		const x = randomInt(-8, 8);
+		const y = randomInt(k + 1, 10);
+		const answer = 2 * k - y;
+		return {
+			prompt: `Reflect P = (${x}, ${y}) across y = ${k}. What is the reflected y-coordinate?`,
+			answer,
+			tolerance: 0,
+			hint: "For reflection across y = k, use y' = 2k - y."
+		};
+	},
+	'reflection-over-a-vertical-line': () => {
+		const k = randomInt(-6, 6);
+		const x = randomInt(k + 1, 10);
+		const y = randomInt(-8, 8);
+		const answer = 2 * k - x;
+		return {
+			prompt: `Reflect P = (${x}, ${y}) across x = ${k}. What is the reflected x-coordinate?`,
+			answer,
+			tolerance: 0,
+			hint: "For reflection across x = k, use x' = 2k - x."
+		};
+	},
+	'reflection-over-y-equals-x': () => {
+		const x = randomInt(-8, 8);
+		let y = randomInt(-8, 8);
+		if (y === x) {
+			y = y === 8 ? 7 : y + 1;
+		}
+		return {
+			prompt: `Reflect P = (${x}, ${y}) across y = x. What is the reflected x-coordinate?`,
+			answer: y,
+			tolerance: 0,
+			hint: "Reflection across y = x swaps coordinates, so (x, y) -> (y, x)."
+		};
+	},
+	'reflection-over-y-equals-x-plus-b': () => {
+		const b = randomInt(-5, 5);
+		const x = randomInt(-8, 8);
+		const y = randomInt(-8, 8);
+		const answer = y - b;
+		return {
+			prompt: `Reflect P = (${x}, ${y}) across y = x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}. What is the reflected x-coordinate?`,
+			answer,
+			tolerance: 0,
+			hint: "For reflection across y = x + b, use x' = y - b."
+		};
+	},
+	'reflection-over-y-equals-mx-plus-b-steps': () => {
+		const m = randomInt(-3, 3);
+		const b = randomInt(-5, 5);
+		const x = randomInt(-6, 6);
+		const y = randomInt(-6, 6);
+		const answer = x - (2 * m * (m * x - y + b)) / (m * m + 1);
+		const slopeText = m.toString();
+		const lineText = b === 0 ? `${slopeText}x` : `${slopeText}x ${b > 0 ? '+' : '-'} ${Math.abs(b)}`;
+		return {
+			prompt: `Reflect P = (${x}, ${y}) across y = ${lineText}. What is the reflected x-coordinate?`,
+			answer,
+			tolerance: 0.02,
+			hint: "Use x' = x - [2m(mx - y + b)] / (m² + 1)."
 		};
 	},
 	'sector-fraction-area': () => {

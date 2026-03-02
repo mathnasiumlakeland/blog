@@ -12,6 +12,7 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
+	import InlineMathText from '$lib/components/math/inline-math-text.svelte';
 	import MathExpression from '$lib/components/math/math-expression.svelte';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs';
 	import HexagonThreeCirclesVisual from '$lib/components/math/hexagon-three-circles-visual.svelte';
@@ -74,11 +75,20 @@
 				<Badge variant="secondary" class="w-fit border border-border/80 bg-background/70">
 					Featured Post
 				</Badge>
-				<CardTitle class="text-xl sm:text-2xl">{featuredPost.title}</CardTitle>
-				<p class="text-sm text-muted-foreground">{featuredPost.subtitle}</p>
+				<CardTitle class="text-xl sm:text-2xl">
+					<InlineMathText text={featuredPost.title} />
+				</CardTitle>
+				<p class="text-sm text-muted-foreground">
+					<InlineMathText text={featuredPost.subtitle} />
+				</p>
 			</CardHeader>
 			<CardContent class="space-y-4 text-sm">
-				<p class="text-muted-foreground">{featuredPost.excerpt}</p>
+				<p class="text-muted-foreground">
+					<InlineMathText text={featuredPost.excerpt} />
+				</p>
+				<p class="text-xs text-muted-foreground">
+					By {featuredPost.author} • {featuredPost.publishedOn} • {featuredPost.readTime}
+				</p>
 				<p class="rounded-lg border border-border/70 bg-background/70 px-3 py-2 text-xs">
 					<MathExpression
 						math={featuredPost.equation}
@@ -96,7 +106,9 @@
 					class="w-full gap-1.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none"
 				>
 					<BookOpenText class="size-4" />
-					Read "{featuredPost.title}"
+					<span>Read "</span>
+					<InlineMathText text={featuredPost.title} />
+					<span>"</span>
 				</Button>
 			</CardContent>
 		</Card>
@@ -138,13 +150,23 @@
 		</Card>
 	</section>
 
-		<section class="space-y-4 rounded-3xl border border-border/70 bg-card/78 p-5 shadow-sm backdrop-blur-sm sm:p-8">
+	<section class="space-y-4 rounded-3xl border border-border/70 bg-card/78 p-5 shadow-sm backdrop-blur-sm sm:p-8">
+		<div class="flex items-end justify-between gap-3">
 			<div class="space-y-1">
 				<h2 class="text-2xl leading-tight sm:text-3xl">Tool Spotlight</h2>
 				<p class="text-sm text-muted-foreground">
 					Two featured tools that make abstract ideas easier to see.
 				</p>
 			</div>
+			<Button
+				href={resolve('/tools')}
+				variant="ghost"
+				class="hidden gap-1.5 hover:!bg-transparent hover:!text-foreground hover:underline hover:shadow-none sm:inline-flex"
+			>
+				View all resources
+				<ArrowRight class="size-4" />
+			</Button>
+		</div>
 
 		<Tabs bind:value={spotlightTab} class="gap-4">
 			<TabsList
@@ -179,6 +201,10 @@
 				</TabsContent>
 			{/if}
 		</Tabs>
+		<Button href={resolve('/tools')} variant="outline" class="w-full gap-1.5 sm:hidden">
+			View all resources
+			<ArrowRight class="size-4" />
+		</Button>
 	</section>
 
 	<section class="space-y-5">
@@ -187,7 +213,11 @@
 				<h2 class="text-2xl leading-tight sm:text-3xl">Latest Posts</h2>
 				<p class="text-sm text-muted-foreground">Recent notes and visuals from Mathnasium Journal.</p>
 			</div>
-			<Button href={resolve('/posts')} variant="ghost" class="hidden gap-1.5 sm:inline-flex">
+			<Button
+				href={resolve('/posts')}
+				variant="ghost"
+				class="hidden gap-1.5 hover:!bg-transparent hover:!text-foreground hover:underline hover:shadow-none sm:inline-flex"
+			>
 				View all
 				<ArrowRight class="size-4" />
 			</Button>

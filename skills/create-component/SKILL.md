@@ -23,7 +23,8 @@ Build reusable, center-friendly math visualizations that are easy to discover an
 - Before finalizing, inspect at least one similar existing tool and mirror its background pattern (wrapper class + drawing surface behavior), not only its color family.
 
 3. Add required indexable metadata inside the component.
-- Export a `toolMeta` object from module scope and keep fields complete.
+- Keep interactive tool metadata canonical in `src/lib/components/math/tool-registry.ts`.
+- Export `toolMeta` from module scope via `requireInteractiveToolMetaById('<tool-id>')`.
 - Set `toolMeta.id` to a kebab-case slug derived from `toolMeta.title` because `/tools/[id]` routes by this value.
 - Do not append generic suffixes not present in the title (for example, avoid forced `-visual` or `-canvas`).
 - Keep `toolMeta.tags` concise and capped at 5 items.
@@ -37,9 +38,7 @@ export const toolMeta = {
   inputs: 'What students/teachers can control.',
   outputs: 'What values/visual results update.',
   useCase: 'What the tool teaches or demonstrates.',
-  tags: ['geometry', 'algebra'],
-  audience: ['students', 'instructors'],
-  kind: 'interactive' // or 'helper'
+  tags: ['geometry', 'algebra']
 };
 ```
 

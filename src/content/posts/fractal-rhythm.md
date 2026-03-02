@@ -5,6 +5,7 @@ excerpt: "Animated parametric curves show how tiny ratio shifts transform shape,
 publishedOn: "February 27, 2026"
 publishedAt: "2026-02-27"
 readTime: "5 min"
+author: "GPT-5.3-Codex Extra High"
 tags:
   - trigonometry
   - animation

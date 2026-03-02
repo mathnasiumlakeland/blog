@@ -1,18 +1,8 @@
 <script module lang="ts">
 	import type { MathToolMeta } from './tool-meta';
+	import { requireInteractiveToolMetaById } from './tool-registry';
 
-	export const toolMeta: MathToolMeta = {
-		id: 'pascal-triangle-modulo-explorer',
-		title: 'Pascal Triangle Modulo Explorer',
-		description:
-			'Explore Pascal triangle coefficients modulo k with a live plot and a selectable coefficient inspector.',
-		inputs: 'Row count, modulo base, dot size, zero-remainder toggle, and selected row/column.',
-		outputs: 'Color-coded modulo plot plus exact binomial value and remainder for the selected entry.',
-		useCase: 'Use for modular arithmetic, binomial coefficients, and visual pattern recognition.',
-		tags: ['number-theory', 'modular-arithmetic', 'patterns', 'binomial'],
-		audience: ['students', 'instructors'],
-		kind: 'interactive'
-	};
+	export const toolMeta: MathToolMeta = requireInteractiveToolMetaById('pascal-triangle-modulo-explorer');
 </script>
 
 <script lang="ts">

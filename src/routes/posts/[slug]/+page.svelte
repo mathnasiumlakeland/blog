@@ -14,7 +14,9 @@
 		equation={data.post.equation}
 		publishedOn={data.post.publishedOn}
 		readTime={data.post.readTime}
+		author={data.post.author}
 		tags={data.post.tags}
+		tableOfContents={data.headings}
 	>
 		<Content />
 	</ArticleShell>

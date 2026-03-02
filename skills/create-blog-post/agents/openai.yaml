@@ -1,4 +1,4 @@
 interface:
   display_name: "Create Blog Post"
   short_description: "Scaffold and refine Mathnasium Journal blog posts"
-  default_prompt: "Create or revise a Mathnasium Journal blog post with required frontmatter and math-rendering rules."
+  default_prompt: "Create or revise a Mathnasium Journal blog post with required frontmatter (including author), a table of contents for multi-section posts, and math-rendering rules."

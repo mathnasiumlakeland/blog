@@ -1,17 +1,8 @@
 <script module lang="ts">
 	import type { MathToolMeta } from './tool-meta';
+	import { requireInteractiveToolMetaById } from './tool-registry';
 
-	export const toolMeta: MathToolMeta = {
-		id: 'sector-fraction-area',
-		title: 'Sector Fraction Area',
-		description: 'Connect angle measure to area by shading a circle sector and scaling equal sectors.',
-		inputs: 'Central angle theta in degrees and number of equal sectors.',
-		outputs: 'Single-sector area and scaled total area with a live sector diagram.',
-		useCase: 'Use for circle geometry, fraction reasoning, and area proportionality.',
-		tags: ['geometry', 'circles', 'fractions', 'area', 'angles'],
-		audience: ['students', 'instructors'],
-		kind: 'interactive'
-	};
+	export const toolMeta: MathToolMeta = requireInteractiveToolMetaById('sector-fraction-area');
 </script>
 
 <script lang="ts">

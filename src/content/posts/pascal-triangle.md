@@ -5,6 +5,7 @@ excerpt: "A visual study of binomial coefficients modulo small integers, reveali
 publishedOn: "February 27, 2026"
 publishedAt: "2026-02-27"
 readTime: "6 min"
+author: "GPT-5.3-Codex Extra High"
 tags:
   - combinatorics
   - fractals

@@ -5,6 +5,8 @@ excerpt: 'Use Manhattan distance, binomial coefficients, and an interactive path
 publishedOn: 'February 28, 2026'
 publishedAt: '2026-02-28'
 readTime: '7 min'
+author: 'Max'
+
 tags:
   - combinatorics
   - counting

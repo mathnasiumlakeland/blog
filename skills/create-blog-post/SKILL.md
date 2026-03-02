@@ -28,6 +28,7 @@ excerpt: "Card summary text"
 publishedOn: "March 1, 2026"
 publishedAt: "2026-03-01"
 readTime: "6 min"
+author: "Author name"
 tags:
   - algebra
   - geometry
@@ -37,12 +38,17 @@ featured: false
 ```
 
 - Keep `publishedAt` as `YYYY-MM-DD`.
+- Keep `author` present as a non-empty string.
 - Keep `equation` present because cards and previews consume it.
 - Keep only one post with `featured: true` across all posts.
 
 4. Draft or revise body content.
 - Use short sections with clear headings.
 - Explain ideas in approachable language first, then notation.
+- For posts with 3 or more major sections, add `## Table of Contents` after the opening paragraph and before the first major section.
+- Build the TOC as a flat markdown bullet list that links to major `##` headings in reading order.
+- Keep TOC labels aligned with heading text and refresh links whenever headings change.
+- Skip the TOC for very short posts (fewer than 3 major sections).
 - Render math in markdown as `$...$` for inline and `$$...$$` for block equations.
 - Include a descriptive `title` attribute on embedded iframes.
 
@@ -63,6 +69,7 @@ featured: false
 ## Response Contract
 
 - State exactly which markdown file was created or updated.
+- State whether the table of contents was added or updated (or why it was skipped).
 - If no routes/components changed, say so explicitly.
 - After scaffolding, hand control back for iteration and offer focused follow-up passes:
   section rewrites, notation cleanup, visual upgrades, and rendering fixes.

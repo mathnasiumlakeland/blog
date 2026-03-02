@@ -1,17 +1,8 @@
 <script module lang="ts">
 	import type { MathToolMeta } from './tool-meta';
+	import { requireInteractiveToolMetaById } from './tool-registry';
 
-	export const toolMeta: MathToolMeta = {
-		id: 'lattice-paths-explorer',
-		title: 'Lattice Paths Explorer',
-		description: 'Build and animate grid paths to compare Manhattan distance, Euclidean distance, and path counts.',
-		inputs: 'Square size n, optional general grid values m and n, and manual/auto path controls.',
-		outputs: 'Live path visualizations plus combinatorial counts shown with binomial expressions.',
-		useCase: 'Use for counting, combinatorics, coordinate geometry, and strategy discussions.',
-		tags: ['combinatorics', 'geometry', 'counting', 'binomial', 'lattice-paths'],
-		audience: ['students', 'instructors'],
-		kind: 'interactive'
-	};
+	export const toolMeta: MathToolMeta = requireInteractiveToolMetaById('lattice-paths-explorer');
 </script>
 
 <script lang="ts">

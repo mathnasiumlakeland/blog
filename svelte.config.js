@@ -2,6 +2,7 @@ import adapter from '@sveltejs/adapter-static';
 import { mdsvex } from 'mdsvex';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import rehypeSlug from 'rehype-slug';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 const basePath = (() => {
@@ -10,17 +11,68 @@ const basePath = (() => {
 	return value.endsWith('/') ? value.slice(0, -1) : value;
 })();
 
+function remarkNormalizeMathCommands() {
+	return (tree) => {
+		function walk(node) {
+			if (!node || typeof node !== 'object') {
+				return;
+			}
+
+			if ((node.type === 'inlineMath' || node.type === 'math') && typeof node.value === 'string') {
+				node.value = node.value.replace(/\\\\([A-Za-z]+)/g, (_, command) => `\\${command}`);
+			}
+
+			if (Array.isArray(node.children)) {
+				for (const child of node.children) {
+					walk(child);
+				}
+			}
+		}
+
+		walk(tree);
+	};
+}
+
+function rehypeEscapeKatexTextNodes() {
+	return (tree) => {
+		function walk(node, inKatex = false) {
+			if (!node || typeof node !== 'object') {
+				return;
+			}
+
+			const className = Array.isArray(node.properties?.className) ? node.properties.className : [];
+			const currentInKatex = inKatex || className.includes('katex');
+
+			if (currentInKatex && node.type === 'text' && typeof node.value === 'string') {
+				node.value = node.value.replaceAll('<', '&lt;');
+			}
+
+			if (Array.isArray(node.children)) {
+				for (const child of node.children) {
+					walk(child, currentInKatex);
+				}
+			}
+		}
+
+		walk(tree);
+	};
+}
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	extensions: ['.svelte', '.md'],
 	preprocess: [
 		vitePreprocess(),
-		mdsvex({
-			extensions: ['.md'],
-			remarkPlugins: [remarkMath],
-			rehypePlugins: [[rehypeKatex, { output: 'html' }]]
-		})
-	],
+			mdsvex({
+				extensions: ['.md'],
+				remarkPlugins: [remarkMath, remarkNormalizeMathCommands],
+				rehypePlugins: [
+					rehypeSlug,
+					[rehypeKatex, { output: 'html', strict: 'ignore' }],
+					rehypeEscapeKatexTextNodes
+				]
+			})
+		],
 	kit: {
 		adapter: adapter(),
 		paths: {

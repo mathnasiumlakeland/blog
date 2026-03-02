@@ -6,8 +6,6 @@ export type MathToolMeta = {
 	outputs: string;
 	useCase: string;
 	tags: string[];
-	audience: string[];
-	kind: 'interactive' | 'helper';
 };
 
 export type ToolListEntry = {

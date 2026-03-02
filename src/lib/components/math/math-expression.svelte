@@ -8,9 +8,7 @@
 		inputs: 'TeX math string plus optional display mode and CSS class.',
 		outputs: 'Rendered KaTeX HTML with fallback plain text if rendering fails.',
 		useCase: 'Use inside Svelte UIs whenever equations must appear as math instead of raw TeX.',
-		tags: ['equations', 'katex', 'rendering', 'utility'],
-		audience: ['instructors', 'content-authors'],
-		kind: 'helper'
+		tags: ['equations', 'katex', 'rendering', 'utility']
 	};
 </script>
 

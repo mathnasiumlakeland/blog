@@ -1,17 +1,8 @@
 <script module lang="ts">
 	import type { MathToolMeta } from './tool-meta';
+	import { requireInteractiveToolMetaById } from './tool-registry';
 
-	export const toolMeta: MathToolMeta = {
-		id: 'hexagon-minus-three-circles',
-		title: 'Hexagon Minus Three Circles',
-		description: 'Show a regular hexagon with three unit circles removed to visualize a target area.',
-		inputs: 'Hexagon radius n controlled by a slider; tangent highlight updates automatically.',
-		outputs: 'Hexagon area, center distance, target area, and tangent/non-tangent visual status.',
-		useCase: 'Use for geometry lessons on composite area and tangent-circle constraints.',
-		tags: ['geometry', 'area', 'circles', 'hexagon', 'tangent'],
-		audience: ['students', 'instructors'],
-		kind: 'interactive'
-	};
+	export const toolMeta: MathToolMeta = requireInteractiveToolMetaById('hexagon-minus-three-circles');
 </script>
 
 <script lang="ts">

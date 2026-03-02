@@ -275,6 +275,18 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Use R = v₀² sin(2θ) / g with g = 9.8 m/s².'
 		};
 	},
+	'polyhedron-surface-area': () => {
+		const prismLength = randomStep(2, 12, 0.5);
+		const prismWidth = randomStep(2, 12, 0.5);
+		const prismHeight = randomStep(2, 12, 0.5);
+		const answer = 2 * (prismLength * prismWidth + prismLength * prismHeight + prismWidth * prismHeight);
+		return {
+			prompt: `A rectangular prism has l = ${prismLength}, w = ${prismWidth}, and h = ${prismHeight}. What is the total surface area?`,
+			answer,
+			tolerance: 0.05,
+			hint: 'Use SA = 2lw + 2lh + 2wh.'
+		};
+	},
 	'sector-fraction-area': () => {
 		const theta = randomStep(15, 330, 15);
 		const answer = (theta / 360) * Math.PI;
@@ -283,6 +295,18 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			answer,
 			tolerance: 0.03,
 			hint: 'Use (θ/360)πr² with r = 1.'
+		};
+	},
+	'stick-figure-tree-shadow-proportion': () => {
+		const personHeight = randomStep(4, 7, 0.1);
+		const personShadow = randomStep(2.5, 6, 0.1);
+		const treeShadow = randomStep(8, 30, 0.5);
+		const answer = (personHeight / personShadow) * treeShadow;
+		return {
+			prompt: `Fill in the missing value: ${personHeight.toFixed(1)}/${personShadow.toFixed(1)} = x/${treeShadow.toFixed(1)}. What is x (in feet)?`,
+			answer,
+			tolerance: 0.05,
+			hint: 'Cross-multiply: x = (person height × tree shadow) ÷ person shadow.'
 		};
 	}
 };

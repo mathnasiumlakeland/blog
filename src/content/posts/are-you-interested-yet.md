@@ -11,7 +11,7 @@ tags:
   - algebra
   - exponential-growth
 equation: "A = P\\left(1 + \\frac{r}{n}\\right)^{nt}"
-featured: true
+featured: false
 ---
 
 <script>

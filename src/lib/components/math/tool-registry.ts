@@ -268,6 +268,22 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
+		id: 'polyhedron-surface-area',
+		meta: {
+			id: 'polyhedron-surface-area',
+			title: '3D Solids Surface Area',
+			description:
+				'Explore multiple 3D solids, compare each face with its net, and build total surface area as a sum.',
+			inputs:
+				'Shape selector, shape dimensions, draggable 3D model, and clickable net faces.',
+			outputs:
+				'Face-by-face formulas, synchronized face highlighting, and total surface area expressions.',
+			useCase:
+				'Use for geometry lessons connecting 3D solids, 2D nets, and additive surface-area reasoning.',
+			tags: ['geometry', 'surface-area', 'nets', '3d-solids', 'measurement']
+		}
+	},
+	{
 		id: 'scientific-calculator',
 		meta: {
 			id: 'scientific-calculator',
@@ -294,6 +310,21 @@ export const interactiveMathTools: ToolListEntry[] = [
 			outputs: 'Single-sector area and scaled total area with a live sector diagram.',
 			useCase: 'Use for circle geometry, fraction reasoning, and area proportionality.',
 			tags: ['geometry', 'circles', 'fractions', 'area', 'angles']
+		}
+	},
+	{
+		id: 'stick-figure-tree-shadow-proportion',
+		meta: {
+			id: 'stick-figure-tree-shadow-proportion',
+			title: 'Stick Figure Tree Shadow Proportion',
+			description:
+				'Compare a stick figure and tree shadow to solve unknown height with equivalent fractions.',
+			inputs: 'Stick figure height and shadow length, plus tree shadow length.',
+			outputs:
+				'Live scene, equivalent height-to-shadow fractions, and solved tree height from the proportion.',
+			useCase:
+				'Use for teaching proportional reasoning with similar triangles in everyday shadow problems.',
+			tags: ['proportional-reasoning', 'ratios', 'proportions', 'similar-triangles', 'word-problems']
 		}
 	}
 ];

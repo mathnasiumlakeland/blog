@@ -93,7 +93,7 @@
 					<p class="text-xs text-muted-foreground">
 						By {featuredPost.author} • {featuredPost.publishedOn} • {featuredPost.readTime}
 					</p>
-					<p class="rounded-lg border border-border/70 bg-background/70 px-3 py-2 text-xs">
+					<p class="w-fit max-w-full rounded-lg border border-border/70 bg-background/70 px-3 py-2 text-xs sm:w-full">
 						<MathExpression
 							math={featuredPost.equation}
 							class="overflow-x-auto [&_.katex]:text-[0.95em]"

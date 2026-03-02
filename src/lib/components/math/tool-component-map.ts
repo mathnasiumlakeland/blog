@@ -25,8 +25,10 @@ const interactiveToolComponentSources: ToolComponentSourceMap = {
 	'projectile-trajectory': 'projectile-trajectory-visual.svelte',
 	'velocity-components': 'velocity-components-visual.svelte',
 	'projectile-range-vs-angle': 'projectile-range-vs-angle-visual.svelte',
+	'polyhedron-surface-area': 'rectangular-prism-surface-area-net-visual.svelte',
 	'scientific-calculator': 'scientific-calculator.svelte',
-	'sector-fraction-area': 'sector-fraction-visual.svelte'
+	'sector-fraction-area': 'sector-fraction-visual.svelte',
+	'stick-figure-tree-shadow-proportion': 'stick-figure-tree-shadow-proportion-visual.svelte'
 };
 
 const interactiveToolLoaders: Record<string, ToolComponentLoader> = {
@@ -54,8 +56,12 @@ const interactiveToolLoaders: Record<string, ToolComponentLoader> = {
 	'projectile-trajectory': () => import('./projectile-trajectory-visual.svelte'),
 	'velocity-components': () => import('./velocity-components-visual.svelte'),
 	'projectile-range-vs-angle': () => import('./projectile-range-vs-angle-visual.svelte'),
+	'polyhedron-surface-area': () =>
+		import('./rectangular-prism-surface-area-net-visual.svelte'),
 	'scientific-calculator': () => import('./scientific-calculator.svelte'),
-	'sector-fraction-area': () => import('./sector-fraction-visual.svelte')
+	'sector-fraction-area': () => import('./sector-fraction-visual.svelte'),
+	'stick-figure-tree-shadow-proportion': () =>
+		import('./stick-figure-tree-shadow-proportion-visual.svelte')
 };
 
 export function getInteractiveToolLoaderById(id: string) {

@@ -12,7 +12,7 @@ tags:
   - transformations
   - algebra
 equation: 'y=mx+b'
-featured: false
+featured: true
 ---
 
 <script>

@@ -1,10 +1,10 @@
 ---
-title: 'Reflection Over a Line'
-subtitle: 'The basics of reflections over a line'
-excerpt: 'A walkthrough of reflections over a line, with interactive visualizations.'
+title: 'Reflecting Points Across a Line'
+subtitle: 'Or: How I Learned to Stop Worrying and Trust the Process'
+excerpt: 'A walkthrough of reflecting points across a line, with interactive visualizations.'
 publishedOn: 'February 28, 2026'
 publishedAt: '2026-02-28'
-readTime: '20 min'
+readTime: '25 min'
 author: 'Max'
 
 tags:
@@ -151,27 +151,27 @@ So, why not try exactly that? Let's reframe this difficult problem into in easie
 Well, we can start by subtracting the $b$ from the $y$-coordinate of the line of reflection $y=x+b$ to move it up/down to the origin. Anything we do to the line of reflection, we'll have to do to the point of interest, $P$, to keep the problem consistent. It's like we're dragging everything up/down by $b$ units.
 
 $$
-y=x+b \Rightarrow y=x
+y=x+b \ \Rightarrow \ y=x
 $$
 
 $$
-P = (x, y) \Rightarrow P = (x, y-b)
+P = (x, y) \ \Rightarrow \ P = (x, y-b)
 $$
 
 Now that we have a line of reflection at $y=x$, we can reflect the point across it as usual by swapping the $x$- and $y$-coordinates.
 
 $$
-P = (x, y-b) \Rightarrow P' = (y-b, x)
+P = (x, y-b) \ \Rightarrow \ P' = (y-b, x)
 $$
 
 Now we need to push everything back in place by adding $b$ back to the $y$-coordinates.
 
 $$
-y = x \Rightarrow y = x + b
+y = x \ \Rightarrow \ y = x + b
 $$
 
 $$
-P' = (y-b, x) \Rightarrow P' = (y-b, x+b)
+P' = (y-b, x) \ \Rightarrow \ P' = (y-b, x+b)
 $$
 
 So, we find that the reflected point is located at:
@@ -224,7 +224,7 @@ P' &= R(\theta)P
 0 \\
 1
 \end{pmatrix}
-\\
+\\[1em]
 &= \begin{pmatrix}
 0 & 1 \\
 -1 & 0
@@ -232,43 +232,106 @@ P' &= R(\theta)P
 0 \\
 1
 \end{pmatrix}
-\\
+\\[1em]
 &= \begin{pmatrix}
 0 \cdot 0 + 1 \cdot 1 \\
 -1 \cdot 0 + 0 \cdot 1
 \end{pmatrix}
-\\
+\\[1em]
 &= \begin{pmatrix}
 1 \\
 0
 \end{pmatrix}
-\\
+\\[1em]
 &= (1, 0)
 \end{align*}
 $$
 
 So, we see that rotating a point $P = (0, 1)$ by $\theta = 90^\circ$ clockwise results in the point $P' = (1, 0)$.
 
+Rotation matrices and vector operations will be discussed in more detail in a future post.
+
 ## General Lines: $y=mx+b$
 
 Now let's do something crazy :)
 
-Say we want to find out how to reflect a point $P = (x, y)$ across some general line $y=mx+b$.
+Say we want to find out how to reflect a point $P = (x, y)$ across some general line $y=mx+b$. We might be able to do this through visual inspection, but it can be pretty difficult, especially for points not on lattice points. Instead, we aim to derive a general formula for the reflected point.
 
-<details class="rounded-xl border border-border/70 bg-background/70 p-4">
-<summary class="cursor-pointer text-sm font-semibold text-foreground">Full derivation... not for the faint of heart!</summary>
+Let's think back to our simple reflections. It would be so nice if we could somehow turn this general line $y=mx+b$ into the simple horizontal line $y=0$, where the rule is to simply flip the sign of the $y$-coordinate, $P' = (x, -y)$. Hmm... we've found ourselves in a [similar situation before](#shifted-diagonal-lines-yx--b)!
+
+Recall, when we were dealing with the diagonal line $y=x + b$, we found that we could subtract off the $b$ to move the line to the origin, reframing the problem into a simple reflection across the line $y=x$. We'll take a similar, albeit slightly more involved, approach here. It might be worthwhile to pause here and make sure you understand the steps we took to simplify the $y=x+b$ problem before continuing.
+
+The general procedure to *"simplify"* the problem is as follows:
+1. Translate the line of reflection $y=mx+b$ to the origin by subtracting off the $b$. Anything we do to the line of reflection, we must do to $P$, so we also subtract off $b$ from $P$'s $y$-component.
+
+$$
+\begin{align*}
+y &= mx
+\\
+P &\leftarrow (x, y-b)
+\end{align*}
+$$
+
+2. Rotate point $P$ and the line of reflection $y=mx$ by a clockwise angle $\theta$ using our rotation matrix $R(\theta)$. This will rotate the line onto the x-axis, making it the horizontal line $y=0$.
+
+$$
+\begin{align*}
+y &=0 \\
+P &\leftarrow R(\theta)P
+\end{align*}
+$$
 
 
-</details>
+3. Reflect point $P$ across the x-axis by flipping the sign of the $y$-coordinate to find the reflected point $P'$.
 
-This is the full derivation workflow you outlined:
-translate by $-b$, rotate by $-\theta$, reflect across $y=0$, rotate back by $+\theta$, then translate by $+b$.
+$$
+P' = (P_x, -P_y)
+$$
 
-Use the stepper below with the **Back** and **Forward** controls.
+4. Rotate the line of reflection back to its original slope, $y=mx$, by a counter-clockwise angle $\theta$. We can rotate point $P'$ back into this frame by multiplying be the inverse rotation matrix $R(-\theta)$.
+
+$$
+\begin{align*}
+y &= mx \\
+P' &\leftarrow R(-\theta)P'
+\end{align*}
+$$
+
+5. Translate the line of reflection back to its original position, $y=mx+b$, by adding back the $b$. And of course, we must do the same to point $P'$ to keep the problem consistent.
+
+$$
+\begin{align*}
+y &= mx + b \\
+P' &\leftarrow (P'_x, P'_y + b)
+\end{align*}
+$$
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
 	<ReflectionOverYEqualsMxPlusBStepsVisual />
 </div>
+
+
+Okay... nice procedure, but that's not very helpful! We could manually perform this (or more likely write a program to do it for us), but why go through all this trouble everytime we want to reflect a point?!
+
+If we could find a formula that would give us the reflected point directly, we could use it to easily **reflect any point across any line**! What follows is exactly that derivation. Brace yourself -- this is not for the faint of heart!
+
+<details class="rounded-xl border border-border/70 bg-background/70 p-4">
+<summary class="cursor-pointer text-sm font-semibold text-foreground">Full derivation... here it comes!</summary>
+
+Tricked ya! Work in progress :)
+
+</details>
+
+Wow! Glad that's over :) Welcome back! 
+
+To review, we found that given a point $P = (x, y)$ and a line $y=mx+b$, the reflected point is located at:
+$$
+P' = \left(\frac{(1-m^2)x + 2m(y-b)}{m^2+1}, \frac{2mx + (m^2-1)(y-b)}{m^2+1} + b\right)
+$$
+
+Now we can just plug and chug to find any reflected point across any line.
+
+
 
 For a line with point $P_0$ and normal vector $n$, the reflected point of $P$ is:
 
@@ -278,6 +341,43 @@ $$
 
 ## Recovering the rules for simple reflections
 
+How do we know this crazy formula is correct? Well, because this is the general formula for *any* line $y=mx+b$, it should work for any particular line we choose to throw at it. Let's try a few:
+
+**Horizontal line:** $y=k$
+
+We know the reflected point should be $P' = (x, 2k-y)$. A horizontal line has slope of zero, so we can plug in $m=0$ and $b=k$ to see if we get the correct answer:
+$$
+\begin{align*}
+P' &= \left(\frac{(1-m^2)x + 2m(y-b)}{m^2+1}, \frac{2mx + (m^2-1)(y-b)}{m^2+1} + b\right)
+\\[1em]
+ &= \left(\frac{(1-0^2)x + 2(0)(y-k)}{0^2+1}, \frac{2(0)x + (0^2-1)(y-k)}{0^2+1} + k\right)
+\\[1em]
+&= \left(\frac{x}{1}, \frac{-(y-k)}{1} + k\right)
+\\[1em]
+ &= \left(x, -y + k + k\right)
+\\[1em]
+ &= \left(x, 2k - y\right)
+\\[1em]
+\end{align*}
+$$
+
+**Diagonal line:** $y=x$
+
+We know the reflected point should be $P' = (y, x)$. This line has slope $m=1$ and intercept $b=0$:
+$$
+\begin{align*}
+P' &= \left(\frac{(1-m^2)x + 2m(y-b)}{m^2+1}, \frac{2mx + (m^2-1)(y-b)}{m^2+1} + b\right)
+\\[1em]
+ &= \left(\frac{(1-1^2)x + 2(1)(y-0)}{1^2+1}, \frac{2(1)x + (1^2-1)(y-0)}{1^2+1} + 0\right)
+\\[1em]
+&= \left(\frac{2y}{2}, \frac{2x}{2}\right)
+\\[1em]
+ &= \left(y, x\right)
+\\[1em]
+\end{align*}
+$$
+
+Awesome! So, as we can see, the formula works!
 
 # Reflections Cheat Sheet
 
@@ -306,6 +406,6 @@ $$
 
 **General line:** $y=mx+b$
 $$
-x' = x-\frac{2m(mx-y+b)}{m^2+1},\qquad
-y' = y+\frac{2(mx-y+b)}{m^2+1}
+x' = \frac{(1-m^2)x + 2m(y-b)}{m^2+1},\qquad
+y' = \frac{2mx + (m^2-1)(y-b)}{m^2+1} + b
 $$

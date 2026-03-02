@@ -15,6 +15,7 @@
 	const PAD_RIGHT = 24;
 	const PAD_TOP = 28;
 	const PAD_BOTTOM = 52;
+	const Y_AXIS_MAX = 30000;
 	const innerW = PLOT_WIDTH - PAD_LEFT - PAD_RIGHT;
 	const innerH = PLOT_HEIGHT - PAD_TOP - PAD_BOTTOM;
 
@@ -23,11 +24,10 @@
 	const X_MAX = 90;
 	const xTicks = [0, 15, 30, 45, 60, 75, 90];
 
-	let v0 = $state(100);
+	let v0 = $state(420);
 	let selAngle = $state(45);
 
 	const rMax = $derived((v0 * v0) / g);
-	const yMax = $derived(rMax * 1.12);
 
 	const compAngle = $derived(90 - selAngle);
 
@@ -44,7 +44,7 @@
 	}
 
 	function toSvgY(r: number) {
-		return PAD_TOP + ((yMax - r) / yMax) * innerH;
+		return PAD_TOP + ((Y_AXIS_MAX - r) / Y_AXIS_MAX) * innerH;
 	}
 
 	const groundY = $derived(toSvgY(0));
@@ -66,10 +66,7 @@
 	const compX = $derived(toSvgX(compAngle));
 	const compY = $derived(toSvgY(compRange));
 
-	const yTicks = $derived.by(() => {
-		const step = rMax / 4;
-		return Array.from({ length: 5 }, (_, i) => i * step);
-	});
+	const yTicks = [0, 6000, 12000, 18000, 24000, 30000];
 
 	function fmt(v: number, d = 0) {
 		return v.toFixed(d);

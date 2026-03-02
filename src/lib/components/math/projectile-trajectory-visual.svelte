@@ -15,10 +15,13 @@
 	const PAD_RIGHT = 28;
 	const PAD_TOP = 32;
 	const PAD_BOTTOM = 56;
+	const X_AXIS_MIN = 0;
+	const X_AXIS_MAX = 4500;
+	const Y_AXIS_MAX = 2500;
 	const innerW = PLOT_WIDTH - PAD_LEFT - PAD_RIGHT;
 	const innerH = PLOT_HEIGHT - PAD_TOP - PAD_BOTTOM;
 
-	let v0 = $state(80);
+	let v0 = $state(155);
 	let angleDeg = $state(45);
 
 	const theta = $derived(angleDeg * (Math.PI / 180));
@@ -28,15 +31,12 @@
 	const maxHeight = $derived((vy * vy) / (2 * g));
 	const range = $derived((v0 * v0 * Math.sin(2 * theta)) / g);
 
-	const xMax = $derived(Math.max(range * 1.1, 1));
-	const yMax = $derived(Math.max(maxHeight * 1.45, 1));
-
 	function toSvgX(x: number) {
-		return PAD_LEFT + (x / xMax) * innerW;
+		return PAD_LEFT + ((x - X_AXIS_MIN) / (X_AXIS_MAX - X_AXIS_MIN)) * innerW;
 	}
 
 	function toSvgY(y: number) {
-		return PAD_TOP + ((yMax - y) / yMax) * innerH;
+		return PAD_TOP + ((Y_AXIS_MAX - y) / Y_AXIS_MAX) * innerH;
 	}
 
 	const groundY = $derived(toSvgY(0));
@@ -66,16 +66,9 @@
 	const arrowEndX = $derived(PAD_LEFT + arrowLen * Math.cos(theta));
 	const arrowEndY = $derived(groundY - arrowLen * Math.sin(theta));
 
-	const xTicks = $derived.by(() => {
-		const step = range / 5;
-		return Array.from({ length: 6 }, (_, i) => i * step);
-	});
+	const xTicks = [0, 900, 1800, 2700, 3600, 4500];
 
-	const yTicks = $derived.by(() => {
-		const topVal = maxHeight * 1.35;
-		const step = topVal / 4;
-		return Array.from({ length: 5 }, (_, i) => i * step);
-	});
+	const yTicks = [0, 500, 1000, 1500, 2000, 2500];
 
 	function fmt(v: number, d = 1) {
 		return v.toFixed(d);

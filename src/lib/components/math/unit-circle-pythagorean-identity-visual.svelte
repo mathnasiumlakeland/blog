@@ -42,7 +42,9 @@ export const toolMeta: MathToolMeta =
 	const radiusLabelX = $derived((originScreenX + pointScreenX) / 2 - y * 12);
 	const radiusLabelY = $derived((originScreenY + pointScreenY) / 2 - x * 12);
 
-	const coordinateLabel = $derived.by(() => `(${formatNumber(x)}, ${formatNumber(y)})`);
+	const coordinateLabel = $derived.by(
+		() => `\\left(${formatNumber(x)},\\ ${formatNumber(y)}\\right)`
+	);
 	const identityNumericalSummary = $derived.by(() => {
 		const x2 = formatNumber(x * x, 3);
 		const y2 = formatNumber(y * y, 3);
@@ -231,11 +233,10 @@ export const toolMeta: MathToolMeta =
 		</p>
 		<p class="w-fit min-w-[10rem] justify-self-start rounded-xl border border-border/70 bg-background/80 pl-2 pr-1.5 py-2 text-sm text-muted-foreground">
 			Point:
-			<span
-				class="mt-1 block max-w-full overflow-x-auto whitespace-nowrap font-semibold text-foreground lg:mt-0 lg:ml-1 lg:inline-block lg:max-w-none lg:align-middle"
-			>
-				{coordinateLabel}
-			</span>
+			<MathExpression
+				math={coordinateLabel}
+				class="mt-1 block max-w-full overflow-x-auto whitespace-nowrap font-semibold text-foreground lg:mt-0 lg:ml-1 lg:inline-block lg:max-w-none lg:align-middle [&_.katex]:whitespace-nowrap"
+			/>
 		</p>
 		<p class="min-w-0 rounded-xl border border-border/70 bg-background/80 pl-2 pr-1.5 py-2 text-sm text-muted-foreground sm:pr-2 lg:pr-3">
 			Identity:

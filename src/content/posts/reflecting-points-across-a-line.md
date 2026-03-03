@@ -372,7 +372,7 @@ $$
 
 Awesome! So, as we can see, the formula works! But it would still be a pain to manually compute every point by hand.
 
-**Live Demo:**
+## Desmos
 
 Instead, we can enter the reflection formula into Desmos and let it do all the heavy lifting. Try dragging the purple point $P$ to see the reflected point $P'$ update in real time.
 

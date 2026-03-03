@@ -226,13 +226,13 @@ export const toolMeta: MathToolMeta =
 			Angle:
 			<MathExpression
 				math={angleSummary}
-				class="mt-1 block w-full max-w-full overflow-x-auto whitespace-nowrap font-semibold text-foreground lg:mt-0 lg:ml-1 lg:inline-block lg:w-auto [&_.katex]:whitespace-nowrap"
+				class="mt-1 block w-full max-w-full overflow-x-auto whitespace-nowrap font-semibold text-foreground lg:mt-0 lg:ml-1 lg:inline-block lg:w-auto lg:align-middle [&_.katex]:whitespace-nowrap"
 			/>
 		</p>
 		<p class="w-fit min-w-[10rem] justify-self-start rounded-xl border border-border/70 bg-background/80 pl-2 pr-1.5 py-2 text-sm text-muted-foreground">
 			Point:
 			<span
-				class="mt-1 block max-w-full overflow-x-auto whitespace-nowrap font-semibold text-foreground lg:mt-0 lg:ml-1 lg:inline-block lg:max-w-none"
+				class="mt-1 block max-w-full overflow-x-auto whitespace-nowrap font-semibold text-foreground lg:mt-0 lg:ml-1 lg:inline-block lg:max-w-none lg:align-middle"
 			>
 				{coordinateLabel}
 			</span>
@@ -241,7 +241,7 @@ export const toolMeta: MathToolMeta =
 			Identity:
 			<MathExpression
 				math={identityNumericalSummary}
-				class="mt-1 block w-full max-w-full overflow-x-auto whitespace-nowrap font-semibold text-foreground lg:mt-0 lg:ml-1 lg:inline-block lg:w-auto [&_.katex]:whitespace-nowrap"
+				class="mt-1 block w-full max-w-full overflow-x-auto whitespace-nowrap font-semibold text-foreground lg:mt-0 lg:ml-1 lg:inline-block lg:w-auto lg:align-middle [&_.katex]:whitespace-nowrap"
 			/>
 		</p>
 	</div>

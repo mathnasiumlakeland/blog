@@ -12,9 +12,7 @@
 			'Live rendered math expression, right-aligned running result, and a short recent-results history.',
 		useCase:
 			'Use for arithmetic fluency, function practice, and quick verification during instruction or homework.',
-		tags: ['algebra', 'trigonometry', 'calculator', 'functions', 'evaluation'],
-		audience: ['students', 'instructors'],
-		kind: 'interactive'
+		tags: ['algebra', 'trigonometry', 'calculator', 'functions', 'evaluation']
 	};
 </script>
 

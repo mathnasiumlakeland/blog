@@ -104,6 +104,7 @@
 	const MIN_ZOOM = 0.55;
 	const MAX_ZOOM = 2.4;
 	const FACE_ROTATION_DURATION_MS = 420;
+	const INITIAL_SHAPE_ID: ShapeId = 'rectangular-prism';
 	const DEFAULT_ANGLED_YAW = -0.7;
 	const DEFAULT_ANGLED_PITCH = 0.35;
 
@@ -684,7 +685,7 @@
 		cylinder: cylinderShape
 	};
 
-	let selectedShapeId = $state<ShapeId>('rectangular-prism');
+	let selectedShapeId = $state<ShapeId>(INITIAL_SHAPE_ID);
 	let dimensionValues = $state<Record<string, number>>({
 		length: 8,
 		width: 5,
@@ -699,7 +700,7 @@
 
 	let yaw = $state(DEFAULT_ANGLED_YAW);
 	let pitch = $state(DEFAULT_ANGLED_PITCH);
-	let zoom = $state(getDefaultZoom(selectedShapeId));
+	let zoom = $state(getDefaultZoom(INITIAL_SHAPE_ID));
 	let activeFaceId = $state<FaceId>('front');
 
 	let polySvg: SVGSVGElement | null = $state(null);

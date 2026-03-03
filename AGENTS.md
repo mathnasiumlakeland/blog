@@ -33,6 +33,10 @@ Guidance for coding agents working in this repository.
 - `src/lib/components/math/tool-meta.ts`: shared tool metadata types
 - `src/lib/components/math/tool-registry.ts`: canonical list of tools shown on `/tools`
 - `src/lib/components/math/tool-visual-theme.ts`: shared plot background tokens/helpers for tool visuals
+- `tests/prebuild-smoke.mjs`: smoke checks run before every build (transient artifact + stale-chunk hook presence)
+- `tests/tool-integrity.mjs`: validates tool id parity across registry, component map, component files, and practice map
+- `tests/build-output-check.mjs`: validates built output and prerendered `/tools/[id]` pages after production build
+- `src/app.html`: global stale-chunk/dynamic-import recovery hook for post-deploy asset skew
 - `static/wasm/*`: wasm binaries served as static assets
 - `.github/workflows/deploy-pages.yml`: GitHub Pages CI/CD
 
@@ -123,11 +127,15 @@ Notes:
 - Install deps: `npm install`
 - Dev server: `npm run dev`
 - Svelte/type checks: `npm run check`
+- Tool wiring/integrity checks: `npm run test:tools-integrity`
 - Production build: `npm run build`
+- Build output verification (run after build): `npm run test:build-output`
+- Full CI-style pipeline: `npm run test:ci`
 - Preview static output: `npm run preview`
 
 Notes:
-- `predev` and `prebuild` run `npm run build:wasm` automatically.
+- `predev` runs `npm run build:wasm` automatically.
+- `prebuild` now runs `npm run test:prebuild`, `npm run test:tools-integrity`, then `npm run build:wasm`.
 - Preserve static compatibility; avoid server-only logic for post rendering.
 - GitHub Pages deploy job sets `BASE_PATH=/blog`.
 
@@ -160,7 +168,11 @@ Notes:
 - For every `.svelte` change:
   - Run `npx @sveltejs/mcp svelte-autofixer <file> --svelte-version 5`
   - Then run `npm run check`
+- For tool-registry/map/id changes:
+  - Run `npm run test:tools-integrity`
 - For substantial or cross-page changes, also run `npm run build` before finishing.
+- For release readiness:
+  - Run `npm run test:ci` (includes check + production build with `BASE_PATH=/blog` + build output checks).
 
 ## Homepage Defaults
 

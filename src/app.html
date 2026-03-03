@@ -3,6 +3,48 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script>
+			(() => {
+				if (typeof window === 'undefined') {
+					return;
+				}
+
+				const RELOAD_GUARD_KEY = 'vite-preload-reload-at';
+				const RELOAD_COOLDOWN_MS = 30000;
+
+				function reloadOncePerCooldown() {
+					const now = Date.now();
+					const lastReloadAt = Number(window.sessionStorage.getItem(RELOAD_GUARD_KEY) ?? '0');
+
+					if (now - lastReloadAt < RELOAD_COOLDOWN_MS) {
+						return;
+					}
+
+					window.sessionStorage.setItem(RELOAD_GUARD_KEY, String(now));
+					window.location.reload();
+				}
+
+				window.addEventListener('vite:preloadError', (event) => {
+					event.preventDefault();
+					reloadOncePerCooldown();
+				});
+
+				window.addEventListener('unhandledrejection', (event) => {
+					const reason = event.reason;
+					const message =
+						typeof reason === 'string'
+							? reason
+							: typeof reason?.message === 'string'
+								? reason.message
+								: '';
+
+					if (message.includes('Failed to fetch dynamically imported module')) {
+						event.preventDefault();
+						reloadOncePerCooldown();
+					}
+				});
+			})();
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

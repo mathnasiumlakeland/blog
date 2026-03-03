@@ -42,7 +42,8 @@ export const toolMeta: MathToolMeta =
 	const radiusLabelX = $derived((originScreenX + pointScreenX) / 2 - y * 12);
 	const radiusLabelY = $derived((originScreenY + pointScreenY) / 2 - x * 12);
 
-	const coordinateLabel = $derived.by(
+	const coordinateLabelText = $derived.by(() => `(${formatNumber(x)}, ${formatNumber(y)})`);
+	const coordinateLabelMath = $derived.by(
 		() => `\\left(${formatNumber(x)},\\ ${formatNumber(y)}\\right)`
 	);
 	const identityNumericalSummary = $derived.by(() => {
@@ -234,7 +235,7 @@ export const toolMeta: MathToolMeta =
 		<p class="w-fit min-w-[10rem] justify-self-start rounded-xl border border-border/70 bg-background/80 pl-2 pr-1.5 py-2 text-sm text-muted-foreground">
 			Point:
 			<MathExpression
-				math={coordinateLabel}
+				math={coordinateLabelMath}
 				class="mt-1 block max-w-full overflow-x-auto whitespace-nowrap font-semibold text-foreground lg:mt-0 lg:ml-1 lg:inline-block lg:max-w-none lg:align-middle [&_.katex]:whitespace-nowrap"
 			/>
 		</p>
@@ -339,7 +340,7 @@ export const toolMeta: MathToolMeta =
 			1
 		</text>
 		<text x={pointLabelX} y={pointLabelY} text-anchor={pointLabelAnchor} class="fill-slate-800 text-xs font-semibold">
-			{coordinateLabel}
+			{coordinateLabelText}
 		</text>
 
 		{#each majorTicks as tick (tick)}

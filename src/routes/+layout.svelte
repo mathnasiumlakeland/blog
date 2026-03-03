@@ -57,7 +57,7 @@
 	/>
 </svelte:head>
 
-<div class="relative min-h-screen">
+<div class="relative flex min-h-screen flex-col">
 	<div class="pointer-events-none absolute inset-0 overflow-hidden">
 		<div class="math-orb -left-20 top-24 size-80 bg-gradient-to-br from-cyan-300/60 to-teal-300/30"></div>
 		<div
@@ -127,7 +127,9 @@
 		</div>
 	</header>
 
-	<main class="relative z-10 mx-auto w-full max-w-6xl px-3 pb-14 pt-6 sm:px-6 sm:pb-16 sm:pt-10 lg:px-8">
+	<main
+		class="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col px-3 pb-14 pt-6 sm:px-6 sm:pb-16 sm:pt-10 lg:px-8"
+	>
 		{@render children()}
 	</main>
 

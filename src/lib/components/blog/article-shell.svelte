@@ -175,11 +175,11 @@
 
 	{#if tocSections.length > 0}
 		<aside
-			class="rounded-2xl border border-border/70 bg-gradient-to-br from-sky-100/45 via-card/88 to-cyan-100/40 p-5 shadow-sm dark:from-sky-950/20 dark:via-card/80 dark:to-cyan-950/20 sm:p-6"
+			class="rounded-2xl border border-border/70 bg-gradient-to-br from-sky-100/45 via-card/88 to-cyan-100/40 shadow-sm dark:from-sky-950/20 dark:via-card/80 dark:to-cyan-950/20"
 		>
 			<button
 				type="button"
-				class="group flex w-full items-center justify-between gap-3 rounded-md px-1 py-0.5 text-left text-muted-foreground transition hover:text-foreground"
+				class="group flex w-full items-center justify-between gap-3 rounded-2xl px-5 py-4 text-left text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:px-6"
 				aria-expanded={tocOpen}
 				aria-controls="post-toc-panel"
 				onclick={() => (tocOpen = !tocOpen)}
@@ -193,10 +193,10 @@
 				</span>
 			</button>
 			{#if tocOpen}
-				<div id="post-toc-panel" transition:slide={{ duration: 190 }}>
+				<div id="post-toc-panel" class="px-5 pb-5 sm:px-6 sm:pb-6" transition:slide={{ duration: 190 }}>
 					<nav
 						aria-label="Table of contents"
-						class="mt-3 max-h-[min(52vh,22rem)] overflow-y-auto pr-1 sm:max-h-none sm:overflow-visible sm:pr-0"
+						class="mt-1 max-h-[min(52vh,22rem)] overflow-y-auto pr-1 sm:max-h-none sm:overflow-visible sm:pr-0"
 					>
 						<ol class="space-y-3">
 							{#each tocSections as group (group.section.id)}

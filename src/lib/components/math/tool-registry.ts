@@ -156,6 +156,21 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
+		id: 'unit-circle-reference',
+		meta: {
+			id: 'unit-circle-reference',
+			title: 'Unit Circle Reference',
+			description:
+				'Explore the key unit-circle angles with exact coordinate pairs to connect x = cos θ and y = sin θ.',
+			inputs: 'Tap a highlighted special-angle point around the unit circle.',
+			outputs:
+				'Exact degree/radian angle, coordinate pair (cos θ, sin θ), and highlighted spoke/angle cue.',
+			useCase:
+				'Use for memorizing special angles and reading cosine/sine values directly from the unit circle.',
+			tags: ['trigonometry', 'unit-circle', 'special-angles', 'sine', 'cosine']
+		}
+	},
+	{
 		id: 'reflection-over-a-horizontal-line',
 		meta: {
 			id: 'reflection-over-a-horizontal-line',

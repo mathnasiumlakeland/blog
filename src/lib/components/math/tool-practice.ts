@@ -171,6 +171,33 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Use the unit-circle equation x^2 + y^2 = 1.'
 		};
 	},
+	'unit-circle-reference': () => {
+		const prompts = [
+			{ fn: 'cos', degree: 30, answer: Math.sqrt(3) / 2 },
+			{ fn: 'sin', degree: 30, answer: 0.5 },
+			{ fn: 'cos', degree: 45, answer: Math.sqrt(2) / 2 },
+			{ fn: 'sin', degree: 45, answer: Math.sqrt(2) / 2 },
+			{ fn: 'cos', degree: 60, answer: 0.5 },
+			{ fn: 'sin', degree: 60, answer: Math.sqrt(3) / 2 },
+			{ fn: 'cos', degree: 120, answer: -0.5 },
+			{ fn: 'sin', degree: 120, answer: Math.sqrt(3) / 2 },
+			{ fn: 'cos', degree: 150, answer: -Math.sqrt(3) / 2 },
+			{ fn: 'sin', degree: 150, answer: 0.5 },
+			{ fn: 'cos', degree: 210, answer: -Math.sqrt(3) / 2 },
+			{ fn: 'sin', degree: 210, answer: -0.5 },
+			{ fn: 'cos', degree: 225, answer: -Math.sqrt(2) / 2 },
+			{ fn: 'sin', degree: 225, answer: -Math.sqrt(2) / 2 },
+			{ fn: 'cos', degree: 300, answer: 0.5 },
+			{ fn: 'sin', degree: 300, answer: -Math.sqrt(3) / 2 }
+		];
+		const prompt = prompts[randomInt(0, prompts.length - 1)];
+		return {
+			prompt: `Using the unit circle, what is ${prompt.fn}(${prompt.degree}°)? Give a decimal rounded to three places.`,
+			answer: prompt.answer,
+			tolerance: 0.005,
+			hint: 'Use the special-angle coordinate values on the unit circle.'
+		};
+	},
 	'reflection-over-a-horizontal-line': () => {
 		const k = randomInt(-6, 6);
 		const x = randomInt(-8, 8);

@@ -16,6 +16,7 @@ const interactiveToolComponentSources: ToolComponentSourceMap = {
 	'polygon-sum-of-interior-angles': 'polygon-triangulation-visual.svelte',
 	'regular-interior-angle': 'regular-interior-angle-visual.svelte',
 	'unit-circle-pythagorean-identity': 'unit-circle-pythagorean-identity-visual.svelte',
+	'unit-circle-reference': 'unit-circle-reference-visual.svelte',
 	'reflection-over-a-horizontal-line': 'reflection-over-horizontal-line-visual.svelte',
 	'reflection-over-a-vertical-line': 'reflection-over-vertical-line-visual.svelte',
 	'reflection-over-y-equals-mx-plus-b-steps': 'reflection-over-y-equals-mx-plus-b-steps-visual.svelte',
@@ -47,6 +48,7 @@ const interactiveToolLoaders: Record<string, ToolComponentLoader> = {
 	'regular-interior-angle': () => import('./regular-interior-angle-visual.svelte'),
 	'unit-circle-pythagorean-identity': () =>
 		import('./unit-circle-pythagorean-identity-visual.svelte'),
+	'unit-circle-reference': () => import('./unit-circle-reference-visual.svelte'),
 	'reflection-over-a-horizontal-line': () => import('./reflection-over-horizontal-line-visual.svelte'),
 	'reflection-over-a-vertical-line': () => import('./reflection-over-vertical-line-visual.svelte'),
 	'reflection-over-y-equals-mx-plus-b-steps': () =>

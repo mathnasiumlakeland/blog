@@ -20,7 +20,7 @@ devOnly: false
 	import UnitCircleSineCosineIdentityVisual from '$lib/components/math/unit-circle-pythagorean-identity-visual.svelte';
 </script>
 
-The Pythagorean identity is first encountered in geometry / pre-calc, but doesn't seem that interesting at first. However, it turns out to be one of the more important trig identities that keeps popping up in all sorts of interesting places down the line. Let's figure out where it comes from.
+The Pythagorean identity is first encountered in geometry / pre-calc, but doesn't seem all that interesting at first. However, it turns out to be one of the more important trig identities that keeps popping up in all sorts of interesting places down the line. Let's figure out where it comes from.
 
 Pick a point along the circumference of the unit circle and call it $(x, y)$. Since the unit circle is defined to have a radius of $r=1$, we know that any such point is just a distance of $1$ away from the origin.
 

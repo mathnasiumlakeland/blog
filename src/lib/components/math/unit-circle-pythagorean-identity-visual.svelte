@@ -48,7 +48,7 @@ export const toolMeta: MathToolMeta =
 		const y2 = formatNumber(y * y, 3);
 		return `x^2 + y^2 = ${x2} + ${y2} = 1`;
 	});
-	const angleSummary = $derived.by(() => `${formatAngle(angle)}^\\circ`);
+	const angleSummary = $derived.by(() => formatInteriorAngleSummary(angle));
 	const radiusDirection = $derived.by(() => Math.atan2(y, x));
 	const interiorBaseAngle = $derived.by(() => (x >= 0 ? 0 : Math.PI));
 	const interiorSweepAngle = $derived.by(() =>
@@ -179,9 +179,20 @@ export const toolMeta: MathToolMeta =
 		return Number.parseFloat(rounded) === 0 ? rounded.replace('-', '') : rounded;
 	}
 
-	function formatAngle(value: number) {
+	function formatInteriorAngleSummary(value: number) {
 		const degrees = ((value * 180) / Math.PI + 360) % 360;
-		return degrees.toFixed(0);
+		const angleText = `${degrees.toFixed(0)}^\\circ`;
+
+		if (degrees <= 90) {
+			return angleText;
+		}
+		if (degrees <= 180) {
+			return `180^\\circ-${angleText}=${(180 - degrees).toFixed(0)}^\\circ`;
+		}
+		if (degrees <= 270) {
+			return `${angleText}-180^\\circ=${(degrees - 180).toFixed(0)}^\\circ`;
+		}
+		return `360^\\circ-${angleText}=${(360 - degrees).toFixed(0)}^\\circ`;
 	}
 
 	function buildAngleArcPath(
@@ -215,12 +226,14 @@ export const toolMeta: MathToolMeta =
 			Angle:
 			<MathExpression
 				math={angleSummary}
-				class="ml-1 inline-block max-w-full overflow-x-auto whitespace-nowrap align-middle font-semibold text-foreground [&_.katex]:whitespace-nowrap"
+				class="mt-1 block w-full max-w-full overflow-x-auto whitespace-nowrap font-semibold text-foreground lg:mt-0 lg:ml-1 lg:inline-block lg:w-auto [&_.katex]:whitespace-nowrap"
 			/>
 		</p>
 		<p class="w-fit min-w-[10rem] justify-self-start rounded-xl border border-border/70 bg-background/80 pl-2 pr-1.5 py-2 text-sm text-muted-foreground">
 			Point:
-			<span class="ml-1 inline-block whitespace-nowrap align-middle font-semibold text-foreground">
+			<span
+				class="mt-1 block max-w-full overflow-x-auto whitespace-nowrap font-semibold text-foreground lg:mt-0 lg:ml-1 lg:inline-block lg:max-w-none"
+			>
 				{coordinateLabel}
 			</span>
 		</p>
@@ -228,7 +241,7 @@ export const toolMeta: MathToolMeta =
 			Identity:
 			<MathExpression
 				math={identityNumericalSummary}
-				class="ml-1 inline-block max-w-full overflow-x-auto whitespace-nowrap align-middle font-semibold text-foreground [&_.katex]:whitespace-nowrap"
+				class="mt-1 block w-full max-w-full overflow-x-auto whitespace-nowrap font-semibold text-foreground lg:mt-0 lg:ml-1 lg:inline-block lg:w-auto [&_.katex]:whitespace-nowrap"
 			/>
 		</p>
 	</div>

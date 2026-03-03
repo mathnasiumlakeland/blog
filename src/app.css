@@ -228,6 +228,28 @@
 		margin: 0.85rem -0.25rem;
 		padding-inline: 0.25rem;
 	}
+
+	.post-reading-body {
+		font-size: 1.02rem;
+		line-height: 1.78;
+	}
+
+	.post-reading-body :where(h2) {
+		margin-top: 1.95em;
+		margin-bottom: 0.7em;
+		line-height: 1.24;
+	}
+
+	.post-reading-body :where(h3) {
+		margin-top: 1.55em;
+		margin-bottom: 0.6em;
+		line-height: 1.28;
+	}
+
+	.post-reading-body :where(pre, table) {
+		margin-inline: -0.2rem;
+		border-radius: 0.8rem;
+	}
 }
 
 @keyframes drift {

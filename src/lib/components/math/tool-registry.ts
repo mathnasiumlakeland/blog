@@ -41,6 +41,19 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
+		id: 'combinatorics-formula-lab',
+		meta: {
+			id: 'combinatorics-formula-lab',
+			title: 'Combinatorics Formula Lab',
+			description:
+				'Compare permutation and combination formulas with slot visuals and overcount corrections.',
+			inputs: 'Distinct values n, slots r, and repeated-count m controls.',
+			outputs: 'Live counts for n^r, nPr, nCr, and n!/m! with visual counting steps.',
+			useCase: 'Use for introducing why different combinatorics formulas multiply or divide.',
+			tags: ['combinatorics', 'permutations', 'combinations', 'counting', 'factorials']
+		}
+	},
+	{
 		id: 'lissajous-pattern-lab',
 		meta: {
 			id: 'lissajous-pattern-lab',

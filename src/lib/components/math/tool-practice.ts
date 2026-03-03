@@ -39,6 +39,18 @@ function binomial(n: number, k: number): number {
 	return Math.round(value);
 }
 
+function permutation(n: number, k: number): number {
+	if (k < 0 || k > n) {
+		return 0;
+	}
+
+	let value = 1;
+	for (let i = 0; i < k; i += 1) {
+		value *= n - i;
+	}
+	return value;
+}
+
 const practiceFactories: Record<string, PracticeFactory> = {
 	'hexagon-minus-three-circles': () => {
 		const n = randomStep(1.2, 4, 0.1);
@@ -71,6 +83,51 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			answer,
 			tolerance: 0,
 			hint: 'Use C(m+n, m).'
+		};
+	},
+	'combinatorics-formula-lab': () => {
+		const variant = randomInt(0, 3);
+
+		if (variant === 0) {
+			const n = randomInt(2, 8);
+			const r = randomInt(2, 6);
+			return {
+				prompt: `Permutations with replacement: compute ${n}^${r}.`,
+				answer: n ** r,
+				tolerance: 0,
+				hint: 'Multiply n by itself r times.'
+			};
+		}
+
+		if (variant === 1) {
+			const n = randomInt(5, 9);
+			const r = randomInt(2, Math.min(5, n));
+			return {
+				prompt: `Permutations in slots: compute ${n}P${r}.`,
+				answer: permutation(n, r),
+				tolerance: 0,
+				hint: 'Use nPr = n! / (n - r)!'
+			};
+		}
+
+		if (variant === 2) {
+			const n = randomInt(5, 10);
+			const r = randomInt(2, Math.min(5, n - 1));
+			return {
+				prompt: `Combinations: compute ${n}C${r}.`,
+				answer: binomial(n, r),
+				tolerance: 0,
+				hint: 'Use nCr = n! / (r!(n - r)!).'
+			};
+		}
+
+		const n = randomInt(5, 9);
+		const m = randomInt(2, Math.min(4, n));
+		return {
+			prompt: `Duplicate-items model: compute ${n}!/${m}!`,
+			answer: permutation(n, n - m),
+			tolerance: 0,
+			hint: 'Divide n! by m! to remove duplicate reorderings.'
 		};
 	},
 	'lissajous-pattern-lab': () => {

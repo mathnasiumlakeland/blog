@@ -370,7 +370,26 @@ P' &= \left(\frac{(1-m^2)x + 2m(y-b)}{m^2+1}, \frac{2mx + (m^2-1)(y-b)}{m^2+1} +
 \end{align*}
 $$
 
-Awesome! So, as we can see, the formula works!
+Awesome! So, as we can see, the formula works! But it would still be a pain to manually compute every point by hand.
+
+**Live Demo:**
+
+Instead, we can enter the reflection formula into Desmos and let it do all the heavy lifting. Try dragging the purple point $P$ to see the reflected point $P'$ update in real time.
+
+You can tinker around with the graph more [here](https://www.desmos.com/calculator/ajdr4a4hck).
+
+<div class="not-prose my-8 overflow-hidden rounded-2xl border border-border/70 bg-card/70 p-3">
+  <div class="aspect-square w-full overflow-hidden rounded-xl border border-border/60 bg-white">
+    <iframe
+      src="https://www.desmos.com/calculator/ajdr4a4hck?embed"
+      title="Interactive Desmos graph for reflecting a point across a line"
+      class="h-full w-full"
+      frameborder="0"
+      loading="lazy"
+    ></iframe>
+  </div>
+</div>
+
 
 # Reflections Cheat Sheet
 

@@ -269,7 +269,6 @@ $$
 ---
 
 # Interest Cheat Sheet
-Here are the main equations from this page in one place.
 
 **Simple interest:**
 $$

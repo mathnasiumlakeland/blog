@@ -15,6 +15,8 @@
 	let lastScrollY = 0;
 	let upwardScrollDistance = 0;
 	let downwardScrollDistance = 0;
+	let pendingScrollY = 0;
+	let scrollFrameId: number | undefined;
 	const postsPath = resolve('/posts');
 	const toolsPath = resolve('/tools');
 	const currentPath = $derived(page.url.pathname);
@@ -39,15 +41,17 @@
 	function updateScrollProgress(scrollY: number) {
 		const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
 		if (maxScroll <= 0) {
-			scrollProgress = 0;
+			if (scrollProgress !== 0) scrollProgress = 0;
 			return;
 		}
 
-		scrollProgress = Math.max(0, Math.min(100, (scrollY / maxScroll) * 100));
+		const nextProgress = Math.max(0, Math.min(100, (scrollY / maxScroll) * 100));
+		if (Math.abs(nextProgress - scrollProgress) >= 0.2) {
+			scrollProgress = nextProgress;
+		}
 	}
 
-	function handleScroll() {
-		const scrollY = Math.max(0, window.scrollY);
+	function applyScrollState(scrollY: number) {
 		updateScrollProgress(scrollY);
 
 		if (!onPostDetailPage) {
@@ -89,6 +93,16 @@
 		}
 
 		lastScrollY = scrollY;
+	}
+
+	function handleScroll() {
+		pendingScrollY = Math.max(0, window.scrollY);
+		if (scrollFrameId !== undefined) return;
+
+		scrollFrameId = window.requestAnimationFrame(() => {
+			scrollFrameId = undefined;
+			applyScrollState(pendingScrollY);
+		});
 	}
 
 	function applyTheme(nextIsDark: boolean) {
@@ -141,7 +155,12 @@
 		updateScrollProgress(lastScrollY);
 		window.addEventListener('scroll', handleScroll, { passive: true });
 
-		return () => window.removeEventListener('scroll', handleScroll);
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+			if (scrollFrameId !== undefined) {
+				window.cancelAnimationFrame(scrollFrameId);
+			}
+		};
 	});
 </script>
 
@@ -171,7 +190,7 @@
 
 	<header
 		bind:this={headerElement}
-		class={`fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background/82 backdrop-blur-md transition-transform duration-300 ease-out ${showProgressChrome ? '-translate-y-full' : 'translate-y-0'}`}
+		class={`fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background/82 backdrop-blur-sm sm:backdrop-blur-md transition-transform duration-300 ease-out will-change-transform ${showProgressChrome ? '-translate-y-full' : 'translate-y-0'}`}
 	>
 		<div class="mx-auto flex max-w-6xl items-center justify-between px-3 py-3 sm:px-6 sm:py-4 lg:px-8">
 			<a
@@ -238,14 +257,12 @@
 		style={`height: ${headerSpacerHeight}px;`}
 	>
 		<div
-			class={`pointer-events-none fixed inset-x-0 top-0 transition-all duration-300 ease-out ${showProgressChrome ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'}`}
+			class={`pointer-events-none fixed inset-x-0 top-0 transition-[transform,opacity] duration-300 ease-out will-change-transform ${showProgressChrome ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'}`}
 		>
-			<div
-				class="h-1.5 overflow-hidden border-b border-border/70 bg-background/82 backdrop-blur-md"
-			>
+			<div class="h-1.5 overflow-hidden border-b border-border/70 bg-background/82">
 				<div
-					class="h-full bg-primary/90 transition-[width] duration-150 ease-out"
-					style={`width: ${scrollProgress}%;`}
+					class="h-full origin-left bg-primary/90 transition-transform duration-150 ease-out will-change-transform"
+					style={`transform: scaleX(${scrollProgress / 100});`}
 				></div>
 			</div>
 		</div>

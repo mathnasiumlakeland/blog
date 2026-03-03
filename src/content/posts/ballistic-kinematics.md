@@ -13,6 +13,7 @@ tags:
   - quadratics
 equation: "R = \\frac{v_0^2 \\sin(2\\theta)}{g}"
 featured: false
+devOnly: true
 ---
 
 <script>

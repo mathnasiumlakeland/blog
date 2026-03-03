@@ -2,8 +2,8 @@
 	import type { MathToolMeta } from './tool-meta';
 	import { requireInteractiveToolMetaById } from './tool-registry';
 
-	export const toolMeta: MathToolMeta =
-		requireInteractiveToolMetaById('unit-circle-sine-cosine-identity');
+export const toolMeta: MathToolMeta =
+		requireInteractiveToolMetaById('unit-circle-pythagorean-identity');
 </script>
 
 <script lang="ts">

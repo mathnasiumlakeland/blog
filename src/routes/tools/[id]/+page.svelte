@@ -242,7 +242,7 @@
 							</span>
 						</summary>
 						<p class="mt-3 text-xs text-muted-foreground">
-							This tool appears in the following posts:
+							This resource appears in the following posts:
 						</p>
 						<ul class="mt-3 space-y-2">
 							{#each data.relatedPosts as relatedPost (relatedPost.slug)}

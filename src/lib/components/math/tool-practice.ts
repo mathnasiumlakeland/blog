@@ -163,7 +163,7 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Use ((n − 2) × 180) / n.'
 		};
 	},
-	'unit-circle-sine-cosine-identity': () => {
+	'unit-circle-pythagorean-identity': () => {
 		return {
 			prompt: 'For any point (x, y) on the unit circle, what is x^2 + y^2?',
 			answer: 1,

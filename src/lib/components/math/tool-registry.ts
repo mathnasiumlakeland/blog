@@ -142,10 +142,10 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
-		id: 'unit-circle-sine-cosine-identity',
+		id: 'unit-circle-pythagorean-identity',
 		meta: {
-			id: 'unit-circle-sine-cosine-identity',
-			title: 'Unit Circle Sine Cosine Identity',
+			id: 'unit-circle-pythagorean-identity',
+			title: 'Unit Circle Pythagorean Identity',
 			description:
 				'Drag a point around the unit circle to connect coordinates with trig values and verify $\\sin^2\\theta + \\cos^2\\theta = 1$.',
 			inputs: 'Drag the point around the circumference to change angle θ and coordinate values.',

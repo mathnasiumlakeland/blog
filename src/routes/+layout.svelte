@@ -8,15 +8,88 @@
 
 	let { children } = $props();
 	let isDark = $state(false);
+	let hideHeader = $state(false);
+	let scrollProgress = $state(0);
+	let headerHeight = $state(0);
+	let headerElement: HTMLElement | undefined = $state();
+	let lastScrollY = 0;
+	let upwardScrollDistance = 0;
+	let downwardScrollDistance = 0;
 	const postsPath = resolve('/posts');
 	const toolsPath = resolve('/tools');
 	const currentPath = $derived(page.url.pathname);
+	const normalizedCurrentPath = $derived(
+		currentPath !== '/' ? currentPath.replace(/\/+$/, '') : currentPath
+	);
 	const onPostsPage = $derived(currentPath === postsPath || currentPath.startsWith(`${postsPath}/`));
 	const onToolsPage = $derived(currentPath === toolsPath || currentPath.startsWith(`${toolsPath}/`));
+	const onPostDetailPage = $derived(
+		normalizedCurrentPath.startsWith(`${postsPath}/`) &&
+			normalizedCurrentPath.slice(postsPath.length + 1).length > 0
+	);
+	const headerSpacerHeight = $derived(onPostDetailPage && hideHeader ? 8 : headerHeight);
+	const showProgressChrome = $derived(onPostDetailPage && hideHeader);
 
 	const activeNavClass = 'gap-1.5 px-2.5 hover:shadow-none sm:px-3';
 	const inactiveNavClass =
 		'gap-1.5 px-2.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none sm:px-3';
+	const hideThreshold = 40;
+	const revealThreshold = 1000;
+
+	function updateScrollProgress(scrollY: number) {
+		const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+		if (maxScroll <= 0) {
+			scrollProgress = 0;
+			return;
+		}
+
+		scrollProgress = Math.max(0, Math.min(100, (scrollY / maxScroll) * 100));
+	}
+
+	function handleScroll() {
+		const scrollY = Math.max(0, window.scrollY);
+		updateScrollProgress(scrollY);
+
+		if (!onPostDetailPage) {
+			hideHeader = false;
+			upwardScrollDistance = 0;
+			downwardScrollDistance = 0;
+			lastScrollY = scrollY;
+			return;
+		}
+
+		if (scrollY <= 16) {
+			hideHeader = false;
+			upwardScrollDistance = 0;
+			downwardScrollDistance = 0;
+			lastScrollY = scrollY;
+			return;
+		}
+
+		const delta = scrollY - lastScrollY;
+		if (Math.abs(delta) < 2) {
+			lastScrollY = scrollY;
+			return;
+		}
+
+		if (delta > 0) {
+			upwardScrollDistance = 0;
+			downwardScrollDistance += delta;
+			if (!hideHeader && scrollY > 120 && downwardScrollDistance >= hideThreshold) {
+				hideHeader = true;
+				downwardScrollDistance = 0;
+			}
+		} else {
+			downwardScrollDistance = 0;
+			upwardScrollDistance += Math.abs(delta);
+			if (hideHeader && upwardScrollDistance >= revealThreshold) {
+				hideHeader = false;
+				upwardScrollDistance = 0;
+			}
+		}
+
+		lastScrollY = scrollY;
+	}
 
 	function applyTheme(nextIsDark: boolean) {
 		document.documentElement.classList.toggle('dark', nextIsDark);
@@ -29,15 +102,46 @@
 		localStorage.setItem('theme', nextIsDark ? 'dark' : 'light');
 	}
 
+	$effect(() => {
+		if (!headerElement || typeof ResizeObserver === 'undefined') return;
+
+		const observer = new ResizeObserver((entries) => {
+			headerHeight = entries[0]?.contentRect.height ?? headerElement?.offsetHeight ?? 0;
+		});
+
+		observer.observe(headerElement);
+		headerHeight = headerElement.offsetHeight;
+
+		return () => observer.disconnect();
+	});
+
+	$effect(() => {
+		if (typeof window === 'undefined') return;
+		onPostDetailPage;
+
+		hideHeader = false;
+		upwardScrollDistance = 0;
+		downwardScrollDistance = 0;
+		lastScrollY = Math.max(0, window.scrollY);
+		updateScrollProgress(lastScrollY);
+	});
+
 	onMount(() => {
 		const savedTheme = localStorage.getItem('theme');
 		if (savedTheme === 'dark' || savedTheme === 'light') {
 			applyTheme(savedTheme === 'dark');
-			return;
+		} else {
+			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+			applyTheme(prefersDark);
 		}
 
-		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		applyTheme(prefersDark);
+		lastScrollY = Math.max(0, window.scrollY);
+		upwardScrollDistance = 0;
+		downwardScrollDistance = 0;
+		updateScrollProgress(lastScrollY);
+		window.addEventListener('scroll', handleScroll, { passive: true });
+
+		return () => window.removeEventListener('scroll', handleScroll);
 	});
 </script>
 
@@ -65,7 +169,10 @@
 		></div>
 	</div>
 
-	<header class="sticky top-0 z-40 border-b border-border/70 bg-background/82 backdrop-blur-md">
+	<header
+		bind:this={headerElement}
+		class={`fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background/82 backdrop-blur-md transition-transform duration-300 ease-out ${showProgressChrome ? '-translate-y-full' : 'translate-y-0'}`}
+	>
 		<div class="mx-auto flex max-w-6xl items-center justify-between px-3 py-3 sm:px-6 sm:py-4 lg:px-8">
 			<a
 				href={resolve('/')}
@@ -126,6 +233,23 @@
 			</div>
 		</div>
 	</header>
+	<div
+		class="relative z-40 transition-[height] duration-300 ease-out"
+		style={`height: ${headerSpacerHeight}px;`}
+	>
+		<div
+			class={`pointer-events-none fixed inset-x-0 top-0 transition-all duration-300 ease-out ${showProgressChrome ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'}`}
+		>
+			<div
+				class="h-1.5 overflow-hidden border-b border-border/70 bg-background/82 backdrop-blur-md"
+			>
+				<div
+					class="h-full bg-primary/90 transition-[width] duration-150 ease-out"
+					style={`width: ${scrollProgress}%;`}
+				></div>
+			</div>
+		</div>
+	</div>
 
 	<main
 		class="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col px-3 pb-14 pt-6 sm:px-6 sm:pb-16 sm:pt-10 lg:px-8"

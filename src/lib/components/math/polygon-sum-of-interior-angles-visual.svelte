@@ -72,9 +72,12 @@
 		<p class="min-w-0 rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Sides:
 			<span
-				class="ml-1 inline-block whitespace-nowrap font-semibold text-foreground sm:mt-1 sm:ml-0 sm:block sm:max-w-full sm:overflow-x-auto xl:mt-0 xl:ml-1 xl:inline-block xl:max-w-none xl:align-middle"
+				class="ml-1 inline-block whitespace-nowrap sm:mt-1 sm:ml-0 sm:block sm:max-w-full sm:overflow-x-auto xl:mt-0 xl:ml-1 xl:inline-block xl:max-w-none xl:align-middle"
 			>
-				{sides}
+				<MathExpression
+					math={`${sides}`}
+					class="font-semibold text-foreground [&_.katex]:whitespace-nowrap"
+				/>
 			</span>
 		</p>
 		<p class="min-w-0 rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">

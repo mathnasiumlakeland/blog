@@ -13,7 +13,7 @@ const interactiveToolComponentSources: ToolComponentSourceMap = {
 	'continuous-compounding-growth': 'continuous-compounding-growth-visual.svelte',
 	'compound-interest-convergence-to-e': 'compound-interest-convergence-to-e-visual.svelte',
 	'pascal-triangle-modulo-explorer': 'pascal-modulo-canvas.svelte',
-	'polygon-sum-of-interior-angles': 'polygon-triangulation-visual.svelte',
+	'polygon-sum-of-interior-angles': 'polygon-sum-of-interior-angles-visual.svelte',
 	'regular-interior-angle': 'regular-interior-angle-visual.svelte',
 	'unit-circle-pythagorean-identity': 'unit-circle-pythagorean-identity-visual.svelte',
 	'unit-circle-reference': 'unit-circle-reference-visual.svelte',
@@ -44,7 +44,7 @@ const interactiveToolLoaders: Record<string, ToolComponentLoader> = {
 	'compound-interest-convergence-to-e': () =>
 		import('./compound-interest-convergence-to-e-visual.svelte'),
 	'pascal-triangle-modulo-explorer': () => import('./pascal-modulo-canvas.svelte'),
-	'polygon-sum-of-interior-angles': () => import('./polygon-triangulation-visual.svelte'),
+	'polygon-sum-of-interior-angles': () => import('./polygon-sum-of-interior-angles-visual.svelte'),
 	'regular-interior-angle': () => import('./regular-interior-angle-visual.svelte'),
 	'unit-circle-pythagorean-identity': () =>
 		import('./unit-circle-pythagorean-identity-visual.svelte'),

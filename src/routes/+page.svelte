@@ -16,7 +16,7 @@
 	import MathExpression from '$lib/components/math/math-expression.svelte';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs';
 	import LissajousCanvas from '$lib/components/math/lissajous-canvas.svelte';
-	import PolygonTriangulationVisual from '$lib/components/math/polygon-triangulation-visual.svelte';
+	import PolygonTriangulationVisual from '$lib/components/math/polygon-sum-of-interior-angles-visual.svelte';
 	import { posts } from '$lib/content/posts';
 
 	let spotlightTab = $state<'curves' | 'angle-sum'>('curves');

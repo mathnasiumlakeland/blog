@@ -19,7 +19,7 @@ devOnly: true
 <script>
 	import HexagonTriangleAreaVisual from '$lib/components/math/hexagon-triangle-area-visual.svelte';
 	import HexagonThreeCirclesVisual from '$lib/components/math/hexagon-three-circles-visual.svelte';
-	import PolygonTriangulationVisual from '$lib/components/math/polygon-triangulation-visual.svelte';
+	import PolygonTriangulationVisual from '$lib/components/math/polygon-sum-of-interior-angles-visual.svelte';
 	import RegularInteriorAngleVisual from '$lib/components/math/regular-interior-angle-visual.svelte';
 	import SectorFractionVisual from '$lib/components/math/sector-fraction-visual.svelte';
 </script>

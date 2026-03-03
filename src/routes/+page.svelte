@@ -160,7 +160,7 @@
 			<div class="space-y-1">
 				<h2 class="text-2xl leading-tight sm:text-3xl">Tool Spotlight</h2>
 				<p class="text-sm text-muted-foreground">
-					Two featured tools that make abstract ideas easier to see.
+					Interactive resources to make math make sense.
 				</p>
 			</div>
 			<Button
@@ -192,7 +192,7 @@
 					value="angle-sum"
 					class="relative z-10 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
 				>
-					Angle Sum
+					Interior Angle Sum
 				</TabsTrigger>
 			</TabsList>
 			{#if spotlightTab === 'curves'}

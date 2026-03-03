@@ -3,6 +3,7 @@
 	import type { Snippet } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import { Badge } from '$lib/components/ui/badge';
+	import InlineMathText from '$lib/components/math/inline-math-text.svelte';
 	import MathExpression from '$lib/components/math/math-expression.svelte';
 	import { Separator } from '$lib/components/ui/separator';
 	import type { PostHeading } from '$lib/content/post-headings';
@@ -153,7 +154,9 @@
 		</div>
 
 		<div class="space-y-2">
-			<h1 class="text-3xl leading-tight tracking-tight sm:text-5xl">{title}</h1>
+			<h1 class="text-3xl leading-tight tracking-tight sm:text-5xl">
+				<InlineMathText text={title} />
+			</h1>
 			<p class="max-w-3xl text-sm text-muted-foreground sm:text-lg">{subtitle}</p>
 		</div>
 

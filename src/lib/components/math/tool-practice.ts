@@ -163,6 +163,14 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Use ((n − 2) × 180) / n.'
 		};
 	},
+	'unit-circle-sine-cosine-identity': () => {
+		return {
+			prompt: 'For any point (x, y) on the unit circle, what is x^2 + y^2?',
+			answer: 1,
+			tolerance: 0,
+			hint: 'Use the unit-circle equation x^2 + y^2 = 1.'
+		};
+	},
 	'reflection-over-a-horizontal-line': () => {
 		const k = randomInt(-6, 6);
 		const x = randomInt(-8, 8);

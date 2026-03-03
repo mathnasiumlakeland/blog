@@ -12,6 +12,7 @@ tags:
   - geometry
 equation: 'x = \sin(at+\delta),\; y = \sin(bt)'
 featured: false
+devOnly: true
 ---
 
 <script>

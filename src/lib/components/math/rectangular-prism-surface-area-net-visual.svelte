@@ -891,8 +891,18 @@
 	}
 
 	function getDefaultZoom(shapeId: ShapeId) {
-		if (shapeId === 'cube') return 0.9;
-		return 1;
+		switch (shapeId) {
+			case 'rectangular-prism':
+				return 0.94;
+			case 'cube':
+				return 0.74;
+			case 'triangular-prism':
+				return 0.93;
+			case 'square-pyramid':
+				return 0.92;
+			default:
+				return 1;
+		}
 	}
 
 	function getDefaultOrientation(_shapeId: ShapeId) {

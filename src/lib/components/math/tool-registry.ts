@@ -142,6 +142,20 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
+		id: 'unit-circle-sine-cosine-identity',
+		meta: {
+			id: 'unit-circle-sine-cosine-identity',
+			title: 'Unit Circle Sine Cosine Identity',
+			description:
+				'Drag a point around the unit circle to connect coordinates with trig values and verify $\\sin^2\\theta + \\cos^2\\theta = 1$.',
+			inputs: 'Drag the point around the circumference to change angle θ and coordinate values.',
+			outputs: 'Live point (x, y), x/y right-triangle legs, and the identity check x² + y² = 1.',
+			useCase:
+				'Use for introducing unit-circle coordinates and deriving the Pythagorean trig identity.',
+			tags: ['trigonometry', 'unit-circle', 'identities', 'geometry']
+		}
+	},
+	{
 		id: 'reflection-over-a-horizontal-line',
 		meta: {
 			id: 'reflection-over-a-horizontal-line',

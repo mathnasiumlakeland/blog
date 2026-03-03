@@ -189,7 +189,7 @@ $$
 
 ## Rotation Matrices
 
-We'll be taking a slight detour to talk about rotation matrices -- basically, a set of numbers that represent how we can rotate a point about the origin. This is a little advanced (you'll see it come up in linear algebra, which among other things, formalizes the concept of transformations like reflections and rotations using matrices) so feel free to skip this section.
+We'll be taking a slight detour to talk about rotation matrices -- basically, a set of numbers that represent how we can rotate a point about the origin. This is a little advanced (you'll see it come up in linear algebra, which, among other things, formalizes the concept of transformations like reflections and rotations using matrices) so feel free to skip this section.
 
 The general rotation matrix for rotating a point about the origin by an angle $\theta$ in the clockwise direction is:
 $$

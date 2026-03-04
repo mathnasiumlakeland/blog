@@ -25,6 +25,13 @@
 	const onToolsPage = $derived(currentPath === toolsPath || currentPath.startsWith(`${toolsPath}/`));
 	const onPostDetailPage = $derived(routeId === '/posts/[slug]');
 	const headerSpacerHeight = $derived(onPostDetailPage && hideHeader ? 8 : headerHeight);
+	const hasMeasuredHeaderHeight = $derived(headerHeight > 0);
+	const showHeaderSpacerFallback = $derived(!hasMeasuredHeaderHeight && !(onPostDetailPage && hideHeader));
+	const headerSpacerStyle = $derived(
+		hasMeasuredHeaderHeight || (onPostDetailPage && hideHeader)
+			? `height: ${headerSpacerHeight}px;`
+			: undefined
+	);
 	const showProgressChrome = $derived(onPostDetailPage && hideHeader);
 
 	const activeNavClass = 'gap-1.5 px-2.5 hover:shadow-none sm:px-3';
@@ -32,6 +39,11 @@
 		'gap-1.5 px-2.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none sm:px-3';
 	const hideThreshold = 40;
 	const revealThreshold = 32;
+
+	function syncHeaderHeight() {
+		if (!headerElement) return;
+		headerHeight = headerElement.offsetHeight;
+	}
 
 	function updateScrollProgress(scrollY: number) {
 		const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -110,14 +122,15 @@
 	}
 
 	$effect(() => {
-		if (!headerElement || typeof ResizeObserver === 'undefined') return;
+		if (!headerElement) return;
+		syncHeaderHeight();
+		if (typeof ResizeObserver === 'undefined') return;
 
 		const observer = new ResizeObserver((entries) => {
 			headerHeight = entries[0]?.contentRect.height ?? headerElement?.offsetHeight ?? 0;
 		});
 
 		observer.observe(headerElement);
-		headerHeight = headerElement.offsetHeight;
 
 		return () => observer.disconnect();
 	});
@@ -145,10 +158,13 @@
 		lastScrollY = Math.max(0, window.scrollY);
 		upwardScrollDistance = 0;
 		downwardScrollDistance = 0;
+		syncHeaderHeight();
 		updateScrollProgress(lastScrollY);
+		window.addEventListener('resize', syncHeaderHeight);
 		window.addEventListener('scroll', handleScroll, { passive: true });
 
 		return () => {
+			window.removeEventListener('resize', syncHeaderHeight);
 			window.removeEventListener('scroll', handleScroll);
 			if (scrollFrameId !== undefined) {
 				window.cancelAnimationFrame(scrollFrameId);
@@ -185,7 +201,7 @@
 		bind:this={headerElement}
 		class={`fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background/82 backdrop-blur-sm sm:backdrop-blur-md transition-transform duration-300 ease-out will-change-transform ${showProgressChrome ? '-translate-y-full' : 'translate-y-0'}`}
 	>
-		<div class="mx-auto flex max-w-6xl items-center justify-between px-3 py-3 sm:px-6 sm:py-4 lg:px-8">
+			<div class="mx-auto flex max-w-6xl items-center justify-between px-3 py-3 sm:px-6 sm:py-4 lg:px-8">
 			<a
 				href={resolve('/')}
 				class="group inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-2.5 py-1.5 text-sm font-semibold shadow-sm transition hover:bg-card/82 sm:gap-2.5 sm:px-3"
@@ -242,24 +258,23 @@
 					<ExternalLink class="size-4" />
 					<span class="hidden sm:inline">Center</span>
 				</Button>
+				</div>
 			</div>
-		</div>
-	</header>
-	<div
-		class="relative z-40 transition-[height] duration-300 ease-out"
-		style={`height: ${headerSpacerHeight}px;`}
-	>
+				<div class="pointer-events-none absolute inset-x-0 bottom-0 h-1.5 overflow-hidden">
+					{#if showProgressChrome}
+						<div class="h-full border-b border-border/70 bg-background/82">
+							<div
+								class="h-full origin-left bg-primary/90 transition-transform duration-150 ease-out will-change-transform"
+								style={`transform: scaleX(${scrollProgress / 100});`}
+							></div>
+						</div>
+					{/if}
+				</div>
+		</header>
 		<div
-			class={`pointer-events-none fixed inset-x-0 top-0 transition-[transform,opacity] duration-300 ease-out will-change-transform ${showProgressChrome ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'}`}
-		>
-			<div class="h-1.5 overflow-hidden border-b border-border/70 bg-background/82">
-				<div
-					class="h-full origin-left bg-primary/90 transition-transform duration-150 ease-out will-change-transform"
-					style={`transform: scaleX(${scrollProgress / 100});`}
-				></div>
-			</div>
-		</div>
-	</div>
+			class={`relative z-40 overflow-hidden transition-[height] duration-300 ease-out ${showHeaderSpacerFallback ? 'h-[57px] sm:h-[65px]' : ''}`}
+			style={headerSpacerStyle}
+		></div>
 
 	<main
 		class="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col px-3 pb-14 pt-6 sm:px-6 sm:pb-16 sm:pt-10 lg:px-8"

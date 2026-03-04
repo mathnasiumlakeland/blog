@@ -13,10 +13,13 @@
 	const svgHeight = 320;
 	const tankWidth = 112;
 	const tankHeight = 164;
-	const tankTop = 92;
+	const tankTop = 76;
 	const initialTankX = 82;
 	const addedTankX = 304;
 	const finalTankX = 526;
+	const plusSymbolX = (initialTankX + tankWidth + addedTankX) / 2;
+	const equalSymbolX = (addedTankX + tankWidth + finalTankX) / 2;
+	const operatorSymbolY = tankTop + tankHeight / 2 + 6;
 
 	let initialAmount = $state(10);
 	let initialPercent = $state(20);
@@ -26,7 +29,15 @@
 	const safeInitialAmount = $derived(Math.max(1, Math.min(40, initialAmount)));
 	const safeInitialPercent = $derived(Math.max(0, Math.min(80, initialPercent)));
 	const safeAddedPercent = $derived(Math.max(0, Math.min(80, addedPercent)));
-	const safeTargetPercent = $derived(Math.max(0, Math.min(80, targetPercent)));
+	const targetPercentLowerBound = $derived(Math.min(safeInitialPercent, safeAddedPercent));
+	const targetPercentUpperBound = $derived(Math.max(safeInitialPercent, safeAddedPercent));
+	const safeTargetPercent = $derived(
+		Math.max(targetPercentLowerBound, Math.min(targetPercentUpperBound, targetPercent))
+	);
+
+	function clampTargetPercentToBlendRange() {
+		targetPercent = Math.max(targetPercentLowerBound, Math.min(targetPercentUpperBound, targetPercent));
+	}
 
 	const initialFraction = $derived(safeInitialPercent / 100);
 	const addedFraction = $derived(safeAddedPercent / 100);
@@ -115,6 +126,7 @@
 		}
 		return `Add about ${formatValue(solvedAddedAmount, 2)} cups. The final amount is ${formatValue(finalAmount, 2)} cups.`;
 	});
+
 </script>
 
 <div class="space-y-4">
@@ -152,6 +164,13 @@
 		<text x="138" y="46" font-size="14" text-anchor="middle" fill="currentColor">Initial mixture</text>
 		<text x="360" y="46" font-size="14" text-anchor="middle" fill="currentColor">Added mixture</text>
 		<text x="582" y="46" font-size="14" text-anchor="middle" fill="currentColor">Final mixture</text>
+
+		<text x={plusSymbolX} y={operatorSymbolY} font-size="36" text-anchor="middle" fill="rgba(15,23,42,0.8)">
+			+
+		</text>
+		<text x={equalSymbolX} y={operatorSymbolY} font-size="36" text-anchor="middle" fill="rgba(15,23,42,0.8)">
+			=
+		</text>
 
 		<rect
 			x={initialTankX}
@@ -316,6 +335,7 @@
 				max="60"
 				step="0.5"
 				bind:value={initialPercent}
+				oninput={clampTargetPercentToBlendRange}
 				class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-primary/25 accent-primary"
 			/>
 		</label>
@@ -328,6 +348,7 @@
 				max="60"
 				step="0.5"
 				bind:value={addedPercent}
+				oninput={clampTargetPercentToBlendRange}
 				class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-primary/25 accent-primary"
 			/>
 		</label>
@@ -336,10 +357,11 @@
 			Target percent pt: {formatValue(safeTargetPercent, 1)}%
 			<input
 				type="range"
-				min="0"
-				max="60"
+				min={targetPercentLowerBound}
+				max={targetPercentUpperBound}
 				step="0.5"
 				bind:value={targetPercent}
+				oninput={clampTargetPercentToBlendRange}
 				class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-primary/25 accent-primary"
 			/>
 		</label>

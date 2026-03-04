@@ -218,12 +218,14 @@
 	}
 }
 
-@media (max-width: 640px) {
+@media (prefers-reduced-motion: reduce), (max-width: 768px) {
 	.math-orb {
-		filter: blur(28px);
-		opacity: 0.22;
+		animation: none;
+		display: none;
 	}
+}
 
+@media (max-width: 640px) {
 	.prose .katex-display {
 		margin: 0.85rem -0.25rem;
 		padding-inline: 0.25rem;

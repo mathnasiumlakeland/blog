@@ -146,6 +146,25 @@
 		updateScrollProgress(lastScrollY);
 	});
 
+	$effect(() => {
+		if (typeof window === 'undefined') return;
+		onPostDetailPage;
+
+		if (!onPostDetailPage) {
+			return;
+		}
+
+		window.addEventListener('scroll', handleScroll, { passive: true });
+
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+			if (scrollFrameId !== undefined) {
+				window.cancelAnimationFrame(scrollFrameId);
+				scrollFrameId = undefined;
+			}
+		};
+	});
+
 	onMount(() => {
 		const savedTheme = localStorage.getItem('theme');
 		if (savedTheme === 'dark' || savedTheme === 'light') {
@@ -161,11 +180,9 @@
 		syncHeaderHeight();
 		updateScrollProgress(lastScrollY);
 		window.addEventListener('resize', syncHeaderHeight);
-		window.addEventListener('scroll', handleScroll, { passive: true });
 
 		return () => {
 			window.removeEventListener('resize', syncHeaderHeight);
-			window.removeEventListener('scroll', handleScroll);
 			if (scrollFrameId !== undefined) {
 				window.cancelAnimationFrame(scrollFrameId);
 			}
@@ -190,12 +207,14 @@
 </svelte:head>
 
 <div class="relative flex min-h-screen flex-col">
-	<div class="pointer-events-none absolute inset-0 overflow-hidden">
-		<div class="math-orb -left-20 top-24 size-80 bg-gradient-to-br from-cyan-300/60 to-teal-300/30"></div>
-		<div
-			class="math-orb -right-24 top-96 size-96 bg-gradient-to-br from-sky-300/45 to-blue-300/30 [animation-delay:1.8s]"
-		></div>
-	</div>
+	{#if !onPostDetailPage}
+		<div class="pointer-events-none absolute inset-0 overflow-hidden">
+			<div class="math-orb -left-20 top-24 size-80 bg-gradient-to-br from-cyan-300/60 to-teal-300/30"></div>
+			<div
+				class="math-orb -right-24 top-96 size-96 bg-gradient-to-br from-sky-300/45 to-blue-300/30 [animation-delay:1.8s]"
+			></div>
+		</div>
+	{/if}
 
 	<header
 		bind:this={headerElement}

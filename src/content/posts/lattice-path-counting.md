@@ -17,7 +17,7 @@ devOnly: true
 ---
 
 <script>
-	import LatticePathsVisual from '$lib/components/math/lattice-paths-visual.svelte';
+	import LazyPostToolEmbed from '$lib/components/blog/lazy-post-tool-embed.svelte';
 </script>
 
 We start with the symmetric version first: from $(0,0)$ to $(n,n)$, moving only right or up.
@@ -43,7 +43,7 @@ $$
 $$
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<LatticePathsVisual />
+	<LazyPostToolEmbed toolId="lattice-paths-explorer" title="Lattice Paths Explorer" />
 </div>
 
 ## Why the binomial coefficient appears

@@ -17,8 +17,7 @@ devOnly: true
 ---
 
 <script>
-	import CombinatoricsFormulaLabVisual from '$lib/components/math/combinatorics-formula-lab-visual.svelte';
-	import LatticePathsVisual from '$lib/components/math/lattice-paths-visual.svelte';
+	import LazyPostToolEmbed from '$lib/components/blog/lazy-post-tool-embed.svelte';
 </script>
 
 Combinatorics used to feel like a list of formulas to memorize. The turning point is realizing each formula comes from one simple question: how many choices do we have at each step, and are we overcounting equivalent outcomes?
@@ -38,7 +37,7 @@ Combinatorics used to feel like a list of formulas to memorize. The turning poin
 That one distinction drives almost every formula below.
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<CombinatoricsFormulaLabVisual />
+	<LazyPostToolEmbed toolId="combinatorics-formula-lab" title="Combinatorics Formula Lab" />
 </div>
 
 ## Permutations (Order Matters)
@@ -151,7 +150,7 @@ Whenever order is irrelevant, a whole family of orderings collapses to one outco
 A classic lattice-path version of the same logic:
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<LatticePathsVisual />
+	<LazyPostToolEmbed toolId="lattice-paths-explorer" title="Lattice Paths Explorer" />
 </div>
 
 From $(0,0)$ to $(m,n)$ using only right/up moves, every shortest path has $m+n$ steps with $m$ of one type and $n$ of the other. Counting those path-strings gives:

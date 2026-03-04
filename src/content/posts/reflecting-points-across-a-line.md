@@ -16,12 +16,7 @@ featured: true
 ---
 
 <script>
-	import ReflectionOverHorizontalLineVisual from '$lib/components/math/reflection-over-horizontal-line-visual.svelte';
-	import ReflectionOverYEqualsMxPlusBStepsVisual from '$lib/components/math/reflection-over-y-equals-mx-plus-b-steps-visual.svelte';
-	import ReflectionOverVerticalLineVisual from '$lib/components/math/reflection-over-vertical-line-visual.svelte';
-	import ReflectionOverYEqualsXVisual from '$lib/components/math/reflection-over-y-equals-x-visual.svelte';
-	import ReflectionOverYEqualsXPlusBVisual from '$lib/components/math/reflection-over-y-equals-x-plus-b-visual.svelte';
-	import ReflectionOverYEqualsXPlusBThreeStepShiftVisual from '$lib/components/math/reflection-over-y-equals-x-plus-b-three-step-shift-visual.svelte';
+	import LazyPostToolEmbed from '$lib/components/blog/lazy-post-tool-embed.svelte';
 </script>
 
 Let's talk about **reflections over a line**. This is a topic that comes up in geometry and can usually be solved through visual inspection.
@@ -44,7 +39,7 @@ In other words, we can pretty much count how far away $P$ is from the line, and 
 In fact, if we have line of reflection $y=0$, then the reflected point is simply $P' = (x, -y)$!
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<ReflectionOverHorizontalLineVisual />
+	<LazyPostToolEmbed toolId="reflection-over-a-horizontal-line" title="Reflection Over a Horizontal Line" />
 </div>
 
 We can actually derive an exact algebraic formula for the reflected point. Let's call the reflected point $P' = (x', y')$. The original point $P$ is a distance of $|y-k|$ units away from the line. The reflected point $P'$ is also a distance of $|y'-k|$ units away from the line on the other side. Because the reflected point is the same distance away from the line as the original point, we can equate them and solve for $y'$:
@@ -88,7 +83,7 @@ We have the same situation as above, but in the $x$-direction instead of the $y$
 And, for example, if we have line of reflection $x=0$, then the reflected point is simply $P' = (-x, y)$!
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<ReflectionOverVerticalLineVisual />
+	<LazyPostToolEmbed toolId="reflection-over-a-vertical-line" title="Reflection Over a Vertical Line" />
 </div>
 
 **Now you try!** Try deriving the general formula for reflecting a point across a vertical line $x=k$ using the same method as above.
@@ -123,7 +118,7 @@ Now let's move on to something a bit more interesting. How do we reflect a point
 First, let's try to solve this problem visually. We count how far away our point $P$ is from the line $y=x$ in the $x$-direction, and then plot the reflected point $P'$ the same distance away in the $y$-direction on the other side of the line.
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<ReflectionOverYEqualsXVisual />
+	<LazyPostToolEmbed toolId="reflection-over-y-equals-x" title="Reflection Over y = x" />
 </div>
 
 But what if we have a weird point at $(2\sqrt{2}, \pi)$ that's difficult to count? Now it's time to learn a quick trick that will save you a lot of time! We can use a bit of handwaving to figure this out.
@@ -145,7 +140,7 @@ We know that if we could just make this problem be a reflection in $y=x$ instead
 So, why not try exactly that? Let's reframe this difficult problem into in easier one. We need to turn $y=x+b$ into $y=x$, and back then back again. But how do we do that?
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<ReflectionOverYEqualsXPlusBThreeStepShiftVisual />
+	<LazyPostToolEmbed toolId="reflection-over-y-equals-x-plus-b-three-step-shift" title="Reflection Over y = x + b Three-Step Shift" />
 </div>
 
 Well, we can start by subtracting the $b$ from the $y$-coordinate of the line of reflection $y=x+b$ to move it up/down to the origin. Anything we do to the line of reflection, we'll have to do to the point of interest, $P$, to keep the problem consistent. It's like we're dragging everything up/down by $b$ units.
@@ -181,7 +176,7 @@ $$
 $$
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<ReflectionOverYEqualsXPlusBVisual />
+	<LazyPostToolEmbed toolId="reflection-over-y-equals-x-plus-b" title="Reflection Over y = x + b" />
 </div>
 
 
@@ -307,7 +302,7 @@ P' &\leftarrow (P'_x, P'_y + b)
 $$
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<ReflectionOverYEqualsMxPlusBStepsVisual />
+	<LazyPostToolEmbed toolId="reflection-over-y-equals-mx-plus-b-steps" title="Reflection Over y = mx + b Steps" />
 </div>
 
 

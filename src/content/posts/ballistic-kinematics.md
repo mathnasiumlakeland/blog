@@ -17,9 +17,7 @@ devOnly: true
 ---
 
 <script>
-	import ProjectileTrajectoryVisual from '$lib/components/math/projectile-trajectory-visual.svelte';
-	import VelocityComponentsVisual from '$lib/components/math/velocity-components-visual.svelte';
-	import ProjectileRangeVsAngleVisual from '$lib/components/math/projectile-range-vs-angle-visual.svelte';
+	import LazyPostToolEmbed from '$lib/components/blog/lazy-post-tool-embed.svelte';
 </script>
 
 Throw a ball off a cliff, fire an arrow at a target, or launch a rocket at an enemy stronghold. In all three cases, the object traces out a curved, graceful arc before landing. The math that describes this arc is called **ballistic kinematics** — the study of objects moving freely under gravity with no engine or steering.
@@ -75,7 +73,7 @@ $v_x$ is the horizontal speed — how fast the object moves sideways. $v_y$ is t
 You can verify that the components obey the Pythagorean theorem: $v_x^2 + v_y^2 = v_0^2 \cos^2\theta + v_0^2 \sin^2\theta = v_0^2$. This makes sense — the original vector has magnitude $v_0$ and the decomposed components reconstruct it exactly.
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<VelocityComponentsVisual />
+	<LazyPostToolEmbed toolId="velocity-components" title="Velocity Components" />
 </div>
 
 ---
@@ -177,7 +175,7 @@ This is a beautiful, compact formula. The range depends on $v_0^2$ (quadratic in
 Use the interactive below to explore how the trajectory changes with speed and angle. Watch how the teal dot marks the peak and the red dot marks the landing point.
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<ProjectileTrajectoryVisual />
+	<LazyPostToolEmbed toolId="projectile-trajectory" title="Projectile Trajectory" />
 </div>
 
 ## Example
@@ -265,7 +263,7 @@ $$
 So a $30°$ shot and a $60°$ shot (which are complementary, $30 + 60 = 90$) land at exactly the same spot. The $30°$ path is flatter with a shorter flight time; the $60°$ path is steeper, slower, and spends more time in the air. In a real combat scenario this leads to interesting tactical choices — a flatter trajectory is harder to intercept with some defence systems, while a steep trajectory can clear obstacles.
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<ProjectileRangeVsAngleVisual />
+	<LazyPostToolEmbed toolId="projectile-range-vs-angle" title="Projectile Range vs Angle" />
 </div>
 
 **Now you try!** Using the range-vs-angle visual above, set $v_0 = 200 \text{ m/s}$. Confirm that the $30°$ and $60°$ markers land on the same height on the curve. Then find two more complementary angle pairs.

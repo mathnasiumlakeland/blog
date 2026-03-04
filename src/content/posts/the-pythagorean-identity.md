@@ -17,7 +17,7 @@ devOnly: false
 ---
 
 <script>
-	import UnitCircleSineCosineIdentityVisual from '$lib/components/math/unit-circle-pythagorean-identity-visual.svelte';
+	import LazyPostToolEmbed from '$lib/components/blog/lazy-post-tool-embed.svelte';
 </script>
 
 The Pythagorean identity is first encountered in geometry / pre-calc, but doesn't seem all that interesting at first. However, it turns out to be one of the more important trig identities that keeps popping up in all sorts of interesting places down the line. Let's figure out where it comes from.
@@ -28,7 +28,7 @@ Notice that this point forms a right triangle with the axes. The legs have lengt
 
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<UnitCircleSineCosineIdentityVisual />
+	<LazyPostToolEmbed toolId="unit-circle-pythagorean-identity" title="Unit Circle Pythagorean Identity" />
 </div>
 
 Let the the interior angle between the radius and the $x$-axis be $\theta$. From our trig ratios, we know that:

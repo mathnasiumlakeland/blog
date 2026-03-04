@@ -15,10 +15,7 @@ featured: false
 ---
 
 <script>
-	import SimpleInterestGrowthVisual from '$lib/components/math/simple-interest-growth-visual.svelte';
-	import CompoundInterestGrowthVisual from '$lib/components/math/compound-interest-growth-visual.svelte';
-	import ContinuousCompoundingGrowthVisual from '$lib/components/math/continuous-compounding-growth-visual.svelte';
-	import CompoundInterestConvergenceToEVisual from '$lib/components/math/compound-interest-convergence-to-e-visual.svelte';
+	import LazyPostToolEmbed from '$lib/components/blog/lazy-post-tool-embed.svelte';
 </script>
 
 
@@ -59,7 +56,7 @@ A = P(1 + rt). \tag{1}
 $$
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<SimpleInterestGrowthVisual />
+	<LazyPostToolEmbed toolId="simple-interest-growth" title="Simple Interest Growth" />
 </div>
 
 ## Example
@@ -138,7 +135,7 @@ $$
 which is how the compound interest formula is usually written. Notice that if there is only one compounding period per year (i.e. when we have an annual compound with $n = 1$) then we recover equation $(2)$ above.
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<CompoundInterestGrowthVisual />
+	<LazyPostToolEmbed toolId="compound-interest-growth" title="Compound Interest Growth" />
 </div>
 
 
@@ -220,7 +217,7 @@ Another problem is that increasing the number of compounds per year requires us 
 The problem of finding the largest amount may seem intractable at first, but surprisingly, we are able to find an exact answer. The solution relies on the fact that the function $A_n$ eventually converges. Essentially, this means that when $n$ is very large, the value of $A_n$ should settle around some number. We can test this by checking large values: $A_{1000} \approx 2.7169$, $A_{10,000} \approx 2.7181$, $A_{100,000} \approx 2.71827$, $A_{1,000,000} \approx 2.71828$. Here we see that $A_n$ does seem to converge around the number $2.72$.
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<CompoundInterestConvergenceToEVisual />
+	<LazyPostToolEmbed toolId="compound-interest-convergence-to-e" title="Compound Interest Convergence to e" />
 </div>
 
 
@@ -243,7 +240,7 @@ A = Pe^{rt}. \tag{7}
 $$
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<ContinuousCompoundingGrowthVisual />
+	<LazyPostToolEmbed toolId="continuous-compounding-growth" title="Continuous Compounding Growth" />
 </div>
 
 ## Example

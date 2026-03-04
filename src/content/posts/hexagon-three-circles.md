@@ -17,11 +17,7 @@ devOnly: true
 ---
 
 <script>
-	import HexagonTriangleAreaVisual from '$lib/components/math/hexagon-triangle-area-visual.svelte';
-	import HexagonThreeCirclesVisual from '$lib/components/math/hexagon-three-circles-visual.svelte';
-	import PolygonTriangulationVisual from '$lib/components/math/polygon-sum-of-interior-angles-visual.svelte';
-	import RegularInteriorAngleVisual from '$lib/components/math/regular-interior-angle-visual.svelte';
-	import SectorFractionVisual from '$lib/components/math/sector-fraction-visual.svelte';
+	import LazyPostToolEmbed from '$lib/components/blog/lazy-post-tool-embed.svelte';
 </script>
 
 Place three unit circles ($r=1$) at alternating vertices ($A,C,E$) of a regular hexagon.  
@@ -44,13 +40,13 @@ $$
 Now compute area inside the hexagon but outside those circles.
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<HexagonThreeCirclesVisual />
+	<LazyPostToolEmbed toolId="hexagon-minus-three-circles" title="Hexagon Minus Three Circles" />
 </div>
 
 ## 1) Sum of interior angles (general formula)
 
 <div class="not-prose my-6 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<PolygonTriangulationVisual />
+	<LazyPostToolEmbed toolId="polygon-sum-of-interior-angles" title="Polygon Sum of Interior Angles" />
 </div>
 
 For any $n$-gon:
@@ -64,7 +60,7 @@ Example: for a pentagon ($n=5$), the sum is $(5-2)\cdot 180^\circ = 540^\circ$.
 ## 2) Single interior angle for a regular polygon
 
 <div class="not-prose my-6 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<RegularInteriorAngleVisual />
+	<LazyPostToolEmbed toolId="regular-interior-angle" title="Regular Interior Angle" />
 </div>
 
 $$
@@ -80,7 +76,7 @@ $$
 ## 3) Sector fraction of a unit circle
 
 <div class="not-prose my-6 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<SectorFractionVisual />
+	<LazyPostToolEmbed toolId="sector-fraction-area" title="Sector Fraction Area" />
 </div>
 
 Since $120^\circ$ is one third of $360^\circ$, one interior sector at a chosen vertex is:
@@ -100,7 +96,7 @@ $$
 ## 4) Hexagon area from six equilateral triangles
 
 <div class="not-prose my-6 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<HexagonTriangleAreaVisual />
+	<LazyPostToolEmbed toolId="regular-polygon-triangle-decomposition" title="Regular Polygon Triangle Decomposition" />
 </div>
 
 A regular hexagon splits into 6 equilateral triangles, each with side length $n$.
@@ -132,7 +128,7 @@ $$
 ## 5) Subtract circle-sector total
 
 <div class="not-prose my-6 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<HexagonThreeCirclesVisual />
+	<LazyPostToolEmbed toolId="hexagon-minus-three-circles" title="Hexagon Minus Three Circles" />
 </div>
 
 Using the sector total from step 3:

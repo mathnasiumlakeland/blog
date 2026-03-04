@@ -17,7 +17,7 @@ devOnly: true
 ---
 
 <script>
-	import MixtureBalanceLabVisual from '$lib/components/math/mixture-balance-lab-visual.svelte';
+	import LazyPostToolEmbed from '$lib/components/blog/lazy-post-tool-embed.svelte';
 </script>
 
 Mixture questions can look different on the surface, but the math underneath is the same every time: track how much pure ingredient is in the mix, and track total amount.
@@ -219,7 +219,7 @@ That formula is just a shortcut version of the same two-balance setup.
 Use the sliders below to test different values and see the two balances stay aligned.
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<MixtureBalanceLabVisual />
+	<LazyPostToolEmbed toolId="mixture-balance-lab" title="Mixture Balance Lab" />
 </div>
 
 If you want extra practice, keep $a=10$, $p_1=20\%$, and $p_2=15\%$, then try different target percentages between $15\%$ and $20\%$.

@@ -4,7 +4,10 @@
 	import PostCard from '$lib/components/blog/post-card.svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
-	import { posts } from '$lib/content/posts';
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
+	const posts = $derived(data.posts);
 </script>
 
 <div class="space-y-8 sm:space-y-10">

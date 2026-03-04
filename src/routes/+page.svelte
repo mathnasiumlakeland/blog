@@ -17,12 +17,13 @@
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs';
 	import LissajousCanvas from '$lib/components/math/lissajous-canvas.svelte';
 	import PolygonTriangulationVisual from '$lib/components/math/polygon-sum-of-interior-angles-visual.svelte';
-	import { posts } from '$lib/content/posts';
+	import type { PageData } from './$types';
 
+	let { data }: { data: PageData } = $props();
 	let spotlightTab = $state<'curves' | 'angle-sum'>('curves');
 
-	const featuredPost = posts.find((post) => post.featured) ?? posts[0];
-	const feed = posts.filter((post) => post.slug !== featuredPost.slug);
+	const featuredPost = $derived(data.featuredPost);
+	const feed = $derived(data.feed);
 </script>
 
 <div class="space-y-10 sm:space-y-12">

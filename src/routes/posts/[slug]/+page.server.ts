@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
-import type { EntryGenerator, PageLoad } from './$types';
 import { getPostBySlug, getPostSlugs } from '$lib/content/posts';
 import { getPostHeadingsBySlug } from '$lib/content/post-headings';
+import type { EntryGenerator, PageServerLoad } from './$types';
 
 export const prerender = true;
 
@@ -9,7 +9,7 @@ export const entries: EntryGenerator = () => {
 	return getPostSlugs().map((slug) => ({ slug }));
 };
 
-export const load: PageLoad = ({ params }) => {
+export const load: PageServerLoad = ({ params }) => {
 	const post = getPostBySlug(params.slug);
 
 	if (!post) {

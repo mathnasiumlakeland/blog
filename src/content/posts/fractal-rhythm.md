@@ -16,7 +16,7 @@ devOnly: true
 ---
 
 <script>
-	import LissajousCanvas from '$lib/components/math/lissajous-canvas.svelte';
+	import LazyPostToolEmbed from '$lib/components/blog/lazy-post-tool-embed.svelte';
 </script>
 
 # Introduction
@@ -59,7 +59,7 @@ Before changing lots of settings, try one simple case: set `Frequency A = 1`, `F
 Ask yourself: what stayed the same, and what changed? You should notice the same frequency pair can still produce noticeably different geometry because phase controls alignment.
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<LissajousCanvas />
+	<LazyPostToolEmbed toolId="lissajous-pattern-lab" title="Lissajous Pattern Lab" />
 </div>
 
 ---

@@ -16,7 +16,7 @@ devOnly: true
 ---
 
 <script>
-	import PascalModuloCanvas from '$lib/components/math/pascal-modulo-canvas.svelte';
+	import LazyPostToolEmbed from '$lib/components/blog/lazy-post-tool-embed.svelte';
 </script>
 
 # Introduction
@@ -86,7 +86,7 @@ In modulo $m$, there are only $m$ possible remainders: $0,1,\dots,m-1$.
 That means the system has finite states. Finite states plus repeated local rules often generate repeating motifs. In Pascal modulo plots, those motifs become visible geometry.
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
-	<PascalModuloCanvas />
+	<LazyPostToolEmbed toolId="pascal-triangle-modulo-explorer" title="Pascal Triangle Modulo Explorer" />
 </div>
 
 ---

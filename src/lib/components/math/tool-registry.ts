@@ -68,6 +68,36 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
+		id: 'parent-function-identification',
+		meta: {
+			id: 'parent-function-identification',
+			title: 'Parent Function Identification',
+			description:
+				'Identify the correct parent function from a transformed graph using shifts, reflections, and stretches.',
+			inputs: 'Randomized transformation values a, h, and k plus parent-function answer choices.',
+			outputs:
+				'Immediate correct/incorrect feedback, revealed transformed equation, and running score metrics.',
+			useCase: 'Use for Algebra 1 practice recognizing parent-function families under transformations.',
+			tags: ['algebra', 'functions', 'transformations', 'graphing', 'practice']
+		}
+	},
+	{
+		id: 'function-translation-drag-practice',
+		meta: {
+			id: 'function-translation-drag-practice',
+			title: 'Function Translation Drag Practice',
+			description:
+				'Drag parent-function graphs to match target transformations like y = f(x) + b and y = f(x + b).',
+			inputs:
+				'Random parent function challenge, transformation target, graph drag gesture, and check/reset/new buttons.',
+			outputs:
+				'Live shifted graph position, correctness feedback, and target overlay after checking.',
+			useCase:
+				'Use for practicing how vertical and horizontal translations change parent-function graphs.',
+			tags: ['algebra', 'functions', 'transformations', 'graphing', 'practice']
+		}
+	},
+	{
 		id: 'simple-interest-growth',
 		meta: {
 			id: 'simple-interest-growth',

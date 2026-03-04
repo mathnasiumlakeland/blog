@@ -9,6 +9,8 @@ const interactiveToolComponentSources: ToolComponentSourceMap = {
 	'lattice-paths-explorer': 'lattice-paths-visual.svelte',
 	'combinatorics-formula-lab': 'combinatorics-formula-lab-visual.svelte',
 	'lissajous-pattern-lab': 'lissajous-canvas.svelte',
+	'parent-function-identification': 'parent-function-identification-visual.svelte',
+	'function-translation-drag-practice': 'function-translation-drag-practice-visual.svelte',
 	'simple-interest-growth': 'simple-interest-growth-visual.svelte',
 	'compound-interest-growth': 'compound-interest-growth-visual.svelte',
 	'continuous-compounding-growth': 'continuous-compounding-growth-visual.svelte',
@@ -40,6 +42,10 @@ const interactiveToolLoaders: Record<string, ToolComponentLoader> = {
 	'lattice-paths-explorer': () => import('./lattice-paths-visual.svelte'),
 	'combinatorics-formula-lab': () => import('./combinatorics-formula-lab-visual.svelte'),
 	'lissajous-pattern-lab': () => import('./lissajous-canvas.svelte'),
+	'parent-function-identification': () =>
+		import('./parent-function-identification-visual.svelte'),
+	'function-translation-drag-practice': () =>
+		import('./function-translation-drag-practice-visual.svelte'),
 	'simple-interest-growth': () => import('./simple-interest-growth-visual.svelte'),
 	'compound-interest-growth': () => import('./compound-interest-growth-visual.svelte'),
 	'continuous-compounding-growth': () => import('./continuous-compounding-growth-visual.svelte'),

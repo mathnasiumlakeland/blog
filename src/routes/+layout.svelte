@@ -20,15 +20,10 @@
 	const postsPath = resolve('/posts');
 	const toolsPath = resolve('/tools');
 	const currentPath = $derived(page.url.pathname);
-	const normalizedCurrentPath = $derived(
-		currentPath !== '/' ? currentPath.replace(/\/+$/, '') : currentPath
-	);
+	const routeId = $derived(page.route.id ?? '');
 	const onPostsPage = $derived(currentPath === postsPath || currentPath.startsWith(`${postsPath}/`));
 	const onToolsPage = $derived(currentPath === toolsPath || currentPath.startsWith(`${toolsPath}/`));
-	const onPostDetailPage = $derived(
-		normalizedCurrentPath.startsWith(`${postsPath}/`) &&
-			normalizedCurrentPath.slice(postsPath.length + 1).length > 0
-	);
+	const onPostDetailPage = $derived(routeId === '/posts/[slug]');
 	const headerSpacerHeight = $derived(onPostDetailPage && hideHeader ? 8 : headerHeight);
 	const showProgressChrome = $derived(onPostDetailPage && hideHeader);
 
@@ -36,19 +31,17 @@
 	const inactiveNavClass =
 		'gap-1.5 px-2.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none sm:px-3';
 	const hideThreshold = 40;
-	const revealThreshold = 1000;
+	const revealThreshold = 32;
 
 	function updateScrollProgress(scrollY: number) {
 		const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
 		if (maxScroll <= 0) {
-			if (scrollProgress !== 0) scrollProgress = 0;
+			scrollProgress = 0;
 			return;
 		}
 
 		const nextProgress = Math.max(0, Math.min(100, (scrollY / maxScroll) * 100));
-		if (Math.abs(nextProgress - scrollProgress) >= 0.2) {
-			scrollProgress = nextProgress;
-		}
+		scrollProgress = nextProgress;
 	}
 
 	function applyScrollState(scrollY: number) {
@@ -71,7 +64,7 @@
 		}
 
 		const delta = scrollY - lastScrollY;
-		if (Math.abs(delta) < 2) {
+		if (Math.abs(delta) < 0.5) {
 			lastScrollY = scrollY;
 			return;
 		}

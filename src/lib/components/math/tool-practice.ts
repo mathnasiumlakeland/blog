@@ -141,6 +141,82 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Use B / gcd(A, B).'
 		};
 	},
+	'parent-function-identification': () => {
+		const parentFamilies = [
+			{ code: 1, type: 'quadratic' as const, label: 'y=x^2' },
+			{ code: 2, type: 'cubic' as const, label: 'y=x^3' },
+			{ code: 3, type: 'linear' as const, label: 'y=x' },
+			{ code: 4, type: 'square-root' as const, label: 'y=sqrt(x)' },
+			{ code: 5, type: 'cube-root' as const, label: 'y=cuberoot(x)' },
+			{ code: 6, type: 'absolute-value' as const, label: 'y=|x|' },
+			{ code: 7, type: 'reciprocal' as const, label: 'y=1/x' },
+			{ code: 8, type: 'reciprocal-squared' as const, label: 'y=1/x^2' }
+		];
+		const selectedFamily = parentFamilies[randomInt(0, parentFamilies.length - 1)];
+		const a = [-3, -2, -1, 1, 2, 3][randomInt(0, 5)];
+		const h = randomInt(-4, 4);
+		const k = randomInt(-4, 4);
+
+		const shiftedX =
+			h === 0 ? 'x' : h > 0 ? `(x-${Math.abs(h)})` : `(x+${Math.abs(h)})`;
+		const scalePrefix = a === 1 ? '' : a === -1 ? '-' : `${a}`;
+		const reciprocalPrefix = a === 1 ? '' : a === -1 ? '-' : `${a}*`;
+		const verticalShift =
+			k === 0 ? '' : k > 0 ? ` + ${k}` : ` - ${Math.abs(k)}`;
+
+		let equationCore = '';
+		if (selectedFamily.type === 'quadratic') {
+			equationCore = `${scalePrefix}${shiftedX}^2`;
+		} else if (selectedFamily.type === 'cubic') {
+			equationCore = `${scalePrefix}${shiftedX}^3`;
+		} else if (selectedFamily.type === 'linear') {
+			equationCore = `${scalePrefix}${shiftedX}`;
+		} else if (selectedFamily.type === 'square-root') {
+			equationCore = `${scalePrefix}sqrt${shiftedX}`;
+		} else if (selectedFamily.type === 'cube-root') {
+			equationCore = `${scalePrefix}cuberoot${shiftedX}`;
+		} else if (selectedFamily.type === 'absolute-value') {
+			equationCore = `${scalePrefix}|${shiftedX}|`;
+		} else if (selectedFamily.type === 'reciprocal') {
+			equationCore = `${reciprocalPrefix}1/${shiftedX}`;
+		} else {
+			equationCore = `${reciprocalPrefix}1/${shiftedX}^2`;
+		}
+
+		const answerKey = parentFamilies.map((family) => `${family.code}=${family.label}`).join(', ');
+		return {
+			prompt: `Use this key: ${answerKey}. Which code matches y = ${equationCore}${verticalShift}?`,
+			answer: selectedFamily.code,
+			tolerance: 0,
+			hint: 'Ignore shifts and scale; match the parent-function family.'
+		};
+	},
+	'function-translation-drag-practice': () => {
+		const horizontal = randomInt(0, 1) === 1;
+		let b = randomInt(-6, 6);
+		if (b === 0) {
+			b = randomInt(1, 6) * (randomInt(0, 1) === 0 ? -1 : 1);
+		}
+
+		if (horizontal) {
+			const answer = -b;
+			const plusBText = b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
+			return {
+				prompt: `For y = f(x ${plusBText}), what horizontal translation should be applied to f(x)? Use right-positive and left-negative units.`,
+				answer,
+				tolerance: 0,
+				hint: 'x + b shifts left by b, and x - b shifts right by b.'
+			};
+		}
+
+		const signedBText = b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
+		return {
+			prompt: `For y = f(x) ${signedBText}, what vertical translation is applied? Use up-positive and down-negative units.`,
+			answer: b,
+			tolerance: 0,
+			hint: 'Adding b outside the function shifts the graph up by b.'
+		};
+	},
 	'simple-interest-growth': () => {
 		const principal = randomInt(500, 6000);
 		const rate = randomStep(0.01, 0.12, 0.005);

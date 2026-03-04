@@ -5,24 +5,24 @@ Static math blog built with Svelte 5, Tailwind v4, shadcn-svelte, mdsvex, and Ka
 ## Quickstart
 
 ```sh
-npm install
-npm run dev
+bun install
+bun run dev
 ```
 
 Open the local URL shown in the terminal.
 
 ## Commands
 
-- `npm run dev` - start dev server (auto-builds WASM first)
-- `npm run check` - run Svelte + TypeScript checks
-- `npm run build` - production build (auto-builds WASM first)
-- `npm run preview` - preview production build
-- `npm run build:wasm` - rebuild WASM assets only
+- `bun run dev` - start dev server (auto-builds WASM first)
+- `bun run check` - run Svelte + TypeScript checks
+- `bun run build` - production build (auto-builds WASM first)
+- `bun run preview` - preview production build
+- `bun run build:wasm` - rebuild WASM assets only
 
 ## Content
 
 - Posts live in `src/content/posts/*.md`
-- Set `devOnly: true` in post frontmatter for draft articles you want visible only in `npm run dev`
+- Set `devOnly: true` in post frontmatter for draft articles you want visible only in `bun run dev`
 - Interactive math components live in `src/lib/components/math/*`
 - Post metadata loading/sorting is in `src/lib/content/posts.ts`
 

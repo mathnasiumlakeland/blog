@@ -62,7 +62,7 @@ Guidance for coding agents working in this repository.
 - Do not hardcode internal route hrefs as raw `/...` in components:
   - Use `resolve('/route')` from `$app/paths` for app routes.
 - For static assets that must respect base path (e.g. runtime fetches), use `$app/paths` `base` (e.g. ``${base}/wasm/...``).
-- If behavior could differ in deployment, validate with `BASE_PATH=/blog npm run build`.
+- If behavior could differ in deployment, validate with `BASE_PATH=/blog bun run build`.
 
 ## Center Link Conventions
 
@@ -98,7 +98,7 @@ Notes:
 - `publishedAt` must remain ISO (`YYYY-MM-DD`) for sort stability.
 - `author` is required for every post and should be a non-empty string.
 - `equation` is required and is used in featured cards and post previews.
-- `devOnly` is optional. Set `devOnly: true` to keep a post visible in `npm run dev` but exclude it from production builds.
+- `devOnly` is optional. Set `devOnly: true` to keep a post visible in `bun run dev` but exclude it from production builds.
 
 ## Blog Post Table of Contents
 
@@ -124,18 +124,18 @@ Notes:
 
 ## Local Commands
 
-- Install deps: `npm install`
-- Dev server: `npm run dev`
-- Svelte/type checks: `npm run check`
-- Tool wiring/integrity checks: `npm run test:tools-integrity`
-- Production build: `npm run build`
-- Build output verification (run after build): `npm run test:build-output`
-- Full CI-style pipeline: `npm run test:ci`
-- Preview static output: `npm run preview`
+- Install deps: `bun install`
+- Dev server: `bun run dev`
+- Svelte/type checks: `bun run check`
+- Tool wiring/integrity checks: `bun run test:tools-integrity`
+- Production build: `bun run build`
+- Build output verification (run after build): `bun run test:build-output`
+- Full CI-style pipeline: `bun run test:ci`
+- Preview static output: `bun run preview`
 
 Notes:
-- `predev` runs `npm run build:wasm` automatically.
-- `prebuild` now runs `npm run test:prebuild`, `npm run test:tools-integrity`, then `npm run build:wasm`.
+- `predev` runs `bun run build:wasm` automatically.
+- `prebuild` now runs `bun run test:prebuild`, `bun run test:tools-integrity`, then `bun run build:wasm`.
 - Preserve static compatibility; avoid server-only logic for post rendering.
 - GitHub Pages deploy job sets `BASE_PATH=/blog`.
 
@@ -155,7 +155,7 @@ Notes:
 - Keep WASM optional and additive; core post rendering should still work without WASM.
 - Source files live in `src/lib/wasm/*.wat`; compiled binaries are emitted to `static/wasm/*.wasm`.
 - Compile with:
-  - `npm run build:wasm` (manual)
+  - `bun run build:wasm` (manual)
   - or rely on `predev` / `prebuild` hooks.
 - In Svelte components, fetch binaries with base-path awareness:
   - `fetch(\`${base}/wasm/<module>.wasm\`)` using `$app/paths`.
@@ -167,12 +167,12 @@ Notes:
 - Do not edit generated output (`build/`, `.svelte-kit/`, `node_modules/`).
 - For every `.svelte` change:
   - Run `npx @sveltejs/mcp svelte-autofixer <file> --svelte-version 5`
-  - Then run `npm run check`
+  - Then run `bun run check`
 - For tool-registry/map/id changes:
-  - Run `npm run test:tools-integrity`
-- For substantial or cross-page changes, also run `npm run build` before finishing.
+  - Run `bun run test:tools-integrity`
+- For substantial or cross-page changes, also run `bun run build` before finishing.
 - For release readiness:
-  - Run `npm run test:ci` (includes check + production build with `BASE_PATH=/blog` + build output checks).
+  - Run `bun run test:ci` (includes check + production build with `BASE_PATH=/blog` + build output checks).
 
 ## Homepage Defaults
 
@@ -213,8 +213,8 @@ For blog-post requests, follow this interaction flow by default:
    - When asked for better visuals, make focused updates in `src/lib/components/math/*` and embed them in the post.
    - Keep geometry faithful and labels readable; use `θ`/`°` notation in figure labels.
 5. Validate every iteration.
-   - Run `svelte-autofixer` for touched `.svelte` files, then `npm run check`.
-   - Run `npm run build` when changes are substantial or affect multiple pages.
+   - Run `svelte-autofixer` for touched `.svelte` files, then `bun run check`.
+   - Run `bun run build` when changes are substantial or affect multiple pages.
 
 ## Skills
 

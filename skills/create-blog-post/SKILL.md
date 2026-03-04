@@ -65,8 +65,8 @@ devOnly: false # optional: set true for dev-only drafts
 6. Validate before handoff.
 - Confirm the post resolves through `src/lib/content/posts.ts` and `src/routes/posts/[slug]/*`.
 - Run `npx @sveltejs/mcp svelte-autofixer <file> --svelte-version 5` for every touched `.svelte` file.
-- Run `npm run check` after Svelte edits.
-- Run `npm run build` for substantial or cross-page changes.
+- Run `bun run check` after Svelte edits.
+- Run `bun run build` for substantial or cross-page changes.
 
 ## Response Contract
 

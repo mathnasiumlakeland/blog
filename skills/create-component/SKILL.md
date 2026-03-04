@@ -61,8 +61,8 @@ export const toolMeta = {
 
 7. Validate before handoff.
 - Run `npx @sveltejs/mcp svelte-autofixer <file> --svelte-version 5` for each touched `.svelte` file.
-- Run `npm run check`.
-- Run `npm run build` for substantial or cross-page changes.
+- Run `bun run check`.
+- Run `bun run build` for substantial or cross-page changes.
 
 ## Response Contract
 

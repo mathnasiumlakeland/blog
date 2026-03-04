@@ -57,6 +57,12 @@ $$
 \sum A_{\text{in}}=\sum A_{\text{out}}
 $$
 
+Where $\sum$ means "add all terms of this type."
+
+- left side sums all inputs
+- right side sums all outputs
+
+
 Equivalent wording form:
 
 $$
@@ -66,11 +72,6 @@ $$
 $$
 \sum_{\text{inputs}}(\text{amount})=\sum_{\text{outputs}}(\text{amount})
 $$
-
-Quick summation note: $\sum$ means "add all terms of this type."
-
-- left side sums all inputs
-- right side sums all outputs
 
 In words, these balances mean:
 

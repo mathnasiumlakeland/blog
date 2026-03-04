@@ -41,16 +41,58 @@
 
 	const tocSections = $derived(buildTocSections(tableOfContents));
 
-	function jumpToHeading(event: MouseEvent, id: string) {
+	function smoothScrollToHeading(id: string) {
 		if (typeof window === 'undefined') return;
-		if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
 		const target = document.getElementById(id);
 		if (!target) return;
 
-		event.preventDefault();
 		target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 		window.history.replaceState(window.history.state, '', `#${id}`);
+	}
+
+	function jumpToHeading(event: MouseEvent, id: string) {
+		if (typeof window === 'undefined') return;
+		if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+		event.preventDefault();
+		smoothScrollToHeading(id);
+	}
+
+	function smoothScrollBodyHashLinksAction(node: HTMLElement) {
+		const handleClick = (event: MouseEvent) => {
+			if (typeof window === 'undefined') return;
+			if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+			if (!(event.target instanceof Element)) return;
+
+			const anchor = event.target.closest('a');
+			if (!(anchor instanceof HTMLAnchorElement)) return;
+			if (anchor.target && anchor.target !== '_self') return;
+			if (anchor.hasAttribute('download')) return;
+
+			const href = anchor.getAttribute('href') ?? '';
+			if (!href.includes('#')) return;
+
+			const resolvedUrl = new URL(anchor.href, window.location.href);
+			if (resolvedUrl.origin !== window.location.origin) return;
+			if (resolvedUrl.pathname !== window.location.pathname) return;
+			if (!resolvedUrl.hash || resolvedUrl.hash.length <= 1) return;
+
+			const id = decodeURIComponent(resolvedUrl.hash.slice(1));
+			const target = document.getElementById(id);
+			if (!target) return;
+
+			event.preventDefault();
+			smoothScrollToHeading(id);
+		};
+
+		node.addEventListener('click', handleClick);
+
+		return {
+			destroy() {
+				node.removeEventListener('click', handleClick);
+			}
+		};
 	}
 
 	function buildTocSections(headings: PostHeading[]): TocSection[] {
@@ -267,6 +309,7 @@
 
 	<div
 		class="post-reading-body prose prose-sm max-w-none prose-headings:scroll-mt-28 prose-headings:font-semibold prose-headings:text-foreground prose-h2:mt-10 prose-h2:mb-4 prose-h3:mt-8 prose-h3:mb-3 prose-p:text-foreground/90 prose-p:leading-7 prose-p:tracking-[0.002em] prose-li:my-1.5 prose-li:text-foreground/90 prose-li:leading-7 prose-ul:pl-5 prose-ol:pl-5 prose-strong:text-foreground prose-th:text-foreground prose-td:text-foreground/85 prose-blockquote:text-foreground/80 prose-a:text-primary prose-code:rounded prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:text-foreground prose-pre:rounded-xl prose-pre:border prose-pre:border-border/70 prose-pre:bg-background/80 prose-img:rounded-xl prose-img:border prose-img:border-border/60 sm:prose-base"
+		use:smoothScrollBodyHashLinksAction
 	>
 		{@render children?.()}
 	</div>

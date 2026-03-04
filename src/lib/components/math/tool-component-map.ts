@@ -10,6 +10,7 @@ const interactiveToolComponentSources: ToolComponentSourceMap = {
 	'combinatorics-formula-lab': 'combinatorics-formula-lab-visual.svelte',
 	'lissajous-pattern-lab': 'lissajous-canvas.svelte',
 	'parent-function-identification': 'parent-function-identification-visual.svelte',
+	'simplifying-radicals-walkthrough': 'simplifying-radicals-walkthrough-visual.svelte',
 	'function-translation-drag-practice': 'function-translation-drag-practice-visual.svelte',
 	'mixture-balance-lab': 'mixture-balance-lab-visual.svelte',
 	'simple-interest-growth': 'simple-interest-growth-visual.svelte',
@@ -45,6 +46,8 @@ const interactiveToolLoaders: Record<string, ToolComponentLoader> = {
 	'lissajous-pattern-lab': () => import('./lissajous-canvas.svelte'),
 	'parent-function-identification': () =>
 		import('./parent-function-identification-visual.svelte'),
+	'simplifying-radicals-walkthrough': () =>
+		import('./simplifying-radicals-walkthrough-visual.svelte'),
 	'function-translation-drag-practice': () =>
 		import('./function-translation-drag-practice-visual.svelte'),
 	'mixture-balance-lab': () => import('./mixture-balance-lab-visual.svelte'),

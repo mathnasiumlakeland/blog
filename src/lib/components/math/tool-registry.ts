@@ -82,6 +82,21 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
+		id: 'simplifying-radicals-walkthrough',
+		meta: {
+			id: 'simplifying-radicals-walkthrough',
+			title: 'Simplifying Radicals Walkthrough',
+			description:
+				'Enter a radicand to build a factor tree, group prime pairs, and simplify the radical step by step.',
+			inputs: 'Whole-number radicand n with quick examples for common classroom values.',
+			outputs:
+				'Factor tree, prime factorization, pair grouping steps, and final simplified radical form.',
+			useCase:
+				'Use for Algebra 1 instruction on prime factorization and square-root simplification workflow.',
+			tags: ['algebra', 'radicals', 'prime-factorization', 'simplification']
+		}
+	},
+	{
 		id: 'function-translation-drag-practice',
 		meta: {
 			id: 'function-translation-drag-practice',

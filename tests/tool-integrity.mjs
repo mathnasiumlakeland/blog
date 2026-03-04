@@ -18,7 +18,10 @@ const componentMapPath = path.join(
 );
 const practicePath = path.join(repoRoot, 'src', 'lib', 'components', 'math', 'tool-practice.ts');
 const componentsDir = path.join(repoRoot, 'src', 'lib', 'components', 'math');
-const PRACTICE_EXEMPT_TOOL_IDS = new Set(['scientific-calculator']);
+const PRACTICE_EXEMPT_TOOL_IDS = new Set([
+	'scientific-calculator',
+	'prime-factorization-factor-tree-lab'
+]);
 
 function parseRegistryEntries(content) {
 	const entries = [];

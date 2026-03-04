@@ -24,7 +24,11 @@
 	let { data }: { data: PageData } = $props();
 
 	const tool = $derived(getInteractiveToolById(data.id));
-	const supportsPracticeMode = $derived(data.id !== 'scientific-calculator');
+	const routePracticeDisabledToolIds = new Set([
+		'scientific-calculator',
+		'prime-factorization-factor-tree-lab'
+	]);
+	const supportsPracticeMode = $derived(!routePracticeDisabledToolIds.has(data.id));
 	const toolPath = $derived(resolve(`/tools/${data.id}`));
 	const practicePath = $derived(`${toolPath}?practice=1`);
 	const practiceMode = $derived(

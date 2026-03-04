@@ -97,6 +97,22 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
+		id: 'prime-factorization-factor-tree-lab',
+		meta: {
+			id: 'prime-factorization-factor-tree-lab',
+			title: 'Prime Factorization Factor Tree Lab',
+			description:
+				'Build factor trees to classify numbers as prime or composite and decompose composites into prime factors.',
+			inputs:
+				'Whole-number input up to 1000 in explore mode, plus typed factor pairs in integrated practice mode.',
+			outputs:
+				'Color-coded factor tree, prime/composite node cues, and final prime factorization product.',
+			useCase:
+				'Use for number-sense instruction on prime vs composite numbers and procedural prime factorization.',
+			tags: ['number-theory', 'prime-factorization', 'prime-numbers', 'composite-numbers', 'practice']
+		}
+	},
+	{
 		id: 'function-translation-drag-practice',
 		meta: {
 			id: 'function-translation-drag-practice',

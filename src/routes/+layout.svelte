@@ -201,7 +201,7 @@
 		bind:this={headerElement}
 		class={`fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background/82 backdrop-blur-sm sm:backdrop-blur-md transition-transform duration-300 ease-out will-change-transform ${showProgressChrome ? '-translate-y-full' : 'translate-y-0'}`}
 	>
-			<div class="mx-auto flex max-w-6xl items-center justify-between px-3 py-3 sm:px-6 sm:py-4 lg:px-8">
+		<div class="mx-auto flex max-w-6xl items-center justify-between px-3 py-3 sm:px-6 sm:py-4 lg:px-8">
 			<a
 				href={resolve('/')}
 				class="group inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-2.5 py-1.5 text-sm font-semibold shadow-sm transition hover:bg-card/82 sm:gap-2.5 sm:px-3"
@@ -258,23 +258,24 @@
 					<ExternalLink class="size-4" />
 					<span class="hidden sm:inline">Center</span>
 				</Button>
+			</div>
+		</div>
+	</header>
+	<div
+		class={`relative z-40 overflow-hidden transition-[height] duration-300 ease-out ${showHeaderSpacerFallback ? 'h-[57px] sm:h-[65px]' : ''}`}
+		style={headerSpacerStyle}
+	>
+		{#if showProgressChrome}
+			<div class="pointer-events-none fixed inset-x-0 top-0">
+				<div class="h-1.5 overflow-hidden border-b border-border/70 bg-background/82">
+					<div
+						class="h-full origin-left bg-primary/90 transition-transform duration-150 ease-out will-change-transform"
+						style={`transform: scaleX(${scrollProgress / 100});`}
+					></div>
 				</div>
 			</div>
-				<div class="pointer-events-none absolute inset-x-0 bottom-0 h-1.5 overflow-hidden">
-					{#if showProgressChrome}
-						<div class="h-full border-b border-border/70 bg-background/82">
-							<div
-								class="h-full origin-left bg-primary/90 transition-transform duration-150 ease-out will-change-transform"
-								style={`transform: scaleX(${scrollProgress / 100});`}
-							></div>
-						</div>
-					{/if}
-				</div>
-		</header>
-		<div
-			class={`relative z-40 overflow-hidden transition-[height] duration-300 ease-out ${showHeaderSpacerFallback ? 'h-[57px] sm:h-[65px]' : ''}`}
-			style={headerSpacerStyle}
-		></div>
+		{/if}
+	</div>
 
 	<main
 		class="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col px-3 pb-14 pt-6 sm:px-6 sm:pb-16 sm:pt-10 lg:px-8"

@@ -98,6 +98,22 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
+		id: 'mixture-balance-lab',
+		meta: {
+			id: 'mixture-balance-lab',
+			title: 'Mixture Balance Lab',
+			description:
+				'Solve percent-mixture problems by balancing total solute and total amount across inputs and output.',
+			inputs:
+				'Starting amount a, initial percent p1, added-mixture percent p2, and target percent pt.',
+			outputs:
+				'Solved added amount x, final amount, and a visual check that input and output solute totals match.',
+			useCase:
+				'Use for pre-algebra and algebra word problems involving weighted averages and concentration blends.',
+			tags: ['algebra', 'percents', 'mixtures', 'weighted-average', 'word-problems']
+		}
+	},
+	{
 		id: 'simple-interest-growth',
 		meta: {
 			id: 'simple-interest-growth',

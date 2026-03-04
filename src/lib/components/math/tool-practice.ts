@@ -217,6 +217,56 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Adding b outside the function shifts the graph up by b.'
 		};
 	},
+	'mixture-balance-lab': () => {
+		let initialAmount = 10;
+		let initialPercent = 20;
+		let addedPercent = 15;
+		let targetPercent = 17;
+		let answer = 15;
+		let attempts = 0;
+
+		while (attempts < 60) {
+			attempts += 1;
+			const candidateInitialAmount = randomStep(6, 20, 0.5);
+			const candidateInitialPercent = randomStep(18, 45, 0.5);
+			const candidateAddedPercent = randomStep(4, 30, 0.5);
+
+			if (candidateInitialPercent <= candidateAddedPercent + 1) {
+				continue;
+			}
+
+			const candidateTargetPercent = randomStep(
+				candidateAddedPercent + 1,
+				candidateInitialPercent - 1,
+				0.5
+			);
+			const denominator = candidateTargetPercent - candidateAddedPercent;
+			if (denominator <= 0) {
+				continue;
+			}
+
+			const candidateAnswer =
+				(candidateInitialAmount * (candidateInitialPercent - candidateTargetPercent)) / denominator;
+
+			if (!Number.isFinite(candidateAnswer) || candidateAnswer < 0.5 || candidateAnswer > 60) {
+				continue;
+			}
+
+			initialAmount = candidateInitialAmount;
+			initialPercent = candidateInitialPercent;
+			addedPercent = candidateAddedPercent;
+			targetPercent = candidateTargetPercent;
+			answer = candidateAnswer;
+			break;
+		}
+
+		return {
+			prompt: `You have ${initialAmount.toFixed(1)} cups at ${initialPercent.toFixed(1)}%. Add x cups at ${addedPercent.toFixed(1)}% to reach ${targetPercent.toFixed(1)}%. Find x.`,
+			answer,
+			tolerance: 0.05,
+			hint: 'Set up a solute balance: a*p1 + x*p2 = (a + x)*pt with percents as decimals.'
+		};
+	},
 	'simple-interest-growth': () => {
 		const principal = randomInt(500, 6000);
 		const rate = randomStep(0.01, 0.12, 0.005);

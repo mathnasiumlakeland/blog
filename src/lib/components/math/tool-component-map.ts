@@ -11,6 +11,7 @@ const interactiveToolComponentSources: ToolComponentSourceMap = {
 	'lissajous-pattern-lab': 'lissajous-canvas.svelte',
 	'parent-function-identification': 'parent-function-identification-visual.svelte',
 	'function-translation-drag-practice': 'function-translation-drag-practice-visual.svelte',
+	'mixture-balance-lab': 'mixture-balance-lab-visual.svelte',
 	'simple-interest-growth': 'simple-interest-growth-visual.svelte',
 	'compound-interest-growth': 'compound-interest-growth-visual.svelte',
 	'continuous-compounding-growth': 'continuous-compounding-growth-visual.svelte',
@@ -46,6 +47,7 @@ const interactiveToolLoaders: Record<string, ToolComponentLoader> = {
 		import('./parent-function-identification-visual.svelte'),
 	'function-translation-drag-practice': () =>
 		import('./function-translation-drag-practice-visual.svelte'),
+	'mixture-balance-lab': () => import('./mixture-balance-lab-visual.svelte'),
 	'simple-interest-growth': () => import('./simple-interest-growth-visual.svelte'),
 	'compound-interest-growth': () => import('./compound-interest-growth-visual.svelte'),
 	'continuous-compounding-growth': () => import('./continuous-compounding-growth-visual.svelte'),

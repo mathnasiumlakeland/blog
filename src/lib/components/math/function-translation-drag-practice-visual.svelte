@@ -10,8 +10,8 @@
 <script lang="ts">
 	import MathExpression from '$lib/components/math/math-expression.svelte';
 
-	const PLOT_WIDTH = 520;
-	const PLOT_HEIGHT = 520;
+	const PLOT_WIDTH = 460;
+	const PLOT_HEIGHT = 460;
 	const PAD_LEFT = 56;
 	const PAD_RIGHT = 24;
 	const PAD_TOP = 24;
@@ -27,6 +27,7 @@
 	const SHIFT_MAX = 8;
 	const SHIFT_STEP = 0.5;
 	const CHECK_TOLERANCE = 0.01;
+	const MAX_WRONG_CHECKS = 3;
 
 	type ParentId =
 		| 'linear'
@@ -88,6 +89,9 @@
 	let revealTarget = $state(false);
 	let attempts = $state(0);
 	let solved = $state(0);
+	let streak = $state(0);
+	let bestStreak = $state(0);
+	let wrongChecksThisCard = $state(0);
 	let challengeCount = $state(1);
 	let plotSvg: SVGSVGElement | null = $state(null);
 	let dragging = $state(false);
@@ -97,6 +101,7 @@
 	let dragStartShiftY = 0;
 
 	const accuracyPercent = $derived(attempts === 0 ? 0 : Math.round((solved / attempts) * 100));
+	const solvedCurrentCard = $derived(Boolean(feedback?.correct));
 	const targetEquationTex = $derived.by(() =>
 		`y=${buildTransformedExpressionTex(challenge.parentId, challenge.shiftX, challenge.shiftY)}`
 	);
@@ -194,10 +199,6 @@
 
 	function snapShift(value: number) {
 		return Math.round(value / SHIFT_STEP) * SHIFT_STEP;
-	}
-
-	function formatShift(value: number) {
-		return Number.isInteger(value) ? value.toString() : value.toFixed(1);
 	}
 
 	function toSvgX(x: number) {
@@ -395,18 +396,20 @@
 		userShiftX = 0;
 		userShiftY = 0;
 		feedback = null;
-		revealTarget = false;
 	}
 
 	function nextChallenge() {
 		challenge = createChallenge();
-		resetPlacement();
+		userShiftX = 0;
+		userShiftY = 0;
+		feedback = null;
+		revealTarget = false;
+		wrongChecksThisCard = 0;
 		challengeCount += 1;
 	}
 
 	function checkPlacement() {
 		attempts += 1;
-		revealTarget = true;
 
 		const xError = Math.abs(userShiftX - targetPlotShiftX);
 		const yError = Math.abs(userShiftY - challenge.shiftY);
@@ -414,30 +417,50 @@
 
 		if (isCorrect) {
 			solved += 1;
+			streak += 1;
+			bestStreak = Math.max(bestStreak, streak);
 			feedback = {
 				correct: true,
-				message: 'Correct placement.'
+				message: 'Correct.'
+			};
+			return;
+		}
+
+		wrongChecksThisCard = Math.min(MAX_WRONG_CHECKS, wrongChecksThisCard + 1);
+		if (wrongChecksThisCard >= MAX_WRONG_CHECKS) {
+			streak = 0;
+			revealTarget = true;
+			feedback = {
+				correct: false,
+				message: 'Not quite. The answer is now shown.'
 			};
 			return;
 		}
 
 		feedback = {
 			correct: false,
-			message: `Not yet. Target is h=${formatShift(challenge.shiftX)}, k=${formatShift(challenge.shiftY)}.`
+			message:
+				wrongChecksThisCard === MAX_WRONG_CHECKS - 1
+					? 'Not quite. One more attempt until the answer is revealed.'
+					: 'Not quite. Adjust the graph and try again.'
 		};
 	}
 </script>
 
 <div class="space-y-4 select-none">
-	<div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+	<div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
 		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
-			Challenge: <span class="font-semibold text-foreground">#{challengeCount}</span>
+			Card: <span class="font-semibold text-foreground">#{challengeCount}</span>
 		</p>
 		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
-			Solved: <span class="font-semibold text-foreground">{solved}/{attempts}</span>
+			Correct: <span class="font-semibold text-foreground">{solved}/{attempts}</span>
 		</p>
 		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Accuracy: <span class="font-semibold text-foreground">{accuracyPercent}%</span>
+		</p>
+		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+			Streak: <span class="font-semibold text-foreground">{streak}</span>
+			<span class="ml-1 text-xs text-muted-foreground">(best {bestStreak})</span>
 		</p>
 	</div>
 
@@ -451,146 +474,121 @@
 		</p>
 	</div>
 
-	<svg
-		bind:this={plotSvg}
-		viewBox={`0 0 ${PLOT_WIDTH} ${PLOT_HEIGHT}`}
-		class="h-auto w-full rounded-xl border border-border/70 bg-white touch-none"
-		role="img"
-		aria-label="Drag the parent function graph to match the target transformation"
-		onpointerdown={handlePlotPointerDown}
-		onpointermove={handlePlotPointerMove}
-		onpointerup={stopDrag}
-		onpointercancel={stopDrag}
-	>
-		<rect x={PAD_LEFT} y={PAD_TOP} width={innerWidth} height={innerHeight} fill="white" />
+	<div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,15.5rem)]">
+		<svg
+			bind:this={plotSvg}
+			viewBox={`0 0 ${PLOT_WIDTH} ${PLOT_HEIGHT}`}
+			class="h-auto w-full max-w-[28rem] rounded-xl border border-border/70 bg-white touch-none lg:max-w-none"
+			role="img"
+			aria-label="Drag the parent function graph to match the target transformation"
+			onpointerdown={handlePlotPointerDown}
+			onpointermove={handlePlotPointerMove}
+			onpointerup={stopDrag}
+			onpointercancel={stopDrag}
+		>
+			<rect x={PAD_LEFT} y={PAD_TOP} width={innerWidth} height={innerHeight} fill="white" />
 
-		{#each yTicks as tick (tick)}
-			<line
-				x1={PAD_LEFT}
-				y1={toSvgY(tick)}
-				x2={PAD_LEFT + innerWidth}
-				y2={toSvgY(tick)}
-				stroke={tick === 0 ? '#94a3b8' : '#e2e8f0'}
-				stroke-width={tick === 0 ? '1.4' : '1'}
-			/>
-			<text x={PAD_LEFT - 8} y={toSvgY(tick) + 4} text-anchor="end" font-size="10" fill="#64748b">
-				{tick}
-			</text>
-		{/each}
+			{#each yTicks as tick (tick)}
+				<line
+					x1={PAD_LEFT}
+					y1={toSvgY(tick)}
+					x2={PAD_LEFT + innerWidth}
+					y2={toSvgY(tick)}
+					stroke={tick === 0 ? '#94a3b8' : '#e2e8f0'}
+					stroke-width={tick === 0 ? '1.4' : '1'}
+				/>
+				<text x={PAD_LEFT - 8} y={toSvgY(tick) + 4} text-anchor="end" font-size="10" fill="#64748b">
+					{tick}
+				</text>
+			{/each}
 
-		{#each xTicks as tick (tick)}
-			<line
-				x1={toSvgX(tick)}
-				y1={PAD_TOP}
-				x2={toSvgX(tick)}
-				y2={PAD_TOP + innerHeight}
-				stroke={tick === 0 ? '#94a3b8' : '#e2e8f0'}
-				stroke-width={tick === 0 ? '1.4' : '1'}
-			/>
-			<text x={toSvgX(tick)} y={PAD_TOP + innerHeight + 15} text-anchor="middle" font-size="10" fill="#64748b">
-				{tick}
-			</text>
-		{/each}
+			{#each xTicks as tick (tick)}
+				<line
+					x1={toSvgX(tick)}
+					y1={PAD_TOP}
+					x2={toSvgX(tick)}
+					y2={PAD_TOP + innerHeight}
+					stroke={tick === 0 ? '#94a3b8' : '#e2e8f0'}
+					stroke-width={tick === 0 ? '1.4' : '1'}
+				/>
+				<text x={toSvgX(tick)} y={PAD_TOP + innerHeight + 15} text-anchor="middle" font-size="10" fill="#64748b">
+					{tick}
+				</text>
+			{/each}
 
-		{#if revealTarget}
-			{#each targetCurveSegments as segment (segment)}
+			{#if revealTarget}
+				{#each targetCurveSegments as segment (segment)}
+					<polyline
+						points={segment}
+						fill="none"
+						stroke="#f97316"
+						stroke-width="2.2"
+						stroke-dasharray="6 4"
+						stroke-linejoin="round"
+						stroke-linecap="round"
+					/>
+				{/each}
+			{/if}
+
+			{#each currentCurveSegments as segment (segment)}
 				<polyline
 					points={segment}
 					fill="none"
-					stroke="#f97316"
-					stroke-width="2.2"
-					stroke-dasharray="6 4"
+					stroke="#0f766e"
+					stroke-width="2.8"
 					stroke-linejoin="round"
 					stroke-linecap="round"
 				/>
 			{/each}
-		{/if}
 
-		{#each currentCurveSegments as segment (segment)}
-			<polyline
-				points={segment}
-				fill="none"
-				stroke="#0f766e"
-				stroke-width="2.8"
-				stroke-linejoin="round"
-				stroke-linecap="round"
-			/>
-		{/each}
+			<text x={PLOT_WIDTH - 12} y={toSvgY(0) - 8} text-anchor="end" font-size="11" fill="#64748b">x</text>
+			<text x={toSvgX(0) + 10} y={PAD_TOP + 11} text-anchor="start" font-size="11" fill="#64748b">y</text>
+		</svg>
 
-		<text x={PLOT_WIDTH - 12} y={toSvgY(0) - 8} text-anchor="end" font-size="11" fill="#64748b">x</text>
-		<text x={toSvgX(0) + 10} y={PAD_TOP + 11} text-anchor="start" font-size="11" fill="#64748b">y</text>
-	</svg>
+		<div class="space-y-3">
+			<p class="rounded-xl border border-border/70 bg-background/75 px-3 py-2 text-xs text-muted-foreground">
+				Drag the graph to match the target transformation. You get <span class="font-semibold text-foreground">3 attempts</span>
+				before the answer appears.
+			</p>
 
-	<div class="grid gap-3 sm:grid-cols-2">
-		<label class="space-y-1 rounded-xl border border-border/70 bg-background/75 px-3 py-2 text-xs font-medium text-muted-foreground">
-			<span>Horizontal shift (h)</span>
-			<input
-				type="range"
-				min={SHIFT_MIN}
-				max={SHIFT_MAX}
-				step={SHIFT_STEP}
-				bind:value={userShiftX}
-				oninput={() => {
-					feedback = null;
-				}}
-				class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-primary/25 accent-primary"
-			/>
-			<span class="text-sm font-semibold text-foreground">{formatShift(userShiftX)}</span>
-		</label>
-		<label class="space-y-1 rounded-xl border border-border/70 bg-background/75 px-3 py-2 text-xs font-medium text-muted-foreground">
-			<span>Vertical shift (k)</span>
-			<input
-				type="range"
-				min={SHIFT_MIN}
-				max={SHIFT_MAX}
-				step={SHIFT_STEP}
-				bind:value={userShiftY}
-				oninput={() => {
-					feedback = null;
-				}}
-				class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-primary/25 accent-primary"
-			/>
-			<span class="text-sm font-semibold text-foreground">{formatShift(userShiftY)}</span>
-		</label>
-		<p class="rounded-xl border border-border/70 bg-background/75 px-3 py-2 text-xs text-muted-foreground sm:col-span-2">
-			Drag on the graph or use the sliders to match the target transformation.
-			Use <span class="font-semibold text-foreground">Check</span> to reveal the target overlay.
-		</p>
+			<div class="grid gap-2">
+				<button
+					type="button"
+					class="rounded-lg border border-border/70 bg-background px-3 py-2 text-sm font-medium text-foreground transition hover:border-primary/40 hover:bg-primary/8"
+					onclick={resetPlacement}
+				>
+					Reset
+				</button>
+				{#if solvedCurrentCard}
+					<button
+						type="button"
+						class="rounded-lg border border-primary/45 bg-primary/12 px-3 py-2 text-sm font-medium text-foreground transition hover:border-primary/60 hover:bg-primary/20"
+						onclick={nextChallenge}
+					>
+						Next card
+					</button>
+				{:else}
+					<button
+						type="button"
+						class="rounded-lg border border-primary/45 bg-primary/12 px-3 py-2 text-sm font-medium text-foreground transition hover:border-primary/60 hover:bg-primary/20"
+						onclick={checkPlacement}
+					>
+						Check
+					</button>
+				{/if}
+			</div>
+
+			{#if feedback}
+				<p
+					class={`rounded-xl border px-3 py-2 text-sm ${
+						feedback.correct
+							? 'border-emerald-500/55 bg-emerald-100/70 text-emerald-900'
+							: 'border-rose-500/55 bg-rose-100/70 text-rose-900'
+					}`}
+				>
+					{feedback.message}
+				</p>
+			{/if}
+		</div>
 	</div>
-
-	<div class="flex flex-wrap items-center gap-2">
-		<button
-			type="button"
-			class="rounded-lg border border-primary/45 bg-primary/12 px-3 py-2 text-sm font-medium text-foreground transition hover:border-primary/60 hover:bg-primary/20"
-			onclick={checkPlacement}
-		>
-			Check
-		</button>
-		<button
-			type="button"
-			class="rounded-lg border border-border/70 bg-background px-3 py-2 text-sm font-medium text-foreground transition hover:border-primary/40 hover:bg-primary/8"
-			onclick={resetPlacement}
-		>
-			Reset
-		</button>
-		<button
-			type="button"
-			class="rounded-lg border border-border/70 bg-background px-3 py-2 text-sm font-medium text-foreground transition hover:border-primary/40 hover:bg-primary/8"
-			onclick={nextChallenge}
-		>
-			New challenge
-		</button>
-	</div>
-
-	{#if feedback}
-		<p
-			class={`rounded-xl border px-3 py-2 text-sm ${
-				feedback.correct
-					? 'border-emerald-500/55 bg-emerald-100/70 text-emerald-900'
-					: 'border-rose-500/55 bg-rose-100/70 text-rose-900'
-			}`}
-		>
-			{feedback.message}
-		</p>
-	{/if}
 </div>

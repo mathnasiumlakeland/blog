@@ -519,6 +519,14 @@
 		};
 	}
 
+	function submitPracticeFactorsWithEnter(event: KeyboardEvent) {
+		if (event.key !== 'Enter') {
+			return;
+		}
+		event.preventDefault();
+		checkPracticeFactors();
+	}
+
 	const parsedExploreInput = $derived.by(() => parseWholeNumber(exploreInput));
 	const hasTypedExploreInput = $derived.by(() => exploreInput.trim().length > 0);
 	const exploreValidationMessage = $derived.by(() => {
@@ -656,6 +664,8 @@
 			</div>
 			<p class="mt-2 text-xs text-muted-foreground">
 				Type factors into the two empty child nodes, then press
+				<span class="font-semibold text-foreground">Enter</span>
+				or
 				<span class="font-semibold text-foreground">Check factors</span>.
 			</p>
 		{/if}
@@ -699,6 +709,7 @@
 									min="2"
 									step="1"
 									value={node.side === 'left' ? leftFactorInput : rightFactorInput}
+									onkeydown={submitPracticeFactorsWithEnter}
 									oninput={(event) => {
 										const value = (event.currentTarget as HTMLInputElement).value;
 										if (node.side === 'left') {

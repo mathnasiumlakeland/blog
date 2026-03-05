@@ -1,5 +1,5 @@
 ---
-title: 'Prime Factorization and Prime vs Composite Numbers'
+title: 'Prime Factorization'
 subtitle: 'Build number sense with factor trees and complete prime decomposition'
 excerpt: 'Learn how to classify numbers as prime or composite, then use factor trees to write complete prime factorizations every time.'
 publishedOn: 'March 4, 2026'
@@ -56,6 +56,36 @@ One valid path is:
 $$
 84=12\cdot7=(3\cdot4)\cdot7=3\cdot(2\cdot2)\cdot7
 $$
+
+<figure style="margin:1.25rem 0;display:flex;justify-content:center">
+<svg viewBox="0 0 420 280" width="420" height="280" style="max-width:100%;height:auto" role="img" aria-label="Factor tree for 84">
+  <!-- edges -->
+  <line x1="240" y1="48" x2="150" y2="86" stroke="#64748b" stroke-width="1.8"/>
+  <line x1="240" y1="48" x2="330" y2="86" stroke="#64748b" stroke-width="1.8"/>
+  <line x1="150" y1="122" x2="110" y2="160" stroke="#64748b" stroke-width="1.8"/>
+  <line x1="150" y1="122" x2="190" y2="160" stroke="#64748b" stroke-width="1.8"/>
+  <line x1="190" y1="196" x2="160" y2="234" stroke="#64748b" stroke-width="1.8"/>
+  <line x1="190" y1="196" x2="220" y2="234" stroke="#64748b" stroke-width="1.8"/>
+  <!-- internal nodes: 84, 12, 4 -->
+  <circle cx="240" cy="30" r="18" fill="rgba(45,212,191,0.22)" stroke="rgba(15,23,42,0.32)" stroke-width="1.5"/>
+  <text x="240" y="35" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">84</text>
+  <circle cx="150" cy="104" r="18" fill="rgba(45,212,191,0.22)" stroke="rgba(15,23,42,0.32)" stroke-width="1.5"/>
+  <text x="150" y="109" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">12</text>
+  <circle cx="190" cy="178" r="18" fill="rgba(45,212,191,0.22)" stroke="rgba(15,23,42,0.32)" stroke-width="1.5"/>
+  <text x="190" y="183" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">4</text>
+  <!-- leaf nodes (primes): 7, 3, 2, 2 -->
+  <circle cx="330" cy="104" r="18" fill="rgba(14,165,233,0.2)" stroke="rgba(15,23,42,0.32)" stroke-width="1.5"/>
+  <text x="330" y="109" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">7</text>
+  <circle cx="110" cy="178" r="18" fill="rgba(14,165,233,0.2)" stroke="rgba(15,23,42,0.32)" stroke-width="1.5"/>
+  <text x="110" y="183" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">3</text>
+  <circle cx="160" cy="252" r="18" fill="rgba(14,165,233,0.2)" stroke="rgba(15,23,42,0.32)" stroke-width="1.5"/>
+  <text x="160" y="257" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">2</text>
+  <circle cx="220" cy="252" r="18" fill="rgba(14,165,233,0.2)" stroke="rgba(15,23,42,0.32)" stroke-width="1.5"/>
+  <text x="220" y="257" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">2</text>
+</svg>
+</figure>
+
+In this tree, <span style="color:#0f766e;font-weight:600">green nodes</span> are composite numbers and <span style="color:#0284c7;font-weight:600">blue nodes</span> are prime numbers.
 
 At the end of the tree, each leaf is prime, so the decomposition is complete.
 

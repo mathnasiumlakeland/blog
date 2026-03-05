@@ -10,18 +10,18 @@
 <script lang="ts">
 	import MathExpression from '$lib/components/math/math-expression.svelte';
 
-	const PLOT_WIDTH = 680;
-	const PLOT_HEIGHT = 360;
+	const PLOT_WIDTH = 520;
+	const PLOT_HEIGHT = 520;
 	const PAD_LEFT = 56;
-	const PAD_RIGHT = 20;
-	const PAD_TOP = 20;
-	const PAD_BOTTOM = 40;
+	const PAD_RIGHT = 24;
+	const PAD_TOP = 24;
+	const PAD_BOTTOM = 56;
 	const X_MIN = -10;
 	const X_MAX = 10;
 	const Y_MIN = -10;
 	const Y_MAX = 10;
 	const SAMPLE_STEP = 0.08;
-	const CLIP_MARGIN = 3;
+	const SAMPLE_COUNT = Math.round((X_MAX - X_MIN) / SAMPLE_STEP);
 	const JUMP_BREAK_THRESHOLD = 3;
 	const SHIFT_MIN = -8;
 	const SHIFT_MAX = 8;
@@ -224,32 +224,103 @@
 		return baseValue + shiftY;
 	}
 
+	function isInsidePlotY(y: number) {
+		return y >= Y_MIN && y <= Y_MAX;
+	}
+
+	function interpolateXAtY(x1: number, y1: number, x2: number, y2: number, targetY: number) {
+		const deltaY = y2 - y1;
+		if (Math.abs(deltaY) < 1e-9) {
+			return x2;
+		}
+		const t = (targetY - y1) / deltaY;
+		return x1 + t * (x2 - x1);
+	}
+
 	function buildCurveSegments(parentId: ParentId, shiftX: number, shiftY: number) {
 		const segments: string[] = [];
 		let activeSegment: string[] = [];
-		let previousY: number | null = null;
+		let previousPoint: { x: number; y: number } | null = null;
 
 		const flushSegment = () => {
 			if (activeSegment.length > 1) {
 				segments.push(activeSegment.join(' '));
 			}
 			activeSegment = [];
-			previousY = null;
 		};
 
-		for (let x = X_MIN; x <= X_MAX + SAMPLE_STEP / 2; x += SAMPLE_STEP) {
+		const addPoint = (x: number, y: number) => {
+			activeSegment.push(`${toSvgX(x).toFixed(2)},${toSvgY(y).toFixed(2)}`);
+		};
+
+		for (let sampleIndex = 0; sampleIndex <= SAMPLE_COUNT; sampleIndex += 1) {
+			const x = X_MIN + sampleIndex * SAMPLE_STEP;
 			const y = evaluateShifted(parentId, x, shiftX, shiftY);
-			if (y === null || !Number.isFinite(y) || y < Y_MIN - CLIP_MARGIN || y > Y_MAX + CLIP_MARGIN) {
+
+			if (y === null || !Number.isFinite(y)) {
 				flushSegment();
+				previousPoint = null;
 				continue;
 			}
 
-			if (previousY !== null && Math.abs(y - previousY) > JUMP_BREAK_THRESHOLD) {
-				flushSegment();
+			if (previousPoint === null) {
+				previousPoint = { x, y };
+				if (isInsidePlotY(y)) {
+					addPoint(x, y);
+				}
+				continue;
 			}
 
-			activeSegment.push(`${toSvgX(x).toFixed(2)},${toSvgY(y).toFixed(2)}`);
-			previousY = y;
+			if (Math.abs(y - previousPoint.y) > JUMP_BREAK_THRESHOLD) {
+				flushSegment();
+				previousPoint = { x, y };
+				if (isInsidePlotY(y)) {
+					addPoint(x, y);
+				}
+				continue;
+			}
+
+			const previousInside = isInsidePlotY(previousPoint.y);
+			const currentInside = isInsidePlotY(y);
+
+			if (previousInside && currentInside) {
+				if (activeSegment.length === 0) {
+					addPoint(previousPoint.x, previousPoint.y);
+				}
+				addPoint(x, y);
+			} else if (previousInside && !currentInside) {
+				const boundaryY = y > Y_MAX ? Y_MAX : Y_MIN;
+				const boundaryX = interpolateXAtY(previousPoint.x, previousPoint.y, x, y, boundaryY);
+				if (activeSegment.length === 0) {
+					addPoint(previousPoint.x, previousPoint.y);
+				}
+				addPoint(boundaryX, boundaryY);
+				flushSegment();
+			} else if (!previousInside && currentInside) {
+				const boundaryY = previousPoint.y > Y_MAX ? Y_MAX : Y_MIN;
+				const boundaryX = interpolateXAtY(previousPoint.x, previousPoint.y, x, y, boundaryY);
+				addPoint(boundaryX, boundaryY);
+				addPoint(x, y);
+			} else {
+				const previousAbove = previousPoint.y > Y_MAX;
+				const currentAbove = y > Y_MAX;
+				if (previousAbove !== currentAbove) {
+					const xAtMin = interpolateXAtY(previousPoint.x, previousPoint.y, x, y, Y_MIN);
+					const xAtMax = interpolateXAtY(previousPoint.x, previousPoint.y, x, y, Y_MAX);
+					if (xAtMin <= xAtMax) {
+						addPoint(xAtMin, Y_MIN);
+						addPoint(xAtMax, Y_MAX);
+					} else {
+						addPoint(xAtMax, Y_MAX);
+						addPoint(xAtMin, Y_MIN);
+					}
+					flushSegment();
+				} else {
+					flushSegment();
+				}
+			}
+
+			previousPoint = { x, y };
 		}
 
 		flushSegment();
@@ -338,14 +409,14 @@
 		if (challenge.type === 'vertical') {
 			feedback = {
 				correct: false,
-				message: `Not yet. You placed \\u0394y=${formatShift(userShiftY)}, but target \\u0394y=${formatShift(challenge.targetShiftY)}.`
+				message: `Not yet. You placed Δy=${formatShift(userShiftY)}, but target Δy=${formatShift(challenge.targetShiftY)}.`
 			};
 			return;
 		}
 
 		feedback = {
 			correct: false,
-			message: `Not yet. You placed \\u0394x=${formatShift(userShiftX)}, but target \\u0394x=${formatShift(challenge.targetShiftX)}.`
+			message: `Not yet. You placed Δx=${formatShift(userShiftX)}, but target Δx=${formatShift(challenge.targetShiftX)}.`
 		};
 	}
 </script>
@@ -466,7 +537,9 @@
 	<div class="grid gap-3 sm:grid-cols-2">
 		<label class="space-y-1 rounded-xl border border-border/70 bg-background/75 px-3 py-2 text-xs font-medium text-muted-foreground">
 			{#if challenge.type === 'vertical'}
-				Vertical shift (\u0394y)
+				<span>Vertical shift (</span>
+				<MathExpression math={'\\Delta y'} class="inline-block align-middle" />
+				<span>)</span>
 				<input
 					type="range"
 					min={SHIFT_MIN}
@@ -481,7 +554,9 @@
 				/>
 				<span class="text-sm font-semibold text-foreground">{formatShift(userShiftY)}</span>
 			{:else}
-				Horizontal shift (\u0394x)
+				<span>Horizontal shift (</span>
+				<MathExpression math={'\\Delta x'} class="inline-block align-middle" />
+				<span>)</span>
 				<input
 					type="range"
 					min={SHIFT_MIN}

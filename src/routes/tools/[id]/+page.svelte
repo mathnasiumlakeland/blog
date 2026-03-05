@@ -26,7 +26,9 @@
 	const tool = $derived(getInteractiveToolById(data.id));
 	const routePracticeDisabledToolIds = new Set([
 		'scientific-calculator',
-		'prime-factorization-factor-tree-lab'
+		'prime-factorization-factor-tree-lab',
+		'parent-function-identification',
+		'function-translation-drag-practice'
 	]);
 	const supportsPracticeMode = $derived(!routePracticeDisabledToolIds.has(data.id));
 	const toolPath = $derived(resolve(`/tools/${data.id}`));

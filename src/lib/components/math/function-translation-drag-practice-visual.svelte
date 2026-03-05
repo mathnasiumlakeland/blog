@@ -12,10 +12,10 @@
 
 	const PLOT_WIDTH = 460;
 	const PLOT_HEIGHT = 460;
-	const PAD_LEFT = 56;
+	const PAD_LEFT = 46;
 	const PAD_RIGHT = 24;
 	const PAD_TOP = 24;
-	const PAD_BOTTOM = 56;
+	const PAD_BOTTOM = 46;
 	const X_MIN = -10;
 	const X_MAX = 10;
 	const Y_MIN = -10;
@@ -540,6 +540,12 @@
 					stroke-linecap="round"
 				/>
 			{/each}
+			<circle
+				cx={toSvgX(userShiftX)}
+				cy={toSvgY(userShiftY)}
+				r="3.5"
+				fill="#f97316"
+			/>
 
 			<text x={PLOT_WIDTH - 12} y={toSvgY(0) - 8} text-anchor="end" font-size="11" fill="#64748b">x</text>
 			<text x={toSvgX(0) + 10} y={PAD_TOP + 11} text-anchor="start" font-size="11" fill="#64748b">y</text>
@@ -548,7 +554,8 @@
 		<div class="space-y-3">
 			<p class="rounded-xl border border-border/70 bg-background/75 px-3 py-2 text-xs text-muted-foreground">
 				Drag the graph to match the target transformation. You get <span class="font-semibold text-foreground">3 attempts</span>
-				before the answer appears.
+				before the answer appears. The dot starts at <span class="font-semibold text-foreground">(0,0)</span>
+				and moves with the graph.
 			</p>
 
 			<div class="grid gap-2">

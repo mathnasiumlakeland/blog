@@ -204,7 +204,7 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Use prime factors and pull one factor outside for every matching pair.'
 		};
 	},
-	'function-translation-drag-practice': () => {
+	'function-tranformation-practice': () => {
 		const horizontal = randomInt(0, 1) === 1;
 		let b = randomInt(-6, 6);
 		if (b === 0) {
@@ -215,7 +215,7 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			const answer = -b;
 			const plusBText = b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
 			return {
-				prompt: `For y = f(x ${plusBText}), what horizontal translation should be applied to f(x)? Use right-positive and left-negative units.`,
+				prompt: `For y = f(x ${plusBText}), what translation should be applied to get f(x + k)?`,
 				answer,
 				tolerance: 0,
 				hint: 'x + b shifts left by b, and x - b shifts right by b.'
@@ -224,10 +224,10 @@ const practiceFactories: Record<string, PracticeFactory> = {
 
 		const signedBText = b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
 		return {
-			prompt: `For y = f(x) ${signedBText}, what vertical translation is applied? Use up-positive and down-negative units.`,
+			prompt: `For y = f(x)${signedBText}, what k gives y = f(x) + k?`,
 			answer: b,
 			tolerance: 0,
-			hint: 'Adding b outside the function shifts the graph up by b.'
+			hint: 'A positive k shifts up; a negative k shifts down.'
 		};
 	},
 	'mixture-balance-lab': () => {

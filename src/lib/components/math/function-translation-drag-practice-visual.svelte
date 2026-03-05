@@ -3,7 +3,7 @@
 	import { requireInteractiveToolMetaById } from './tool-registry';
 
 	export const toolMeta: MathToolMeta = requireInteractiveToolMetaById(
-		'function-translation-drag-practice'
+		'function-tranformation-practice'
 	);
 </script>
 
@@ -38,8 +38,6 @@
 		| 'reciprocal'
 		| 'reciprocal-squared';
 
-	type ChallengeType = 'vertical' | 'horizontal';
-
 	type ParentDefinition = {
 		id: ParentId;
 		label: string;
@@ -48,11 +46,9 @@
 	};
 
 	type Challenge = {
-		type: ChallengeType;
 		parentId: ParentId;
-		b: number;
-		targetShiftX: number;
-		targetShiftY: number;
+		shiftX: number;
+		shiftY: number;
 	};
 
 	const parentFunctions: ParentDefinition[] = [
@@ -60,7 +56,12 @@
 		{ id: 'absolute-value', label: 'Absolute Value', fxTex: '\\left|x\\right|', base: (u) => Math.abs(u) },
 		{ id: 'quadratic', label: 'Quadratic', fxTex: 'x^2', base: (u) => u * u },
 		{ id: 'cubic', label: 'Cubic', fxTex: 'x^3', base: (u) => u * u * u },
-		{ id: 'square-root', label: 'Square Root', fxTex: '\\sqrt{x}', base: (u) => (u >= 0 ? Math.sqrt(u) : null) },
+		{
+			id: 'square-root',
+			label: 'Square Root',
+			fxTex: '\\sqrt{x}',
+			base: (u) => (u >= 0 ? Math.sqrt(u) : null)
+		},
 		{ id: 'cube-root', label: 'Cube Root', fxTex: '\\sqrt[3]{x}', base: (u) => Math.cbrt(u) },
 		{ id: 'reciprocal', label: 'Reciprocal', fxTex: '\\frac{1}{x}', base: (u) => (Math.abs(u) < 1e-3 ? null : 1 / u) },
 		{
@@ -80,7 +81,6 @@
 	const innerWidth = PLOT_WIDTH - PAD_LEFT - PAD_RIGHT;
 	const innerHeight = PLOT_HEIGHT - PAD_TOP - PAD_BOTTOM;
 
-	let rngSeed = 20260303;
 	let challenge = $state<Challenge>(createChallenge());
 	let userShiftX = $state(0);
 	let userShiftY = $state(0);
@@ -96,40 +96,26 @@
 	let dragStartShiftX = 0;
 	let dragStartShiftY = 0;
 
-	const activeParent = $derived(parentById[challenge.parentId]);
 	const accuracyPercent = $derived(attempts === 0 ? 0 : Math.round((solved / attempts) * 100));
-	const targetEquationTex = $derived.by(() => {
-		if (challenge.type === 'vertical') {
-			return `y=f(x)${signedValueTex(challenge.b)}`;
-		}
-		return `y=f\\left(${xShiftArgumentTex(challenge.b)}\\right)`;
-	});
-	const fDefinitionTex = $derived.by(() => `f(x)=${activeParent.fxTex}`);
-	const activeShiftModeLabel = $derived(
-		challenge.type === 'vertical' ? 'Vertical drag mode' : 'Horizontal drag mode'
+	const targetEquationTex = $derived.by(() =>
+		`y=${buildTransformedExpressionTex(challenge.parentId, challenge.shiftX, challenge.shiftY)}`
 	);
-	const targetDirectionHint = $derived.by(() => {
-		if (challenge.type === 'vertical') {
-			if (challenge.b > 0) return `Move up ${formatShift(challenge.b)} units.`;
-			return `Move down ${formatShift(Math.abs(challenge.b))} units.`;
-		}
-		if (challenge.b > 0) return `For f(x+${challenge.b}), move left ${formatShift(challenge.b)} units.`;
-		return `For f(x${challenge.b}), move right ${formatShift(Math.abs(challenge.b))} units.`;
-	});
-	const currentShiftSummaryTex = $derived.by(
-		() => `\\Delta x=${formatShift(userShiftX)},\\;\\Delta y=${formatShift(userShiftY)}`
-	);
+	const targetPlotShiftX = $derived.by(() => -challenge.shiftX);
 
 	const currentCurveSegments = $derived.by(() =>
 		buildCurveSegments(challenge.parentId, userShiftX, userShiftY)
 	);
 	const targetCurveSegments = $derived.by(() =>
-		buildCurveSegments(challenge.parentId, challenge.targetShiftX, challenge.targetShiftY)
+		buildCurveSegments(challenge.parentId, targetPlotShiftX, challenge.shiftY)
 	);
 
 	function nextRandom() {
-		rngSeed = (rngSeed * 1664525 + 1013904223) >>> 0;
-		return rngSeed / 4294967296;
+		if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+			const randomBuffer = new Uint32Array(1);
+			crypto.getRandomValues(randomBuffer);
+			return randomBuffer[0] / 4294967296;
+		}
+		return Math.random();
 	}
 
 	function randomInt(minValue: number, maxValue: number) {
@@ -140,30 +126,65 @@
 		return values[Math.floor(nextRandom() * values.length)] ?? values[0];
 	}
 
+	function shuffleValues<T>(values: T[]) {
+		const shuffled = values.slice();
+		for (let index = shuffled.length - 1; index > 0; index -= 1) {
+			const swapIndex = Math.floor(nextRandom() * (index + 1));
+			const value = shuffled[index];
+			shuffled[index] = shuffled[swapIndex] ?? value;
+			shuffled[swapIndex] = value;
+		}
+		return shuffled;
+	}
+
 	function createChallenge(): Challenge {
-		const type: ChallengeType = pickRandomValue(['vertical', 'horizontal']);
-		const parentId = pickRandomValue(parentIds);
-		let b = randomInt(-5, 5);
-		if (b === 0) {
-			b = randomInt(1, 5) * (nextRandom() < 0.5 ? -1 : 1);
+		const parentOrder = shuffleValues(parentIds);
+		let shiftX = randomInt(-6, 6);
+		let shiftY = randomInt(-6, 6);
+		if (shiftX === 0 && shiftY === 0) {
+			shiftY = randomInt(1, 6) * (nextRandom() < 0.5 ? 1 : -1);
 		}
 
 		return {
-			type,
-			parentId,
-			b,
-			targetShiftX: type === 'horizontal' ? -b : 0,
-			targetShiftY: type === 'vertical' ? b : 0
+			parentId: parentOrder[0] ?? pickRandomValue(parentIds),
+			shiftX,
+			shiftY
 		};
 	}
 
-	function signedValueTex(value: number) {
-		if (value === 0) return '';
-		return value > 0 ? `+${value}` : `${value}`;
+	function buildTransformedExpressionTex(parentId: ParentId, shiftX: number, shiftY: number) {
+		const inner = shiftArgumentTex(shiftX);
+		const wrappedInner = inner === 'x' ? 'x' : `\\left(${inner}\\right)`;
+		let expression = '';
+
+		if (parentId === 'linear') {
+			expression = inner;
+		} else if (parentId === 'quadratic') {
+			expression = `${wrappedInner}^2`;
+		} else if (parentId === 'cubic') {
+			expression = `${wrappedInner}^3`;
+		} else if (parentId === 'square-root') {
+			expression = `\\sqrt{${wrappedInner}}`;
+		} else if (parentId === 'cube-root') {
+			expression = `\\sqrt[3]{${wrappedInner}}`;
+		} else if (parentId === 'absolute-value') {
+			expression = `\\left|${wrappedInner}\\right|`;
+		} else if (parentId === 'reciprocal') {
+			expression = `\\frac{1}{${wrappedInner}}`;
+		} else {
+			expression = `\\frac{1}{${wrappedInner}^2}`;
+		}
+
+		if (shiftY === 0) {
+			return expression;
+		}
+		return `${expression}${shiftY > 0 ? `+${shiftY}` : `${shiftY}`}`;
 	}
 
-	function xShiftArgumentTex(value: number) {
-		if (value === 0) return 'x';
+	function shiftArgumentTex(value: number) {
+		if (value === 0) {
+			return 'x';
+		}
 		return value > 0 ? `x+${value}` : `x${value}`;
 	}
 
@@ -355,14 +376,8 @@
 
 		const deltaX = point.x - dragStartPlotX;
 		const deltaY = point.y - dragStartPlotY;
-
-		if (challenge.type === 'vertical') {
-			userShiftY = snapShift(clamp(dragStartShiftY + deltaY, SHIFT_MIN, SHIFT_MAX));
-			userShiftX = 0;
-		} else {
-			userShiftX = snapShift(clamp(dragStartShiftX + deltaX, SHIFT_MIN, SHIFT_MAX));
-			userShiftY = 0;
-		}
+		userShiftX = snapShift(clamp(dragStartShiftX + deltaX, SHIFT_MIN, SHIFT_MAX));
+		userShiftY = snapShift(clamp(dragStartShiftY + deltaY, SHIFT_MIN, SHIFT_MAX));
 		feedback = null;
 	}
 
@@ -393,8 +408,8 @@
 		attempts += 1;
 		revealTarget = true;
 
-		const xError = Math.abs(userShiftX - challenge.targetShiftX);
-		const yError = Math.abs(userShiftY - challenge.targetShiftY);
+		const xError = Math.abs(userShiftX - targetPlotShiftX);
+		const yError = Math.abs(userShiftY - challenge.shiftY);
 		const isCorrect = xError <= CHECK_TOLERANCE && yError <= CHECK_TOLERANCE;
 
 		if (isCorrect) {
@@ -406,23 +421,15 @@
 			return;
 		}
 
-		if (challenge.type === 'vertical') {
-			feedback = {
-				correct: false,
-				message: `Not yet. You placed Δy=${formatShift(userShiftY)}, but target Δy=${formatShift(challenge.targetShiftY)}.`
-			};
-			return;
-		}
-
 		feedback = {
 			correct: false,
-			message: `Not yet. You placed Δx=${formatShift(userShiftX)}, but target Δx=${formatShift(challenge.targetShiftX)}.`
+			message: `Not yet. Target is h=${formatShift(challenge.shiftX)}, k=${formatShift(challenge.shiftY)}.`
 		};
 	}
 </script>
 
 <div class="space-y-4 select-none">
-	<div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+	<div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
 		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Challenge: <span class="font-semibold text-foreground">#{challengeCount}</span>
 		</p>
@@ -432,33 +439,13 @@
 		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Accuracy: <span class="font-semibold text-foreground">{accuracyPercent}%</span>
 		</p>
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
-			Mode: <span class="font-semibold text-foreground">{activeShiftModeLabel}</span>
-		</p>
 	</div>
 
 	<div class="space-y-3 rounded-xl border border-border/70 bg-background/75 p-3">
 		<p class="text-sm text-muted-foreground">
-			Parent function:
-			<MathExpression
-				math={fDefinitionTex}
-				class="ml-1 inline-block align-middle font-semibold text-foreground"
-			/>
-		</p>
-		<p class="text-sm text-muted-foreground">
 			Target transformation:
 			<MathExpression
 				math={targetEquationTex}
-				class="ml-1 inline-block align-middle font-semibold text-foreground"
-			/>
-		</p>
-		<p class="text-sm text-muted-foreground">
-			{targetDirectionHint}
-		</p>
-		<p class="text-sm text-muted-foreground">
-			Current placement:
-			<MathExpression
-				math={currentShiftSummaryTex}
 				class="ml-1 inline-block align-middle font-semibold text-foreground"
 			/>
 		</p>
@@ -536,45 +523,38 @@
 
 	<div class="grid gap-3 sm:grid-cols-2">
 		<label class="space-y-1 rounded-xl border border-border/70 bg-background/75 px-3 py-2 text-xs font-medium text-muted-foreground">
-			{#if challenge.type === 'vertical'}
-				<span>Vertical shift (</span>
-				<MathExpression math={'\\Delta y'} class="inline-block align-middle" />
-				<span>)</span>
-				<input
-					type="range"
-					min={SHIFT_MIN}
-					max={SHIFT_MAX}
-					step={SHIFT_STEP}
-					bind:value={userShiftY}
-					oninput={() => {
-						userShiftX = 0;
-						feedback = null;
-					}}
-					class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-primary/25 accent-primary"
-				/>
-				<span class="text-sm font-semibold text-foreground">{formatShift(userShiftY)}</span>
-			{:else}
-				<span>Horizontal shift (</span>
-				<MathExpression math={'\\Delta x'} class="inline-block align-middle" />
-				<span>)</span>
-				<input
-					type="range"
-					min={SHIFT_MIN}
-					max={SHIFT_MAX}
-					step={SHIFT_STEP}
-					bind:value={userShiftX}
-					oninput={() => {
-						userShiftY = 0;
-						feedback = null;
-					}}
-					class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-primary/25 accent-primary"
-				/>
-				<span class="text-sm font-semibold text-foreground">{formatShift(userShiftX)}</span>
-			{/if}
+			<span>Horizontal shift (h)</span>
+			<input
+				type="range"
+				min={SHIFT_MIN}
+				max={SHIFT_MAX}
+				step={SHIFT_STEP}
+				bind:value={userShiftX}
+				oninput={() => {
+					feedback = null;
+				}}
+				class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-primary/25 accent-primary"
+			/>
+			<span class="text-sm font-semibold text-foreground">{formatShift(userShiftX)}</span>
 		</label>
-		<p class="rounded-xl border border-border/70 bg-background/75 px-3 py-2 text-xs text-muted-foreground">
-			Drag directly on the graph to move the curve. In this mode, only one axis is active.
-			Use <span class="font-semibold text-foreground">Check</span> to reveal the target (orange dashed).
+		<label class="space-y-1 rounded-xl border border-border/70 bg-background/75 px-3 py-2 text-xs font-medium text-muted-foreground">
+			<span>Vertical shift (k)</span>
+			<input
+				type="range"
+				min={SHIFT_MIN}
+				max={SHIFT_MAX}
+				step={SHIFT_STEP}
+				bind:value={userShiftY}
+				oninput={() => {
+					feedback = null;
+				}}
+				class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-primary/25 accent-primary"
+			/>
+			<span class="text-sm font-semibold text-foreground">{formatShift(userShiftY)}</span>
+		</label>
+		<p class="rounded-xl border border-border/70 bg-background/75 px-3 py-2 text-xs text-muted-foreground sm:col-span-2">
+			Drag on the graph or use the sliders to match the target transformation.
+			Use <span class="font-semibold text-foreground">Check</span> to reveal the target overlay.
 		</p>
 	</div>
 

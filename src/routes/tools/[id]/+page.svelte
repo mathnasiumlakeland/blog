@@ -28,7 +28,7 @@
 		'scientific-calculator',
 		'prime-factorization-factor-tree-lab',
 		'parent-function-identification',
-		'function-translation-drag-practice'
+		'function-tranformation-practice'
 	]);
 	const supportsPracticeMode = $derived(!routePracticeDisabledToolIds.has(data.id));
 	const toolPath = $derived(resolve(`/tools/${data.id}`));

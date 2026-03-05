@@ -113,18 +113,18 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
-		id: 'function-translation-drag-practice',
+		id: 'function-tranformation-practice',
 		meta: {
-			id: 'function-translation-drag-practice',
-			title: 'Function Translation Drag Practice',
+			id: 'function-tranformation-practice',
+			title: 'Function Tranformation Practice',
 			description:
-				'Drag parent-function graphs to match target transformations like y = f(x) + b and y = f(x + b).',
+				'Drag parent-function graphs to match target transformations in the form y = f(x+h) + k.',
 			inputs:
-				'Random parent function challenge, transformation target, graph drag gesture, and check/reset/new buttons.',
+				'Random parent-function challenge, target transformed equation y = f(x+h)+k, graph drag, and check/reset/new buttons.',
 			outputs:
-				'Live shifted graph position, correctness feedback, and target overlay after checking.',
+				'Live transformed graph, correctness feedback, and target-overlay reveal after checking.',
 			useCase:
-				'Use for practicing how vertical and horizontal translations change parent-function graphs.',
+				'Use for practicing both horizontal and vertical translations using y = f(x+h)+k.',
 			tags: ['algebra', 'functions', 'transformations', 'graphing', 'practice']
 		}
 	},

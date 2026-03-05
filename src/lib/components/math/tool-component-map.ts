@@ -12,7 +12,7 @@ const interactiveToolComponentSources: ToolComponentSourceMap = {
 	'parent-function-identification': 'parent-function-identification-visual.svelte',
 	'simplifying-radicals-walkthrough': 'simplifying-radicals-walkthrough-visual.svelte',
 	'prime-factorization-factor-tree-lab': 'prime-factorization-factor-tree-lab-visual.svelte',
-	'function-translation-drag-practice': 'function-translation-drag-practice-visual.svelte',
+	'function-tranformation-practice': 'function-translation-drag-practice-visual.svelte',
 	'mixture-balance-lab': 'mixture-balance-lab-visual.svelte',
 	'simple-interest-growth': 'simple-interest-growth-visual.svelte',
 	'compound-interest-growth': 'compound-interest-growth-visual.svelte',
@@ -51,7 +51,7 @@ const interactiveToolLoaders: Record<string, ToolComponentLoader> = {
 		import('./simplifying-radicals-walkthrough-visual.svelte'),
 	'prime-factorization-factor-tree-lab': () =>
 		import('./prime-factorization-factor-tree-lab-visual.svelte'),
-	'function-translation-drag-practice': () =>
+	'function-tranformation-practice': () =>
 		import('./function-translation-drag-practice-visual.svelte'),
 	'mixture-balance-lab': () => import('./mixture-balance-lab-visual.svelte'),
 	'simple-interest-growth': () => import('./simple-interest-growth-visual.svelte'),

@@ -540,9 +540,13 @@
 			<text x={toSvgX(0) + 10} y={PAD_TOP + 11} text-anchor="start" font-size="11" fill="#64748b">y</text>
 		</svg>
 
-			<div class="relative lg:h-full lg:min-h-0">
-				{#if isCorrectGuess}
-					<section class="space-y-3 lg:flex lg:h-full lg:min-h-0 lg:flex-col">
+				<div class="relative lg:h-full lg:min-h-0">
+					{#if isCorrectGuess}
+						<section
+							in:slide={{ delay: 260, duration: 260 }}
+							out:slide={{ duration: 260 }}
+							class="space-y-3 lg:absolute lg:inset-0 lg:z-0"
+						>
 						<div
 							class="rounded-xl border border-emerald-500/55 bg-emerald-100/70 px-3 py-3 text-sm text-emerald-900"
 						>
@@ -577,15 +581,16 @@
 								Next card
 							</button>
 						</div>
-				</section>
-				{:else}
-					<section
-						out:slide={{ duration: 220 }}
-						class="space-y-3 lg:flex lg:h-full lg:min-h-0 lg:flex-col"
-					>
-							<div class="space-y-2 lg:flex lg:h-full lg:min-h-0 lg:flex-col">
-								<p class="text-sm font-medium text-foreground">Select the parent function:</p>
-								<div class="grid gap-2 lg:flex lg:flex-1 lg:min-h-0 lg:flex-col lg:justify-between lg:gap-3">
+					</section>
+					{:else}
+						<section
+							in:slide={{ delay: 260, duration: 260 }}
+							out:slide={{ duration: 260 }}
+							class="space-y-3 lg:absolute lg:inset-0 lg:z-10 lg:flex lg:h-full lg:flex-col"
+						>
+								<div class="space-y-2 lg:flex lg:flex-1 lg:flex-col">
+									<p class="text-sm font-medium text-foreground">Select the parent function:</p>
+									<div class="grid gap-2 lg:flex-1 lg:content-between lg:gap-3">
 									{#each card.optionOrder as optionId (optionId)}
 										{@const option = parentById[optionId]}
 										<button

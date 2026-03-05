@@ -554,8 +554,7 @@
 		<div class="space-y-3">
 			<p class="rounded-xl border border-border/70 bg-background/75 px-3 py-2 text-xs text-muted-foreground">
 				Drag the graph to match the target transformation. You get <span class="font-semibold text-foreground">3 attempts</span>
-				before the answer appears. The dot starts at <span class="font-semibold text-foreground">(0,0)</span>
-				and moves with the graph.
+				before the answer appears.
 			</p>
 
 			<div class="grid gap-2">

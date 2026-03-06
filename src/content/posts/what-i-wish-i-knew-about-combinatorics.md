@@ -6,6 +6,7 @@ publishedOn: 'March 5, 2026'
 publishedAt: '2026-03-05'
 readTime: '11 min'
 author: 'Max'
+difficulty: 'intermediate'
 tags:
   - combinatorics
   - counting

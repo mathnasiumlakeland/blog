@@ -6,6 +6,7 @@ publishedOn: 'February 28, 2026'
 publishedAt: '2026-02-28'
 readTime: '7 min'
 author: 'Max'
+difficulty: 'intermediate'
 
 tags:
   - combinatorics

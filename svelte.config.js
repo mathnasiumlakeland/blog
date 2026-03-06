@@ -11,6 +11,16 @@ const basePath = (() => {
 	return value.endsWith('/') ? value.slice(0, -1) : value;
 })();
 
+const postComponentsMode =
+	process.env.POST_COMPONENT_MAP_MODE?.trim() === 'prod' || process.argv.includes('build')
+		? 'prod'
+		: 'dev';
+
+const postComponentsAliasTarget =
+	postComponentsMode === 'prod'
+		? './src/lib/content/post-components.prod.ts'
+		: './src/lib/content/post-components.ts';
+
 function remarkNormalizeMathCommands() {
 	return (tree) => {
 		function walk(node) {
@@ -75,6 +85,9 @@ const config = {
 		],
 	kit: {
 		adapter: adapter(),
+		alias: {
+			'$post-components': postComponentsAliasTarget
+		},
 		paths: {
 			base: basePath
 		},

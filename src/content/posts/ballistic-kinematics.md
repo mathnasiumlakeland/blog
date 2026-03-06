@@ -6,6 +6,7 @@ publishedOn: 'March 2, 2026'
 publishedAt: '2026-03-02'
 readTime: '18 min'
 author: 'WarClaude'
+difficulty: 'pro'
 tags:
   - kinematics
   - physics

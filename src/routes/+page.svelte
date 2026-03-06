@@ -11,6 +11,7 @@
 	import PostCard from '$lib/components/blog/post-card.svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
+	import type { BlogPostDifficulty } from '$lib/content/posts';
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
 	import InlineMathText from '$lib/components/math/inline-math-text.svelte';
 	import MathExpression from '$lib/components/math/math-expression.svelte';
@@ -24,6 +25,13 @@
 
 	const featuredPost = $derived(data.featuredPost);
 	const feed = $derived(data.feed);
+
+	const difficultyBadgeClasses: Record<BlogPostDifficulty, string> = {
+		beginner: 'border-teal-200/80 bg-teal-500/10 text-teal-700',
+		intermediate: 'border-sky-200/80 bg-sky-500/10 text-sky-700',
+		advanced: 'border-amber-200/80 bg-amber-500/10 text-amber-700',
+		pro: 'border-rose-200/80 bg-rose-500/10 text-rose-700'
+	};
 </script>
 
 <div class="space-y-10 sm:space-y-12">
@@ -33,52 +41,58 @@
 			class="soft-grid relative min-w-0 overflow-hidden rounded-3xl border border-border/70 bg-card/78 p-5 shadow-sm backdrop-blur-sm sm:p-10 lg:flex lg:h-full lg:flex-col"
 		>
 			<div class="space-y-5 lg:flex lg:h-full lg:flex-col lg:space-y-0">
-				<div class="space-y-5">
-					<Badge
-						href="https://www.mathnasium.com/math-centers/lakelandhighlands"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="w-fit border border-primary/20 bg-primary/12 px-3 py-1 text-[11px] text-primary hover:!bg-primary/16 sm:text-sm"
-					>
-						<School class="mr-1.5 size-3.5" />
-						Mathnasium Lakeland Highlands
-					</Badge>
+				<Badge
+					href="https://www.mathnasium.com/math-centers/lakelandhighlands"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="w-fit border border-primary/20 bg-primary/12 px-3 py-1 text-[11px] text-primary hover:!bg-primary/16 sm:text-sm"
+				>
+					<School class="mr-1.5 size-3.5" />
+					Mathnasium Lakeland Highlands
+				</Badge>
 
-					<div class="space-y-4">
+				<div class="space-y-5 lg:flex lg:flex-1 lg:flex-col lg:justify-center lg:space-y-0">
+					<div class="space-y-8 sm:space-y-10">
 						<h1 class="max-w-xl text-3xl leading-tight tracking-tight sm:text-4xl lg:text-5xl">
 							Math resources from our center, built for students and families.
 						</h1>
+
 						<p class="max-w-2xl text-sm text-muted-foreground sm:text-lg">
 							Clear explanations, interactive visuals, and take-home ideas from
 							Mathnasium Lakeland Highlands.
 						</p>
-					</div>
-				</div>
 
-				<div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 lg:mt-auto">
-					<Button href={resolve('/posts')} class="w-full justify-center gap-1.5 sm:w-auto">
-						Read latest posts
-						<ArrowRight class="size-4" />
-					</Button>
-					<Button
-						href="https://www.mathnasium.com/math-centers/lakelandhighlands"
-						variant="secondary"
-						class="w-full justify-center gap-1.5 sm:w-auto"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						<ExternalLink class="size-4" />
-						Visit center page
-					</Button>
+						<div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+							<Button href={resolve('/posts')} class="w-full justify-center gap-1.5 sm:w-auto">
+								Read latest posts
+								<ArrowRight class="size-4" />
+							</Button>
+							<Button
+								href="https://www.mathnasium.com/math-centers/lakelandhighlands"
+								variant="secondary"
+								class="w-full justify-center gap-1.5 sm:w-auto"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								<ExternalLink class="size-4" />
+								Visit center page
+							</Button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 
 		<Card class="flex h-full min-w-0 flex-col border-border/70 bg-card/85 backdrop-blur-sm lg:py-10">
 			<CardHeader class="space-y-2">
-				<Badge variant="secondary" class="w-fit border border-border/80 bg-background/70">
-					Featured Post
-				</Badge>
+				<div class="flex flex-wrap gap-2">
+					<Badge variant="secondary" class="w-fit border border-border/80 bg-background/70">
+						Featured Post
+					</Badge>
+					<Badge class={`w-fit border capitalize ${difficultyBadgeClasses[featuredPost.difficulty]}`}>
+						{featuredPost.difficulty}
+					</Badge>
+				</div>
 				<CardTitle class="text-xl sm:text-2xl">
 					<InlineMathText text={featuredPost.title} />
 				</CardTitle>
@@ -91,20 +105,15 @@
 					<p class="text-muted-foreground">
 						<InlineMathText text={featuredPost.excerpt} />
 					</p>
-					<p class="text-xs text-muted-foreground">
-						By {featuredPost.author} • {featuredPost.publishedOn} • {featuredPost.readTime}
-					</p>
 					<p class="w-fit max-w-full rounded-lg border border-border/70 bg-background/70 px-3 py-2 text-xs sm:w-full">
 						<MathExpression
 							math={featuredPost.equation}
 							class="overflow-x-auto [&_.katex]:text-[0.95em]"
 						/>
 					</p>
-					<div class="flex flex-wrap gap-2">
-						{#each featuredPost.tags as tag (tag)}
-							<Badge variant="outline">{tag}</Badge>
-						{/each}
-					</div>
+					<p class="text-xs text-muted-foreground">
+						By {featuredPost.author} • {featuredPost.publishedOn} • {featuredPost.readTime}
+					</p>
 				</div>
 				<Button
 					href={resolve(`/posts/${featuredPost.slug}`)}

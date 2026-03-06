@@ -6,6 +6,7 @@ publishedOn: 'March 4, 2026'
 publishedAt: '2026-03-04'
 readTime: '8 min'
 author: 'Max'
+difficulty: 'beginner'
 tags:
   - number theory
   - prime numbers

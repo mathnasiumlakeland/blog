@@ -1,3 +1,7 @@
+export const BLOG_POST_DIFFICULTIES = ['beginner', 'intermediate', 'advanced', 'pro'] as const;
+
+export type BlogPostDifficulty = (typeof BLOG_POST_DIFFICULTIES)[number];
+
 export type BlogPost = {
 	slug: string;
 	title: string;
@@ -7,6 +11,7 @@ export type BlogPost = {
 	publishedAt: string;
 	readTime: string;
 	author: string;
+	difficulty: BlogPostDifficulty;
 	tags: string[];
 	equation: string;
 	featured?: boolean;
@@ -27,6 +32,19 @@ function assertTags(value: unknown, path: string): string[] {
 		throw new Error(`Invalid frontmatter: "tags" must be a string array in ${path}`);
 	}
 	return value;
+}
+
+function assertDifficulty(value: unknown, path: string): BlogPostDifficulty {
+	if (
+		typeof value !== 'string' ||
+		!BLOG_POST_DIFFICULTIES.includes(value as BlogPostDifficulty)
+	) {
+		throw new Error(
+			`Invalid frontmatter: "difficulty" must be one of ${BLOG_POST_DIFFICULTIES.join(', ')} in ${path}`
+		);
+	}
+
+	return value as BlogPostDifficulty;
 }
 
 function assertBooleanOrUndefined(
@@ -65,6 +83,7 @@ const records: BlogPost[] = Object.entries(metadataModules)
 			publishedAt: assertString(metadata.publishedAt, 'publishedAt', path),
 			readTime: assertString(metadata.readTime, 'readTime', path),
 			author: assertString(metadata.author, 'author', path),
+			difficulty: assertDifficulty(metadata.difficulty, path),
 			tags: assertTags(metadata.tags, path),
 			equation: assertString(metadata.equation, 'equation', path),
 			featured: metadata.featured,

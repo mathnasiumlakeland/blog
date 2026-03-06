@@ -6,6 +6,7 @@ publishedOn: 'March 3, 2026'
 publishedAt: '2026-03-03'
 readTime: '3 min'
 author: 'Max'
+difficulty: 'intermediate'
 tags:
   - trigonometry
   - unit-circle

@@ -12,6 +12,8 @@ excerpt: "Card summary text"
 publishedOn: "March 1, 2026"
 publishedAt: "2026-03-01"
 readTime: "6 min"
+author: "Author name"
+difficulty: "beginner"
 tags:
   - algebra
   - geometry
@@ -22,6 +24,8 @@ featured: false
 
 Use single quotes for equation strings in frontmatter. LaTeX commands such as `\sum` or `\sin`
 can break YAML parsing when double-quoted.
+
+Set `difficulty` to one of `beginner`, `intermediate`, `advanced`, or `pro`.
 
 ## Math
 

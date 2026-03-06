@@ -6,6 +6,7 @@ publishedOn: "February 27, 2026"
 publishedAt: "2026-02-27"
 readTime: "10 min"
 author: "GPT-5.3-Codex Extra High"
+difficulty: "advanced"
 tags:
   - trigonometry
   - animation

@@ -6,6 +6,7 @@ publishedOn: 'March 6, 2026'
 publishedAt: '2026-03-06'
 readTime: '7 min'
 author: 'Max'
+difficulty: 'intermediate'
 tags:
   - algebra
   - percents

@@ -2,7 +2,7 @@
 	import { resolve } from '$app/paths';
 	import InlineMathText from '$lib/components/math/inline-math-text.svelte';
 	import MathExpression from '$lib/components/math/math-expression.svelte';
-	import type { BlogPost } from '$lib/content/posts';
+	import type { BlogPost, BlogPostDifficulty } from '$lib/content/posts';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
 	import {
@@ -14,17 +14,24 @@
 		CardTitle
 	} from '$lib/components/ui/card';
 
+	const difficultyBadgeClasses: Record<BlogPostDifficulty, string> = {
+		beginner: 'border-teal-200/80 bg-teal-500/10 text-teal-700',
+		intermediate: 'border-sky-200/80 bg-sky-500/10 text-sky-700',
+		advanced: 'border-amber-200/80 bg-amber-500/10 text-amber-700',
+		pro: 'border-rose-200/80 bg-rose-500/10 text-rose-700'
+	};
+
 	let { post }: { post: BlogPost } = $props();
 </script>
 
 <Card class="h-full border-border/70 bg-card/85 backdrop-blur-sm transition hover:-translate-y-0.5 hover:shadow-lg">
 	<CardHeader class="flex flex-col gap-2.5 sm:gap-3">
 		<div class="flex min-h-[2rem] flex-wrap items-center gap-2 md:min-h-[2.75rem]">
-			{#each post.tags as tag (tag)}
-				<Badge variant="secondary" class="border border-border/80 bg-background/70 text-[11px]">
-					{tag}
-				</Badge>
-			{/each}
+			<Badge
+				class={`border text-[11px] capitalize ${difficultyBadgeClasses[post.difficulty]}`}
+			>
+				{post.difficulty}
+			</Badge>
 		</div>
 		<div class="space-y-2">
 			<CardTitle class="text-lg leading-tight sm:text-xl">

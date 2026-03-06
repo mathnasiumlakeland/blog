@@ -52,7 +52,8 @@
 				</Badge>
 
 				<div class="space-y-5 lg:flex lg:flex-1 lg:flex-col lg:justify-center lg:space-y-0">
-					<div class="space-y-8 sm:space-y-10">
+					<div class="space-y-1 sm:space-y-3">
+
 						<h1 class="max-w-xl text-3xl leading-tight tracking-tight sm:text-4xl lg:text-5xl">
 							Math resources from our center, built for students and families.
 						</h1>

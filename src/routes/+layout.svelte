@@ -34,7 +34,7 @@
 	);
 	const showProgressChrome = $derived(onPostDetailPage && hideHeader);
 
-	const activeNavClass = 'gap-1.5 px-2.5 hover:shadow-none sm:px-3';
+	const activeNavClass = 'gap-1.5 border border-transparent px-2.5 hover:shadow-none sm:px-3';
 	const inactiveNavClass =
 		'gap-1.5 px-2.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none sm:px-3';
 	const hideThreshold = 40;

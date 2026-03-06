@@ -11,7 +11,7 @@
 		"test:tools-integrity": "bun tests/tool-integrity.mjs",
 		"test:build-output": "bun tests/build-output-check.mjs",
 		"test:perf-budgets": "bun tests/perf-budgets.mjs",
-		"test:ci": "bun run check && BASE_PATH=/blog bun run build && bun run test:build-output && bun run test:perf-budgets",
+		"test:ci": "bun run check && bun run build && bun run test:build-output && bun run test:perf-budgets",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",

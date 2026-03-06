@@ -15,7 +15,7 @@ Guidance for coding agents working in this repository.
 
 ## Brand/Voice Defaults
 
-- Keep the site title as **Mathnasium Journal**.
+- Keep the site title as **Mathnasium Pro**.
 - Homepage language should be center/journal-focused (Mathnasium Lakeland Highlands), not “website feature demo” language.
 - Prefer clear, family/student-friendly copy over product-style buzzwords.
 
@@ -220,7 +220,7 @@ For blog-post requests, follow this interaction flow by default:
 
 Use these repo-local skills when their triggers match user requests:
 
-- `create-blog-post`: Scaffold and iterate new Mathnasium Journal blog posts with valid frontmatter/math conventions and the existing route flow.
+- `create-blog-post`: Scaffold and iterate new Mathnasium Pro blog posts with valid frontmatter/math conventions and the existing route flow.
   - File: `skills/create-blog-post/SKILL.md`
 - `create-component`: Create and refine reusable math tool components with indexable metadata and tools-page registration.
   - File: `skills/create-component/SKILL.md`

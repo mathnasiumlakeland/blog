@@ -1,11 +1,11 @@
 ---
 name: create-blog-post
-description: Create and iterate Mathnasium Journal posts in this SvelteKit repo. Use when the user asks to scaffold a new blog post, revise an existing post in `src/content/posts/*.md`, fix or add required frontmatter fields, add math explanations, or refine interactive math embeds while preserving compatibility with the post listing and slug routes.
+description: Create and iterate Mathnasium Pro posts in this SvelteKit repo. Use when the user asks to scaffold a new blog post, revise an existing post in `src/content/posts/*.md`, fix or add required frontmatter fields, add math explanations, or refine interactive math embeds while preserving compatibility with the post listing and slug routes.
 ---
 
 # Create Blog Post
 
-Create or refine markdown posts that publish cleanly through the existing post pipeline and match Mathnasium Journal voice.
+Create or refine markdown posts that publish cleanly through the existing post pipeline and match Mathnasium Pro voice.
 
 ## Execution Flow
 

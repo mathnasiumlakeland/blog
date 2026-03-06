@@ -9,6 +9,7 @@ const repoRoot = path.resolve(testsDir, '..');
 
 const buildDir = path.join(repoRoot, 'build');
 const buildIndexPath = path.join(buildDir, 'index.html');
+const build404Path = path.join(buildDir, '404.html');
 const toolsIndexPath = path.join(buildDir, 'tools', 'index.html');
 const registryPath = path.join(repoRoot, 'src', 'lib', 'components', 'math', 'tool-registry.ts');
 
@@ -37,11 +38,13 @@ async function ensureExists(filePath, label) {
 async function run() {
 	await ensureExists(buildDir, 'build directory');
 	await ensureExists(buildIndexPath, 'build index');
+	await ensureExists(build404Path, 'custom 404 page');
 	await ensureExists(toolsIndexPath, 'tools index');
 
-	const [registryContent, buildIndex, toolsIndex] = await Promise.all([
+	const [registryContent, buildIndex, build404, toolsIndex] = await Promise.all([
 		readFile(registryPath, 'utf8'),
 		readFile(buildIndexPath, 'utf8'),
+		readFile(build404Path, 'utf8'),
 		readFile(toolsIndexPath, 'utf8')
 	]);
 
@@ -51,6 +54,10 @@ async function run() {
 
 	if (!buildIndex.includes('Failed to fetch dynamically imported module')) {
 		throw new Error('Build index is missing dynamic-import failure recovery text.');
+	}
+
+	if (!build404.includes('Page not found.')) {
+		throw new Error('Custom 404 page is missing the expected not-found heading.');
 	}
 
 	const toolIds = parseRegistryIds(registryContent);
@@ -67,7 +74,7 @@ async function run() {
 		}
 	}
 
-	console.log(`Build output checks passed for ${toolIds.length} prerendered tool pages.`);
+	console.log(`Build output checks passed for custom 404 output and ${toolIds.length} prerendered tool pages.`);
 }
 
 run().catch((error) => {

@@ -6,7 +6,7 @@ publishedOn: 'February 28, 2026'
 publishedAt: '2026-02-28'
 readTime: '25 min'
 author: 'Max'
-difficulty: 'intermediate'
+difficulty: 'advanced'
 
 tags:
   - geometry

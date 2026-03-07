@@ -18,10 +18,11 @@
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs';
 	import LissajousCanvas from '$lib/components/math/lissajous-canvas.svelte';
 	import PolygonTriangulationVisual from '$lib/components/math/polygon-sum-of-interior-angles-visual.svelte';
+	import PrimeFactorizationFactorTreeVisual from '$lib/components/math/prime-factorization-factor-tree-visual.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
-	let spotlightTab = $state<'curves' | 'angle-sum'>('curves');
+	let spotlightTab = $state<'curves' | 'angle-sum' | 'factor-tree'>('curves');
 
 	const featuredPost = $derived(data.featuredPost);
 	const feed = $derived(data.feed);
@@ -186,11 +187,17 @@
 
 		<Tabs bind:value={spotlightTab} class="gap-4">
 			<TabsList
-				class="relative grid h-10 w-full grid-cols-2 overflow-hidden rounded-xl border border-border/70 bg-muted/70 p-1 sm:max-w-xs"
+				class="relative grid h-10 w-full grid-cols-3 overflow-hidden rounded-xl border border-border/70 bg-muted/70 p-1 sm:max-w-md"
 			>
 				<div aria-hidden="true" class="pointer-events-none absolute inset-1 z-0">
 					<div
-						class={`h-full w-1/2 rounded-lg border border-border/80 bg-background/95 shadow-[0_1px_2px_rgba(15,23,42,0.08)] transition-transform duration-300 ease-out ${spotlightTab === 'angle-sum' ? 'translate-x-full' : 'translate-x-0'}`}
+						class={`h-full w-1/3 rounded-lg border border-border/80 bg-background/95 shadow-[0_1px_2px_rgba(15,23,42,0.08)] transition-transform duration-300 ease-out ${
+							spotlightTab === 'curves'
+								? 'translate-x-0'
+								: spotlightTab === 'angle-sum'
+									? 'translate-x-full'
+									: 'translate-x-[200%]'
+						}`}
 					></div>
 				</div>
 				<TabsTrigger
@@ -203,7 +210,13 @@
 					value="angle-sum"
 					class="relative z-10 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
 				>
-					Interior Angle Sum
+					Angle Sum
+				</TabsTrigger>
+				<TabsTrigger
+					value="factor-tree"
+					class="relative z-10 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+				>
+					Factor Tree
 				</TabsTrigger>
 			</TabsList>
 			{#if spotlightTab === 'curves'}
@@ -214,6 +227,11 @@
 			{#if spotlightTab === 'angle-sum'}
 				<TabsContent value="angle-sum" class="mt-0">
 					<PolygonTriangulationVisual />
+				</TabsContent>
+			{/if}
+			{#if spotlightTab === 'factor-tree'}
+				<TabsContent value="factor-tree" class="mt-0">
+					<PrimeFactorizationFactorTreeVisual />
 				</TabsContent>
 			{/if}
 		</Tabs>

@@ -6,7 +6,7 @@ publishedOn: "February 27, 2026"
 publishedAt: "2026-02-27"
 readTime: "15 min"
 author: "Max"
-difficulty: "beginner"
+difficulty: "intermediate"
 tags:
   - interest
   - algebra

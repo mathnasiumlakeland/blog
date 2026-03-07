@@ -17,6 +17,7 @@
 	let downwardScrollDistance = 0;
 	let pendingScrollY = 0;
 	let scrollFrameId: number | undefined;
+	let suppressHeaderScrollResponses = false;
 	const postsPath = resolve('/posts');
 	const toolsPath = resolve('/tools');
 	const currentPath = $derived(page.url.pathname);
@@ -39,6 +40,16 @@
 		'gap-1.5 px-2.5 hover:!bg-card/82 hover:!text-foreground hover:!shadow-none sm:px-3';
 	const hideThreshold = 40;
 	const revealThreshold = 32;
+	const scrollIntentKeys = new Set([
+		'ArrowUp',
+		'ArrowDown',
+		'PageUp',
+		'PageDown',
+		'Home',
+		'End',
+		' ',
+		'Spacebar'
+	]);
 
 	function syncHeaderHeight() {
 		if (!headerElement) return;
@@ -56,11 +67,35 @@
 		scrollProgress = nextProgress;
 	}
 
+	function suppressHeaderForAnchorScroll() {
+		if (!onPostDetailPage) return;
+
+		suppressHeaderScrollResponses = true;
+		upwardScrollDistance = 0;
+		downwardScrollDistance = 0;
+	}
+
+	function clearHeaderScrollSuppression(event?: Event) {
+		if (event instanceof KeyboardEvent && !scrollIntentKeys.has(event.key)) {
+			return;
+		}
+
+		suppressHeaderScrollResponses = false;
+	}
+
 	function applyScrollState(scrollY: number) {
 		updateScrollProgress(scrollY);
 
 		if (!onPostDetailPage) {
 			hideHeader = false;
+			suppressHeaderScrollResponses = false;
+			upwardScrollDistance = 0;
+			downwardScrollDistance = 0;
+			lastScrollY = scrollY;
+			return;
+		}
+
+		if (suppressHeaderScrollResponses) {
 			upwardScrollDistance = 0;
 			downwardScrollDistance = 0;
 			lastScrollY = scrollY;
@@ -140,6 +175,7 @@
 		onPostDetailPage;
 
 		hideHeader = false;
+		suppressHeaderScrollResponses = false;
 		upwardScrollDistance = 0;
 		downwardScrollDistance = 0;
 		lastScrollY = Math.max(0, window.scrollY);
@@ -175,13 +211,22 @@
 		}
 
 		lastScrollY = Math.max(0, window.scrollY);
+		suppressHeaderScrollResponses = false;
 		upwardScrollDistance = 0;
 		downwardScrollDistance = 0;
 		syncHeaderHeight();
 		updateScrollProgress(lastScrollY);
+		window.addEventListener('post-anchor-scroll', suppressHeaderForAnchorScroll);
+		window.addEventListener('wheel', clearHeaderScrollSuppression, { passive: true });
+		window.addEventListener('touchmove', clearHeaderScrollSuppression, { passive: true });
+		window.addEventListener('keydown', clearHeaderScrollSuppression);
 		window.addEventListener('resize', syncHeaderHeight);
 
 		return () => {
+			window.removeEventListener('post-anchor-scroll', suppressHeaderForAnchorScroll);
+			window.removeEventListener('wheel', clearHeaderScrollSuppression);
+			window.removeEventListener('touchmove', clearHeaderScrollSuppression);
+			window.removeEventListener('keydown', clearHeaderScrollSuppression);
 			window.removeEventListener('resize', syncHeaderHeight);
 			if (scrollFrameId !== undefined) {
 				window.cancelAnimationFrame(scrollFrameId);

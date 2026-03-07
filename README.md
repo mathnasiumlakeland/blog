@@ -35,20 +35,9 @@ When using a coding agent for a new post, start by describing the post idea at a
 We need to fix the ugly slop UI 🤮. Ideas:
 - https://www.pi.website/
 - https://harmonic.fun/about
-- https://saaspocalypse.now/ haha
+- https://embedding-inversion-demo.jina.ai/
 - https://dribbble.com/shots/20860486-Minimal-blog-post-Untitled-UI
 - https://dribbble.com/shots/24074591-Minimal-blog-Untitled-UI
 - https://dribbble.com/shots/26108908-Halftone-blog-Untitled-UI
 - https://dribbble.com/shots/24565936-Minimal-blog-Untitled-UI
 - https://dribbble.com/shots/24365811-Design-journal-Untitled-UI
-
-Lots of blues + lines
-
-Remember ☯ 🐍:
-> Beautiful is better than ugly.  
-> Explicit is better than implicit.  
-> Simple is better than complex.  
-> Complex is better than complicated.  
-> Flat is better than nested.  
-> Sparse is better than dense.  
-> Readability counts.

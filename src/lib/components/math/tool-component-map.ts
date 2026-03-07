@@ -11,7 +11,7 @@ const interactiveToolComponentSources: ToolComponentSourceMap = {
 	'lissajous-pattern-lab': 'lissajous-canvas.svelte',
 	'parent-function-identification': 'parent-function-identification-visual.svelte',
 	'simplifying-radicals-walkthrough': 'simplifying-radicals-walkthrough-visual.svelte',
-	'prime-factorization-factor-tree-lab': 'prime-factorization-factor-tree-lab-visual.svelte',
+	'prime-factorization-factor-tree': 'prime-factorization-factor-tree-visual.svelte',
 	'function-tranformation-practice': 'function-translation-drag-practice-visual.svelte',
 	'mixture-balance-lab': 'mixture-balance-lab-visual.svelte',
 	'simple-interest-growth': 'simple-interest-growth-visual.svelte',
@@ -49,8 +49,8 @@ const interactiveToolLoaders: Record<string, ToolComponentLoader> = {
 		import('./parent-function-identification-visual.svelte'),
 	'simplifying-radicals-walkthrough': () =>
 		import('./simplifying-radicals-walkthrough-visual.svelte'),
-	'prime-factorization-factor-tree-lab': () =>
-		import('./prime-factorization-factor-tree-lab-visual.svelte'),
+	'prime-factorization-factor-tree': () =>
+		import('./prime-factorization-factor-tree-visual.svelte'),
 	'function-tranformation-practice': () =>
 		import('./function-translation-drag-practice-visual.svelte'),
 	'mixture-balance-lab': () => import('./mixture-balance-lab-visual.svelte'),

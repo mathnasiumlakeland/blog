@@ -3,7 +3,7 @@
 	import { requireInteractiveToolMetaById } from './tool-registry';
 
 	export const toolMeta: MathToolMeta = requireInteractiveToolMetaById(
-		'prime-factorization-factor-tree-lab'
+		'prime-factorization-factor-tree'
 	);
 </script>
 
@@ -15,7 +15,7 @@
 		TOOL_BG_SURFACE_WASH
 	} from './tool-visual-theme';
 
-	type Mode = 'explore' | 'practice';
+	type Mode = 'example' | 'practice';
 
 	type FactorTreeNode = {
 		value: number;
@@ -75,10 +75,9 @@
 
 	const MAX_NUMBER = 1000;
 	const NODE_RADIUS = 24;
-	const sampleValues = [48, 72, 180, 300];
 	const practiceSeeds = [24, 36, 48, 54, 60, 72, 84, 90, 96, 108, 120, 144, 180, 210, 240, 300];
 
-	let mode = $state<Mode>('explore');
+	let mode = $state<Mode>('example');
 
 	let exploreInput = $state('72');
 	let appliedExploreNumber = $state(72);
@@ -86,6 +85,7 @@
 	let practiceNodeCounter = 0;
 	const initialPracticeTree = createPracticeRoot(pickPracticeSeed());
 	let practiceTree = $state(initialPracticeTree);
+	let practiceInput = $state(initialPracticeTree.value.toString());
 	let activePracticeNodeId = $state(getNextExpandableNodeId(initialPracticeTree));
 	let leftFactorInput = $state('');
 	let rightFactorInput = $state('');
@@ -121,6 +121,17 @@
 		}
 		if (value > MAX_NUMBER) {
 			return `Use ${MAX_NUMBER} or smaller so the tree stays readable.`;
+		}
+		return null;
+	}
+
+	function validatePracticeNumber(value: number | null) {
+		const baseMessage = validateRadicand(value);
+		if (baseMessage) {
+			return baseMessage;
+		}
+		if (value !== null && isPrime(value)) {
+			return 'Choose a composite number so there is a factor tree to complete.';
 		}
 		return null;
 	}
@@ -434,14 +445,42 @@
 		return values.join('\\cdot');
 	}
 
+	function toCondensedPrimeProductTeX(values: number[]) {
+		if (values.length === 0) {
+			return '1';
+		}
+
+		const sorted = [...values].sort((left, right) => left - right);
+		const terms: string[] = [];
+		let index = 0;
+
+		while (index < sorted.length) {
+			const current = sorted[index];
+			let count = 1;
+			let nextIndex = index + 1;
+
+			while (nextIndex < sorted.length && sorted[nextIndex] === current) {
+				count += 1;
+				nextIndex += 1;
+			}
+
+			terms.push(count === 1 ? `${current}` : `${current}^{${count}}`);
+			index = nextIndex;
+		}
+
+		return terms.join('\\cdot');
+	}
+
+	function combineProductAndCondensed(base: number, factors: number[]) {
+		const product = joinProductTeX(factors);
+		const condensed = toCondensedPrimeProductTeX(factors);
+
+		return condensed === product ? `${base}=${product}` : `${base}=${product}=${condensed}`;
+	}
+
 	function setMode(nextMode: Mode) {
 		mode = nextMode;
 		practiceFeedback = null;
-	}
-
-	function setExploreSample(value: number) {
-		exploreInput = value.toString();
-		appliedExploreNumber = value;
 	}
 
 	function applyExploreNumber() {
@@ -457,14 +496,24 @@
 	}
 
 	function startNewPractice(value = pickPracticeSeed()) {
+		practiceInput = value.toString();
 		practiceTree = createPracticeRoot(value);
 		activePracticeNodeId = getNextExpandableNodeId(practiceTree);
 		leftFactorInput = '';
 		rightFactorInput = '';
-		practiceFeedback = {
-			kind: 'info',
-			message: 'Split the highlighted node into two factors greater than 1.'
-		};
+		practiceFeedback = null;
+	}
+
+	function applyPracticeNumber() {
+		if (!canApplyPractice || parsedPracticeInput === null) {
+			return;
+		}
+		startNewPractice(parsedPracticeInput);
+	}
+
+	function submitPracticeNumber(event: SubmitEvent) {
+		event.preventDefault();
+		applyPracticeNumber();
 	}
 
 	function checkPracticeFactors() {
@@ -506,17 +555,11 @@
 		rightFactorInput = '';
 
 		if (activePracticeNodeId === null) {
-			practiceFeedback = {
-				kind: 'ok',
-				message: 'Correct. Tree complete and fully decomposed into primes.'
-			};
+			practiceFeedback = null;
 			return;
 		}
 
-		practiceFeedback = {
-			kind: 'ok',
-			message: `Correct: ${leftValue} × ${rightValue} = ${activeNode.value}. Keep going.`
-		};
+		practiceFeedback = null;
 	}
 
 	function submitPracticeFactorsWithEnter(event: KeyboardEvent) {
@@ -538,6 +581,17 @@
 	const canApplyExplore = $derived.by(() => {
 		return parsedExploreInput !== null && validateRadicand(parsedExploreInput) === null;
 	});
+	const parsedPracticeInput = $derived.by(() => parseWholeNumber(practiceInput));
+	const hasTypedPracticeInput = $derived.by(() => practiceInput.trim().length > 0);
+	const practiceValidationMessage = $derived.by(() => {
+		if (!hasTypedPracticeInput) {
+			return null;
+		}
+		return validatePracticeNumber(parsedPracticeInput);
+	});
+	const canApplyPractice = $derived.by(() => {
+		return parsedPracticeInput !== null && validatePracticeNumber(parsedPracticeInput) === null;
+	});
 
 	const activePracticeNode = $derived.by(() => {
 		if (!activePracticeNodeId) {
@@ -547,7 +601,7 @@
 	});
 
 	const displayRoot = $derived.by(() => {
-		if (mode === 'explore') {
+		if (mode === 'example') {
 			const tree = buildExploreTree(appliedExploreNumber);
 			return toDisplayExploreTree(tree);
 		}
@@ -558,8 +612,8 @@
 	const treeLayout = $derived.by(() => buildDisplayLayout(displayRoot));
 
 	const explorePrimeFactors = $derived.by(() => factorize(appliedExploreNumber));
-	const exploreFactorizationExpression = $derived(
-		`${appliedExploreNumber}=${joinProductTeX(explorePrimeFactors)}`
+	const exploreFactorizationExpression = $derived.by(() =>
+		combineProductAndCondensed(appliedExploreNumber, explorePrimeFactors)
 	);
 
 	const practicePrimeFactors = $derived.by(() => {
@@ -568,107 +622,150 @@
 		factors.sort((left, right) => left - right);
 		return factors;
 	});
+	const practiceFactorizationExpression = $derived.by(() =>
+		combineProductAndCondensed(practiceTree.value, practicePrimeFactors)
+	);
 
 	const practiceComplete = $derived(mode === 'practice' && activePracticeNodeId === null);
-	const practiceFactorizationExpression = $derived(
-		`${practiceTree.value}=${joinProductTeX(practicePrimeFactors)}`
-	);
 
 	const factorTreeBackgroundStyle = `background: linear-gradient(140deg, ${TOOL_BG_GRADIENT_START} 0%, ${TOOL_BG_GRADIENT_END} 100%);`;
 	const treeSurfaceStyle = `background: ${TOOL_BG_SURFACE_WASH};`;
+
+	function autofocusPlaceholder(node: HTMLInputElement, enabled: boolean) {
+		let frame = 0;
+
+		const focusInput = () => {
+			if (!enabled) {
+				return;
+			}
+
+			frame = requestAnimationFrame(() => {
+				node.focus();
+				node.select();
+			});
+		};
+
+		focusInput();
+
+		return {
+			update(nextEnabled: boolean) {
+				enabled = nextEnabled;
+				cancelAnimationFrame(frame);
+				focusInput();
+			},
+			destroy() {
+				cancelAnimationFrame(frame);
+			}
+		};
+	}
 </script>
 
 <div class="prime-factorization-tool space-y-4">
 	<div class="rounded-xl border border-border/70 bg-background/75 p-4">
-		<div class="flex flex-wrap gap-2">
-			<button
-				type="button"
-				class={`rounded-md border px-3 py-1 text-xs font-semibold uppercase tracking-wide transition-colors ${
-					mode === 'explore'
-						? 'border-primary/60 bg-primary/12 text-primary'
-						: 'border-border/70 bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground'
-				}`}
-				onclick={() => setMode('explore')}
-			>
-				Explore
-			</button>
-			<button
-				type="button"
-				class={`rounded-md border px-3 py-1 text-xs font-semibold uppercase tracking-wide transition-colors ${
-					mode === 'practice'
-						? 'border-primary/60 bg-primary/12 text-primary'
-						: 'border-border/70 bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground'
-				}`}
-				onclick={() => setMode('practice')}
-			>
-				Practice
-			</button>
-		</div>
-
-		{#if mode === 'explore'}
-			<form class="mt-3 flex flex-wrap items-end gap-3" onsubmit={submitExploreNumber}>
-				<label class="min-w-52 space-y-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-					Number n
-					<input
-						type="number"
-						min="2"
-						max={MAX_NUMBER}
-						step="1"
-						value={exploreInput}
-						oninput={(event) => {
-							exploreInput = (event.currentTarget as HTMLInputElement).value;
-						}}
-						class="mt-1 h-10 w-full rounded-lg border border-border/70 bg-background px-3 text-sm text-foreground outline-none transition-colors focus-visible:border-primary"
-					/>
-				</label>
-				<button
-					type="submit"
-					class="h-10 rounded-lg border border-primary/40 bg-primary/10 px-3 text-xs font-semibold uppercase tracking-wide text-primary transition-colors hover:bg-primary/18 disabled:cursor-not-allowed disabled:opacity-50"
-					disabled={!canApplyExplore}
-				>
-					Build tree
-				</button>
-				<div class="flex flex-wrap gap-2">
-					{#each sampleValues as value (value)}
-						<button
-							type="button"
-							class="rounded-md border border-border/70 bg-background px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
-							onclick={() => setExploreSample(value)}
-						>
-							Try {value}
-						</button>
-					{/each}
-				</div>
-			</form>
-			{#if exploreValidationMessage}
-				<p class="mt-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
-					{exploreValidationMessage}
-				</p>
-			{/if}
-		{:else}
-			<div class="mt-3 flex flex-wrap items-center gap-2">
+		<div class="space-y-4">
+			<div class="flex flex-wrap gap-2">
 				<button
 					type="button"
-					class="rounded-md border border-border/70 bg-background px-3 py-1 text-xs font-semibold uppercase tracking-wide text-foreground transition-colors hover:border-primary/40"
-					onclick={() => startNewPractice()}
+					class={`rounded-md border px-3 py-1 text-xs font-semibold uppercase tracking-wide transition-colors ${
+						mode === 'example'
+							? 'border-primary/60 bg-primary/12 text-primary'
+							: 'border-border/70 bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground'
+					}`}
+					onclick={() => setMode('example')}
 				>
-					New problem
+					Example
 				</button>
-				{#if activePracticeNode}
-					<p class="text-xs text-muted-foreground">
-						Split the highlighted node: <span class="font-semibold text-foreground">{activePracticeNode.value}</span>
-					</p>
-				{:else}
-					<p class="text-xs text-muted-foreground">Tree complete. Start a new problem for another round.</p>
-				{/if}
+				<button
+					type="button"
+					class={`rounded-md border px-3 py-1 text-xs font-semibold uppercase tracking-wide transition-colors ${
+						mode === 'practice'
+							? 'border-primary/60 bg-primary/12 text-primary'
+							: 'border-border/70 bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground'
+					}`}
+					onclick={() => setMode('practice')}
+				>
+					Practice
+				</button>
 			</div>
-			<p class="mt-2 text-xs text-muted-foreground">
-				Type factors into the two empty child nodes, then press
-				<span class="font-semibold text-foreground">Enter</span>
-				or
-				<span class="font-semibold text-foreground">Check factors</span>.
-			</p>
-		{/if}
+
+				{#if mode === 'example'}
+					<div class="space-y-3">
+						<form class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end" onsubmit={submitExploreNumber}>
+							<label class="space-y-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+								Choose a number
+								<input
+									type="number"
+									min="2"
+									max={MAX_NUMBER}
+									step="1"
+									value={exploreInput}
+									oninput={(event) => {
+										exploreInput = (event.currentTarget as HTMLInputElement).value;
+									}}
+									class="mt-1 h-10 w-full rounded-lg border border-border/70 bg-background px-3 text-sm text-foreground outline-none transition-colors focus-visible:border-primary"
+								/>
+							</label>
+							<button
+								type="submit"
+								class="h-10 rounded-lg border border-primary/40 bg-primary/10 px-3 text-xs font-semibold uppercase tracking-wide text-primary transition-colors hover:bg-primary/18 disabled:cursor-not-allowed disabled:opacity-50 sm:min-w-32"
+								disabled={!canApplyExplore}
+							>
+								Build tree
+							</button>
+						</form>
+						{#if exploreValidationMessage}
+							<p class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+								{exploreValidationMessage}
+							</p>
+						{:else}
+							<p class="text-xs text-muted-foreground">
+								Build a factor tree for any whole number from 2 to {MAX_NUMBER}.
+							</p>
+						{/if}
+					</div>
+				{:else}
+				<div class="space-y-3">
+					<form
+						class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-end"
+						onsubmit={submitPracticeNumber}
+					>
+						<label class="space-y-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+							Choose a number
+							<input
+								type="number"
+								min="4"
+								max={MAX_NUMBER}
+								step="1"
+								value={practiceInput}
+								oninput={(event) => {
+									practiceInput = (event.currentTarget as HTMLInputElement).value;
+								}}
+								class="mt-1 h-10 w-full rounded-lg border border-border/70 bg-background px-3 text-sm text-foreground outline-none transition-colors focus-visible:border-primary"
+							/>
+						</label>
+						<button
+							type="submit"
+							class="h-10 rounded-lg border border-primary/40 bg-primary/10 px-3 text-xs font-semibold uppercase tracking-wide text-primary transition-colors hover:bg-primary/18 disabled:cursor-not-allowed disabled:opacity-50"
+							disabled={!canApplyPractice}
+						>
+							Start practice
+						</button>
+						<button
+							type="button"
+							class="h-10 rounded-lg border border-border/70 bg-background px-3 text-xs font-semibold uppercase tracking-wide text-foreground transition-colors hover:border-primary/40"
+							onclick={() => startNewPractice()}
+						>
+							Random problem
+						</button>
+					</form>
+					{#if practiceValidationMessage}
+						<p class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+							{practiceValidationMessage}
+						</p>
+					{/if}
+				</div>
+			{/if}
+		</div>
 	</div>
 
 	<section class="rounded-xl border border-border/70 p-3" style={factorTreeBackgroundStyle}>
@@ -678,7 +775,7 @@
 				viewBox={`0 0 ${treeLayout.width} ${treeLayout.height}`}
 				class="h-auto w-full rounded-md"
 				role="img"
-				aria-label={`Factor tree for ${mode === 'explore' ? appliedExploreNumber : practiceTree.value}`}
+				aria-label={`Factor tree for ${mode === 'example' ? appliedExploreNumber : practiceTree.value}`}
 			>
 				<rect x="0" y="0" width={treeLayout.width} height={treeLayout.height} fill="rgba(248,250,252,0.82)"></rect>
 				{#each treeLayout.edges as edge (edge.id)}
@@ -708,6 +805,7 @@
 									type="number"
 									min="2"
 									step="1"
+									use:autofocusPlaceholder={node.side === 'left'}
 									value={node.side === 'left' ? leftFactorInput : rightFactorInput}
 									onkeydown={submitPracticeFactorsWithEnter}
 									oninput={(event) => {
@@ -761,16 +859,17 @@
 				</span>
 			{/if}
 		</div>
-	</section>
-
-	{#if mode === 'explore'}
-		<section class="rounded-xl border border-border/70 bg-background/75 p-3">
-			<p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Prime factorization</p>
-			<MathExpression math={exploreFactorizationExpression} displayMode class="mt-2 text-sm text-foreground" />
-		</section>
-	{:else}
-		<section class="rounded-xl border border-border/70 bg-background/75 p-3">
-			<div class="flex flex-wrap items-center gap-2">
+		{#if mode === 'practice'}
+			<div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+				<p class="text-sm text-slate-700">
+					Type factors into the two empty child nodes, then press
+					<span class="font-semibold text-slate-900">Enter</span>
+					or
+					<span class="font-semibold text-slate-900">Check factors</span>.
+					Use
+					<span class="font-semibold text-slate-900">Tab</span>
+					to move to the next node.
+				</p>
 				<button
 					type="button"
 					class="rounded-md border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary transition-colors hover:bg-primary/18 disabled:cursor-not-allowed disabled:opacity-45"
@@ -779,45 +878,37 @@
 				>
 					Check factors
 				</button>
-				<button
-					type="button"
-					class="rounded-md border border-border/70 bg-background px-3 py-1 text-xs font-semibold uppercase tracking-wide text-foreground transition-colors hover:border-primary/40"
-					onclick={() => startNewPractice()}
-				>
-					New problem
-				</button>
 			</div>
 
-			{#if activePracticeNode}
-				<MathExpression
-					math={`${activePracticeNode.value}=\\square\\cdot\\square`}
-					displayMode
-					class="mt-2 text-sm text-foreground"
-				/>
-			{/if}
-
-			{#if practiceFeedback}
+			{#if practiceFeedback?.kind === 'error'}
 				<p
-					class={`mt-2 rounded-lg border px-3 py-2 text-xs ${
-						practiceFeedback.kind === 'ok'
-							? 'border-emerald-300/70 bg-emerald-100/65 text-emerald-900'
-							: practiceFeedback.kind === 'error'
-								? 'border-rose-300/70 bg-rose-100/70 text-rose-900'
-								: 'border-slate-300/70 bg-slate-100/70 text-slate-800'
-					}`}
+					class="mt-3 rounded-lg border border-rose-300/70 bg-rose-100/70 px-3 py-2 text-xs text-rose-900"
 				>
 					{practiceFeedback.message}
 				</p>
 			{/if}
 
 			{#if practiceComplete}
-				<p class="mt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+				<p class="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-700">
 					Prime factorization complete
 				</p>
-				<MathExpression math={practiceFactorizationExpression} displayMode class="mt-1 text-sm text-foreground" />
+				<MathExpression
+					math={practiceFactorizationExpression}
+					displayMode
+					class="mt-1 text-sm text-slate-900"
+				/>
 			{/if}
-		</section>
-	{/if}
+		{:else}
+			<p class="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-700">
+				Prime factorization
+			</p>
+			<MathExpression
+				math={exploreFactorizationExpression}
+				displayMode
+				class="mt-1 text-sm text-slate-900"
+			/>
+		{/if}
+	</section>
 </div>
 
 <style>

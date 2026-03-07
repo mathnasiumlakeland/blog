@@ -26,7 +26,8 @@
 	const tool = $derived(getInteractiveToolById(data.id));
 	const routePracticeDisabledToolIds = new Set([
 		'scientific-calculator',
-		'prime-factorization-factor-tree-lab',
+		'prime-factorization-factor-tree',
+		'simplifying-radicals-walkthrough',
 		'parent-function-identification',
 		'function-tranformation-practice'
 	]);

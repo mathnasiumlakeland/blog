@@ -3,6 +3,7 @@ import GithubSlugger from 'github-slugger';
 export type PostHeading = {
 	id: string;
 	text: string;
+	depth: 1 | 2;
 	level: number;
 };
 
@@ -27,7 +28,7 @@ export function getPostHeadingsBySlug(slug: string) {
 function extractPostHeadings(markdown: string): PostHeading[] {
 	const content = stripFrontmatter(markdown);
 	const slugger = new GithubSlugger();
-	const headings: PostHeading[] = [];
+	const rawHeadings: Array<Omit<PostHeading, 'depth'>> = [];
 
 	let codeFence: string | null = null;
 	let fenceLength = 0;
@@ -55,19 +56,28 @@ function extractPostHeadings(markdown: string): PostHeading[] {
 		if (!headingMatch) continue;
 
 		const level = headingMatch[1].length;
-		if (level > 2) continue;
-
 		const text = normalizeHeadingText(headingMatch[2]);
-		if (!text) continue;
+		if (!text || isTableOfContentsHeading(text)) continue;
 
-		headings.push({
+		rawHeadings.push({
 			id: slugger.slug(text),
 			text,
 			level
 		});
 	}
 
-	return headings;
+	if (rawHeadings.length === 0) {
+		return [];
+	}
+
+	const sectionLevel = Math.min(...rawHeadings.map((heading) => heading.level));
+
+	return rawHeadings
+		.filter((heading) => heading.level === sectionLevel || heading.level === sectionLevel + 1)
+		.map((heading) => ({
+			...heading,
+			depth: heading.level === sectionLevel ? 1 : 2
+		}));
 }
 
 function stripFrontmatter(markdown: string): string {
@@ -91,4 +101,8 @@ function normalizeHeadingText(value: string): string {
 		.replace(/~~(.*?)~~/g, '$1')
 		.replace(/\\([\\`*_{}\[\]()#+\-.!])/g, '$1')
 		.trim();
+}
+
+function isTableOfContentsHeading(value: string) {
+	return value.trim().toLowerCase() === 'table of contents';
 }

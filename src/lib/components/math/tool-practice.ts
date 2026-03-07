@@ -191,19 +191,6 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			hint: 'Ignore shifts and scale; match the parent-function family.'
 		};
 	},
-	'simplifying-radicals-walkthrough': () => {
-		const insideCandidates = [2, 3, 5, 6, 7, 10, 11, 13];
-		const outside = randomInt(2, 12);
-		const inside = insideCandidates[randomInt(0, insideCandidates.length - 1)];
-		const radicand = outside * outside * inside;
-
-		return {
-			prompt: `Simplify sqrt(${radicand}) to a*sqrt(b). What is the outside coefficient a?`,
-			answer: outside,
-			tolerance: 0,
-			hint: 'Use prime factors and pull one factor outside for every matching pair.'
-		};
-	},
 	'function-tranformation-practice': () => {
 		const horizontal = randomInt(0, 1) === 1;
 		let b = randomInt(-6, 6);

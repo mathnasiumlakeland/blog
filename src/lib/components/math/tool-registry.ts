@@ -97,10 +97,10 @@ export const interactiveMathTools: ToolListEntry[] = [
 		}
 	},
 	{
-		id: 'prime-factorization-factor-tree-lab',
+		id: 'prime-factorization-factor-tree',
 		meta: {
-			id: 'prime-factorization-factor-tree-lab',
-			title: 'Prime Factorization Factor Tree Lab',
+			id: 'prime-factorization-factor-tree',
+			title: 'Prime Factorization Factor Tree',
 			description:
 				'Build factor trees to classify numbers as prime or composite and decompose composites into prime factors.',
 			inputs:

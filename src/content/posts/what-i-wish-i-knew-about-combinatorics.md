@@ -12,7 +12,7 @@ tags:
   - counting
   - permutations
   - combinations
-equation: '\\binom{n}{r}=\\frac{n!}{r!(n-r)!}'
+equation: '\binom{n}{r}=\frac{n!}{r!(n-r)!}'
 featured: false
 devOnly: true
 ---

@@ -20,7 +20,8 @@ const practicePath = path.join(repoRoot, 'src', 'lib', 'components', 'math', 'to
 const componentsDir = path.join(repoRoot, 'src', 'lib', 'components', 'math');
 const PRACTICE_EXEMPT_TOOL_IDS = new Set([
 	'scientific-calculator',
-	'prime-factorization-factor-tree-lab'
+	'prime-factorization-factor-tree',
+	'simplifying-radicals-walkthrough'
 ]);
 
 function parseRegistryEntries(content) {

@@ -133,8 +133,8 @@ Color key in the visualization:
 
 <div class="not-prose my-8 rounded-2xl border border-border/70 bg-card/70 p-4">
 	<LazyPostToolEmbed
-		toolId="prime-factorization-factor-tree-lab"
-		title="Prime Factorization Factor Tree Lab"
+		toolId="prime-factorization-factor-tree"
+		title="Prime Factorization Factor Tree"
 	/>
 </div>
 

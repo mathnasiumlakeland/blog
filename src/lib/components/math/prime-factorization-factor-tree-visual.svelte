@@ -758,15 +758,25 @@
 							Random problem
 						</button>
 					</form>
-					{#if practiceValidationMessage}
-						<p class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
-							{practiceValidationMessage}
-						</p>
-					{/if}
-				</div>
-			{/if}
+						{#if practiceValidationMessage}
+							<p class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+								{practiceValidationMessage}
+							</p>
+						{:else}
+							<p class="text-xs text-muted-foreground">
+								Type factors into the two empty child nodes, then press
+								<span class="font-semibold text-foreground">Enter</span>
+								or
+								<span class="font-semibold text-foreground">Check factors</span>.
+								Use
+								<span class="font-semibold text-foreground">Tab</span>
+								to move to the next node.
+							</p>
+						{/if}
+					</div>
+				{/if}
+			</div>
 		</div>
-	</div>
 
 	<section class="rounded-xl border border-border/70 p-3" style={factorTreeBackgroundStyle}>
 		<p class="text-xs font-semibold uppercase tracking-wide text-slate-700">Factor tree</p>
@@ -859,22 +869,13 @@
 				</span>
 			{/if}
 		</div>
-		{#if mode === 'practice'}
-			<div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-				<p class="text-sm text-slate-700">
-					Type factors into the two empty child nodes, then press
-					<span class="font-semibold text-slate-900">Enter</span>
-					or
-					<span class="font-semibold text-slate-900">Check factors</span>.
-					Use
-					<span class="font-semibold text-slate-900">Tab</span>
-					to move to the next node.
-				</p>
-				<button
-					type="button"
-					class="rounded-md border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary transition-colors hover:bg-primary/18 disabled:cursor-not-allowed disabled:opacity-45"
-					onclick={checkPracticeFactors}
-					disabled={!activePracticeNodeId}
+			{#if mode === 'practice'}
+				<div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+					<button
+						type="button"
+						class="rounded-md border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary transition-colors hover:bg-primary/18 disabled:cursor-not-allowed disabled:opacity-45"
+						onclick={checkPracticeFactors}
+						disabled={!activePracticeNodeId}
 				>
 					Check factors
 				</button>

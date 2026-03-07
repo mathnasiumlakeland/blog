@@ -340,7 +340,7 @@
 
 <article class="mx-auto w-full max-w-7xl space-y-5 sm:space-y-8">
 	<header
-		class="soft-grid relative mx-auto max-w-4xl space-y-4 overflow-hidden rounded-2xl border border-border/70 bg-card/78 p-4 shadow-sm backdrop-blur-sm sm:space-y-5 sm:p-8 xl:mx-0"
+		class={`soft-grid relative mx-auto max-w-4xl space-y-4 overflow-hidden rounded-2xl border border-border/70 bg-card/78 p-4 shadow-sm backdrop-blur-sm sm:space-y-5 sm:p-8 ${hasToc ? 'xl:mx-0' : ''}`}
 	>
 		<div class="flex flex-wrap items-center gap-2">
 			{#each tags as tag (tag)}
@@ -370,9 +370,9 @@
 		</div>
 	</header>
 
-	<div class="xl:grid xl:grid-cols-[minmax(0,1fr)_18rem] xl:gap-10">
+	<div class={hasToc ? 'xl:grid xl:grid-cols-[minmax(0,1fr)_18rem] xl:gap-10' : ''}>
 		<div class="min-w-0">
-			<div class="mx-auto w-full max-w-4xl space-y-5 sm:space-y-8 xl:mx-0">
+			<div class={`mx-auto w-full max-w-4xl space-y-5 sm:space-y-8 ${hasToc ? 'xl:mx-0' : ''}`}>
 				{#if hasToc}
 					<aside
 						class="rounded-2xl border border-border/70 bg-gradient-to-br from-sky-100/45 via-card/88 to-cyan-100/40 shadow-sm xl:hidden dark:from-sky-950/20 dark:via-card/80 dark:to-cyan-950/20"

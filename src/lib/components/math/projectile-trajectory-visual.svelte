@@ -80,16 +80,16 @@
 </script>
 
 <div class="space-y-4">
-	<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+	<div class="tool-summary-grid">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Time of flight:
 			<MathExpression math={`T\\approx${fmt(flightTime)}\\text{ s}`} class="ml-1 font-semibold text-foreground" />
 		</p>
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Max height:
 			<MathExpression math={`H\\approx${fmt(maxHeight, 0)}\\text{ m}`} class="ml-1 font-semibold text-foreground" />
 		</p>
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Range:
 			<MathExpression math={`R\\approx${fmt(range, 0)}\\text{ m}`} class="ml-1 font-semibold text-foreground" />
 		</p>

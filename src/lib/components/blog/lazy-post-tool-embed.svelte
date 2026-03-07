@@ -81,7 +81,9 @@
 	class={`min-h-[13rem] overflow-hidden rounded-xl border border-border/60 bg-background/70 ${placeholderClass}`.trim()}
 >
 	{#if embedState === 'ready' && ToolComponent}
-		<ToolComponent />
+		<div class="p-3 sm:p-4">
+			<ToolComponent />
+		</div>
 	{:else if embedState === 'failed'}
 		<div class="soft-grid flex min-h-[13rem] flex-col items-center justify-center gap-2 p-4 text-center">
 			<p class="text-sm font-medium text-foreground">Unable to load {title} right now.</p>

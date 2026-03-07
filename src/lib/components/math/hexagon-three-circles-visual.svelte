@@ -76,22 +76,22 @@
 </script>
 
 <div class="space-y-4">
-	<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+	<div class="tool-summary-grid">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Hexagon area:
 			<MathExpression
 				math={`\\frac{3\\sqrt3}{2}\\cdot${n.toFixed(2)}^2=${hexArea.toFixed(3)}`}
 				class="ml-1 font-semibold text-foreground"
 			/>
 		</p>
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Center distance:
 			<MathExpression
 				math={`d=\\sqrt3\\,n\\approx${centerDistance.toFixed(3)}`}
 				class="ml-1 font-semibold text-foreground"
 			/>
 		</p>
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Target area:
 			<MathExpression
 				math={`A(${n.toFixed(2)})=\\frac{3\\sqrt3}{2}n^2-\\pi\\approx${targetArea.toFixed(3)}`}

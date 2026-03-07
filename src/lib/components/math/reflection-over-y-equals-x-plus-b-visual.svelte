@@ -291,29 +291,29 @@
 </script>
 
 <div class="space-y-4 select-none">
-	<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-		<p class="rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+	<div class="tool-summary-grid">
+		<p class="tool-summary-card rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 			Reflection line:
 			<MathExpression
 				math={lineSummary}
 				class="ml-1 inline-block max-w-full overflow-x-auto whitespace-nowrap align-middle font-semibold text-foreground [&_.katex]:whitespace-nowrap"
 			/>
 		</p>
-		<p class="rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 			Coordinates:
 			<MathExpression
 				math={coordinateSummary}
 				class="ml-1 inline-block max-w-full overflow-x-auto whitespace-nowrap align-middle font-semibold text-foreground [&_.katex]:whitespace-nowrap"
 			/>
 		</p>
-		<p class="rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 			Shift rule:
 			<MathExpression
 				math={reflectionSummary}
 				class="ml-1 inline-block max-w-full overflow-x-auto whitespace-nowrap align-middle font-semibold text-foreground [&_.katex]:whitespace-nowrap"
 			/>
 		</p>
-		<p class="rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 			Distance to line:
 			<MathExpression
 				math={distanceSummary}

@@ -497,20 +497,20 @@
 			</p>
 		</div>
 
-		<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-			<p class="rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+		<div class="tool-summary-grid">
+			<p class="tool-summary-card rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 				<MathExpression
 					math={`d_\\text{Manhattan}=n+n=2n=${squareManhattan}`}
 					class="font-semibold text-foreground"
 				/>
 			</p>
-			<p class="rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+			<p class="tool-summary-card rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 				<MathExpression
 					math={`d_\\text{Euclidean}=\\sqrt{n^2+n^2}=n\\sqrt{2}\\approx${squareEuclidean.toFixed(2)}`}
 					class="font-semibold text-foreground"
 				/>
 			</p>
-			<p class="rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+			<p class="tool-summary-card rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 				<MathExpression math={`\\binom{2n}{n}=\\binom{${2 * squareN}}{${squareN}}`} class="font-semibold text-foreground" />
 				<span class="mt-1 block text-foreground">Paths: {formatBigInt(squarePathCount)}</span>
 			</p>
@@ -850,14 +850,14 @@
 			</p>
 		</div>
 
-		<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-			<p class="rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+		<div class="tool-summary-grid">
+			<p class="tool-summary-card rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 				<MathExpression math={`d_\\text{Manhattan}=m+n=${generalM + generalN}`} class="font-semibold text-foreground" />
 			</p>
-			<p class="rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+			<p class="tool-summary-card rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 				<MathExpression math={`\\binom{m+n}{m}=\\frac{(m+n)!}{m!\\,n!}`} class="font-semibold text-foreground" />
 			</p>
-			<p class="rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+			<p class="tool-summary-card rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 				<MathExpression math={`\\binom{${generalM + generalN}}{${generalM}}`} class="font-semibold text-foreground" />
 				<span class="mt-1 block text-foreground">Paths: {formatBigInt(generalPathCount)}</span>
 			</p>

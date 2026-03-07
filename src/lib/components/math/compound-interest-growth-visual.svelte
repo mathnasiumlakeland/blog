@@ -111,22 +111,22 @@
 </script>
 
 <div class="space-y-4">
-	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+	<div class="tool-summary-grid">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Formula:
 			<MathExpression
 				math={'A=P\\left(1+\\frac{r}{n}\\right)^{nt}'}
 				class="ml-1 font-semibold text-foreground"
 			/>
 		</p>
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Per-period rate:
 			<MathExpression
 				math={`\\frac{r}{n}\\approx${formatCompact(ratePerPeriod * 100, 4)}\\%`}
 				class="ml-1 font-semibold text-foreground"
 			/>
 		</p>
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			At
 			<MathExpression math={`t=${formatCompact(safeSelectedYear, 1)}`} class="mx-1 font-semibold text-foreground" />
 			years:

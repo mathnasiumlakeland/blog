@@ -78,16 +78,16 @@
 </script>
 
 <div class="space-y-4">
-	<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+	<div class="tool-summary-grid">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			At θ = {selAngle}°:
 			<MathExpression math={`R\\approx${fmt(selRange, 0)}\\text{ m}`} class="ml-1 font-semibold text-foreground" />
 		</p>
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Complement θ = {compAngle}°:
 			<MathExpression math={`R\\approx${fmt(compRange, 0)}\\text{ m}`} class="ml-1 font-semibold text-foreground" />
 		</p>
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Max range (45°):
 			<MathExpression math={`R_{\\max}\\approx${fmt(rMax, 0)}\\text{ m}`} class="ml-1 font-semibold text-foreground" />
 		</p>

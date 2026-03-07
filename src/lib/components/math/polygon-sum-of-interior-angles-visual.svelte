@@ -68,8 +68,8 @@
 </script>
 
 <div class="space-y-4">
-	<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-		<p class="min-w-0 rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+	<div class="tool-summary-grid">
+		<p class="tool-summary-card min-w-0 rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Sides:
 			<span
 				class="ml-1 inline-block whitespace-nowrap sm:mt-1 sm:ml-0 sm:block sm:max-w-full sm:overflow-x-auto xl:mt-0 xl:ml-1 xl:inline-block xl:max-w-none xl:align-middle"
@@ -80,7 +80,7 @@
 				/>
 			</span>
 		</p>
-		<p class="min-w-0 rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card min-w-0 rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Triangles from one vertex:
 			<span
 				class="mt-1 block w-full max-w-full overflow-x-auto whitespace-nowrap xl:mt-0 xl:ml-1 xl:inline-block xl:w-auto xl:align-middle"
@@ -91,7 +91,7 @@
 				/>
 			</span>
 		</p>
-		<p class="min-w-0 rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card min-w-0 rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Interior-angle sum:
 			<span
 				class="mt-1 block w-full max-w-full overflow-x-auto whitespace-nowrap xl:mt-0 xl:ml-1 xl:inline-block xl:w-auto xl:align-middle"

@@ -229,22 +229,22 @@ export const toolMeta: MathToolMeta = requireInteractiveToolMetaById('unit-circl
 </script>
 
 <div class="space-y-4">
-	<div class="grid gap-3 sm:grid-cols-3">
-		<p class="rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+	<div class="tool-summary-grid">
+		<p class="tool-summary-card rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 			Selected angle:
 			<MathExpression
 				math={selectedAngleTex}
 				class="ml-1 inline-block whitespace-nowrap align-middle font-semibold text-foreground"
 			/>
 		</p>
-		<p class="rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 			Point on circle:
 			<MathExpression
 				math={selectedCoordinateTex}
 				class="ml-1 inline-block whitespace-nowrap align-middle font-semibold text-foreground"
 			/>
 		</p>
-		<p class="rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 			Trig values:
 			<MathExpression
 				math={selectedTrigTex}

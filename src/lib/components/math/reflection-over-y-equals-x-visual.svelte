@@ -177,29 +177,29 @@
 </script>
 
 <div class="min-w-0 space-y-4 select-none">
-	<div class="grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-		<p class="min-w-0 rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+	<div class="tool-summary-grid min-w-0">
+		<p class="tool-summary-card min-w-0 rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 			Reflection line:
 			<MathExpression
 				math="y=x"
 				class="mt-1 block max-w-full overflow-x-auto whitespace-nowrap align-middle font-semibold text-foreground sm:mt-0 sm:ml-1 sm:inline-block [&_.katex]:whitespace-nowrap"
 			/>
 		</p>
-		<p class="min-w-0 rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card min-w-0 rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 			Coordinates:
 			<MathExpression
 				math={coordinateSummary}
 				class="mt-1 block max-w-full overflow-x-auto whitespace-nowrap align-middle font-semibold text-foreground sm:mt-0 sm:ml-1 sm:inline-block [&_.katex]:whitespace-nowrap"
 			/>
 		</p>
-		<p class="min-w-0 rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card min-w-0 rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 			Swap rule:
 			<MathExpression
 				math={reflectionSummary}
 				class="mt-1 block max-w-full overflow-x-auto whitespace-nowrap align-middle font-semibold text-foreground sm:mt-0 sm:ml-1 sm:inline-block [&_.katex]:whitespace-nowrap"
 			/>
 		</p>
-		<p class="min-w-0 rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card min-w-0 rounded-xl border border-border/70 bg-background/80 px-3 py-2 text-sm text-muted-foreground">
 			Distance to line:
 				<MathExpression
 					math={distanceSummary}

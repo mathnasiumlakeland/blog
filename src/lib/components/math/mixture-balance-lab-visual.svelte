@@ -296,16 +296,16 @@
 	</svg>
 
 	{#if hasUniqueSolution}
-		<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-			<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-xs text-muted-foreground">
+		<div class="tool-summary-grid">
+			<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-xs text-muted-foreground">
 				Input solute total:
 				<span class="ml-1 font-semibold text-foreground">{formatValue(totalInputSolute, 3)}</span>
 			</p>
-			<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-xs text-muted-foreground">
+			<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-xs text-muted-foreground">
 				Output solute total:
 				<span class="ml-1 font-semibold text-foreground">{formatValue(totalOutputSolute, 3)}</span>
 			</p>
-			<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-xs text-muted-foreground">
+			<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-xs text-muted-foreground">
 				Amount check:
 				<span class="ml-1 font-semibold text-foreground">
 					{formatValue(safeInitialAmount + solvedAddedAmount, 2)} = {formatValue(finalAmount, 2)}

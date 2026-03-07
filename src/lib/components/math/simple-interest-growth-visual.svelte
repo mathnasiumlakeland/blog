@@ -107,12 +107,12 @@
 </script>
 
 <div class="space-y-4">
-	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+	<div class="tool-summary-grid">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Formula:
 			<MathExpression math="A=P(1+rt)" class="ml-1 font-semibold text-foreground" />
 		</p>
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			At
 			<MathExpression math={`t=${formatCompact(safeSelectedYear, 1)}`} class="mx-1 font-semibold text-foreground" />
 			years:
@@ -121,7 +121,7 @@
 				class="ml-1 font-semibold text-foreground"
 			/>
 		</p>
-		<p class="rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
+		<p class="tool-summary-card rounded-lg border border-border/70 bg-background/75 px-3 py-2 text-sm text-muted-foreground">
 			Interest earned:
 			<MathExpression
 				math={`A-P\\approx${formatCompact(selectedInterest, 2)}`}

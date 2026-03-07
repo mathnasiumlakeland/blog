@@ -198,6 +198,32 @@
 		background-size: 32px 32px;
 	}
 
+	.tool-summary-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+		gap: 0.75rem;
+		align-items: start;
+	}
+
+	.tool-summary-grid > * {
+		min-width: 0;
+	}
+
+	.tool-summary-card {
+		min-width: 0;
+		overflow-wrap: anywhere;
+	}
+
+	.tool-summary-card > span[class*='font-semibold']:has(.katex) {
+		display: inline-block;
+		max-width: 100%;
+		overflow-x: auto;
+		overflow-y: hidden;
+		vertical-align: middle;
+		white-space: nowrap;
+		padding-bottom: 0.1rem;
+	}
+
 	.dark .soft-grid {
 		background-image:
 			linear-gradient(to right, rgba(236, 241, 249, 0.09) 1px, transparent 1px),

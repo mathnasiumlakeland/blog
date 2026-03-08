@@ -196,7 +196,7 @@ R(\theta) =
 \end{pmatrix}
 $$
 
-where $\theta$ is the angle between the line of reflection and the x-axis.
+where $\theta$ is the angle between the line of reflection and the $x$-axis.
 
 For any point $P = (x, y)$, which we can represent as a column vector, the rotated point $P'$ is given by:
 $$
@@ -268,17 +268,18 @@ P &\leftarrow (x, y-b)
 \end{align*}
 $$
 
-2. Rotate point $P$ and the line of reflection $y=mx$ by a clockwise angle $\theta$ using our rotation matrix $R(\theta)$. This will rotate the line onto the x-axis, making it the horizontal line $y=0$.
+2. Rotate point $P$ and the line of reflection $y=mx$ by a clockwise angle $\theta$, the angle that the line makes with the $x$-axis. We know that $\tan(\theta) = \text{opp} / \text{adj} = y / x = m$, so we can take the inverse tangent to find $\theta$. We can then use our rotation matrix $R(\theta)$ to rotate the line onto the $x$-axis, making it the horizontal line $y=0$.
 
 $$
 \begin{align*}
+\theta &= \tan^{-1}(m) \\
 y &=0 \\
 P &\leftarrow R(\theta)P
 \end{align*}
 $$
 
 
-3. Reflect point $P$ across the x-axis by flipping the sign of the $y$-coordinate to find the reflected point $P'$.
+3. Reflect point $P$ across the $x$-axis by flipping the sign of the $y$-coordinate to find the reflected point $P'$.
 
 $$
 P' = (P_x, -P_y)

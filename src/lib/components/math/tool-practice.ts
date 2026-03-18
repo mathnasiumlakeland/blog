@@ -146,11 +146,12 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			{ code: 1, type: 'quadratic' as const, label: 'y=x^2' },
 			{ code: 2, type: 'cubic' as const, label: 'y=x^3' },
 			{ code: 3, type: 'linear' as const, label: 'y=x' },
-			{ code: 4, type: 'square-root' as const, label: 'y=sqrt(x)' },
-			{ code: 5, type: 'cube-root' as const, label: 'y=cuberoot(x)' },
-			{ code: 6, type: 'absolute-value' as const, label: 'y=|x|' },
-			{ code: 7, type: 'reciprocal' as const, label: 'y=1/x' },
-			{ code: 8, type: 'reciprocal-squared' as const, label: 'y=1/x^2' }
+			{ code: 4, type: 'exponential' as const, label: 'y=b^x' },
+			{ code: 5, type: 'square-root' as const, label: 'y=sqrt(x)' },
+			{ code: 6, type: 'cube-root' as const, label: 'y=cuberoot(x)' },
+			{ code: 7, type: 'absolute-value' as const, label: 'y=|x|' },
+			{ code: 8, type: 'reciprocal' as const, label: 'y=1/x' },
+			{ code: 9, type: 'reciprocal-squared' as const, label: 'y=1/x^2' }
 		];
 		const selectedFamily = parentFamilies[randomInt(0, parentFamilies.length - 1)];
 		const a = [-3, -2, -1, 1, 2, 3][randomInt(0, 5)];
@@ -171,6 +172,8 @@ const practiceFactories: Record<string, PracticeFactory> = {
 			equationCore = `${scalePrefix}${shiftedX}^3`;
 		} else if (selectedFamily.type === 'linear') {
 			equationCore = `${scalePrefix}${shiftedX}`;
+		} else if (selectedFamily.type === 'exponential') {
+			equationCore = `${reciprocalPrefix}b^${shiftedX}`;
 		} else if (selectedFamily.type === 'square-root') {
 			equationCore = `${scalePrefix}sqrt${shiftedX}`;
 		} else if (selectedFamily.type === 'cube-root') {

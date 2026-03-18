@@ -34,6 +34,7 @@
 		| 'quadratic'
 		| 'cubic'
 		| 'linear'
+		| 'exponential'
 		| 'square-root'
 		| 'cube-root'
 		| 'absolute-value'
@@ -81,6 +82,12 @@
 			base: (u) => u
 		},
 		{
+			id: 'exponential',
+			label: 'Exponential',
+			parentTex: 'y=b^x',
+			base: (u) => 2 ** u
+		},
+		{
 			id: 'square-root',
 			label: 'Square Root',
 			parentTex: 'y=\\sqrt{x}',
@@ -116,6 +123,7 @@
 		quadratic: { aValues: [-2, -1, 1, 2], hRange: [-4, 4], kRange: [-4, 4] },
 		cubic: { aValues: [-2, -1, 1, 2], hRange: [-4, 4], kRange: [-4, 4] },
 		linear: { aValues: [-3, -2, -1, 1, 2, 3], hRange: [-4, 4], kRange: [-4, 4] },
+		exponential: { aValues: [-2, -1, 1, 2], hRange: [-2, 6], kRange: [-4, 4] },
 		'square-root': { aValues: [-3, -2, -1, 1, 2, 3], hRange: [-8, 4], kRange: [-4, 4] },
 		'cube-root': { aValues: [-3, -2, -1, 1, 2, 3], hRange: [-5, 5], kRange: [-4, 4] },
 		'absolute-value': { aValues: [-3, -2, -1, 1, 2, 3], hRange: [-5, 5], kRange: [-4, 4] },
@@ -133,6 +141,7 @@
 	) as Record<ParentId, ParentDefinition>;
 	const answerOptionOrder: ParentId[] = [
 		'linear',
+		'exponential',
 		'absolute-value',
 		'quadratic',
 		'cubic',
@@ -175,11 +184,18 @@
 		return card.k > 0 ? `${card.k} up` : `${Math.abs(card.k)} down`;
 	});
 
-	const showAsymptotes = $derived(
-		card.parentId === 'reciprocal' || card.parentId === 'reciprocal-squared'
+	const showVerticalAsymptote = $derived(
+		(card.parentId === 'reciprocal' || card.parentId === 'reciprocal-squared') &&
+			card.h > X_MIN &&
+			card.h < X_MAX
 	);
-	const showVerticalAsymptote = $derived(showAsymptotes && card.h > X_MIN && card.h < X_MAX);
-	const showHorizontalAsymptote = $derived(showAsymptotes && card.k > Y_MIN && card.k < Y_MAX);
+	const showHorizontalAsymptote = $derived(
+		(card.parentId === 'reciprocal' ||
+			card.parentId === 'reciprocal-squared' ||
+			card.parentId === 'exponential') &&
+			card.k > Y_MIN &&
+			card.k < Y_MAX
+	);
 
 	function isInsidePlotY(y: number) {
 		return y >= Y_MIN && y <= Y_MAX;
@@ -359,6 +375,8 @@
 				return appendVerticalShiftTex(applyScaleTex(a, `\\left(${shiftedX}\\right)^3`), k);
 			case 'linear':
 				return appendVerticalShiftTex(applyScaleTex(a, shiftedX), k);
+			case 'exponential':
+				return appendVerticalShiftTex(applyScaleTex(a, `b^{${shiftedX}}`), k);
 			case 'square-root':
 				return appendVerticalShiftTex(applyScaleTex(a, `\\sqrt{${shiftedX}}`), k);
 			case 'cube-root':
